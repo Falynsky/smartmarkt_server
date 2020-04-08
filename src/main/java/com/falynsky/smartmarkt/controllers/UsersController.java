@@ -3,6 +3,7 @@ package com.falynsky.smartmarkt.controllers;
 import com.falynsky.smartmarkt.models.DTO.Users;
 import com.falynsky.smartmarkt.models.UsersEntity;
 import com.falynsky.smartmarkt.repositories.UsersRepository;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,13 +24,20 @@ public class UsersController {
     }
 
     @GetMapping("/all")
-    public List<Users> getAllSubjects() {
+    public List<Users> getAllUsers() {
         return usersRepository.retrieveUsersAsDTO();
     }
 
     @GetMapping("/{id}")
-    public Users getAllSubjects(@PathVariable("id") Integer id) {
+    public Users getAllUsers(@PathVariable("id") Integer id) {
         return usersRepository.retrieveUsersAsDTObyId(id);
+    }
+
+    @RequestMapping("/create")
+    public void addNewUser(){
+        Users user = new Users(4,"test", "test");
+        UsersEntity usersEntity = new UsersEntity(user);
+        usersRepository.save(usersEntity);
     }
 
     @DeleteMapping("/{userId}")

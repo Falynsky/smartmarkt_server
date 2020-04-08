@@ -19,7 +19,5 @@ public interface UsersRepository extends JpaRepository<UsersEntity, Integer> {
     @Query("SELECT new com.falynsky.smartmarkt.models.DTO.Users(u.id, u.login, u.password) FROM UsersEntity u where u.id = :userId")
     Users retrieveUsersAsDTObyId(@Param("userId") Integer userId);
 
-    //Optional<UsersEntity> findById(@Param("userId") Integer userId);
-
 
 }

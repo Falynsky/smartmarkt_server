@@ -1,5 +1,7 @@
 package com.falynsky.smartmarkt.models;
 
+import com.falynsky.smartmarkt.models.DTO.Users;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -9,6 +11,15 @@ public class UsersEntity {
     private int id;
     private String login;
     private String password;
+
+    public UsersEntity() {
+    }
+
+    public UsersEntity(Users user) {
+        this.id = user.getId();
+        this.login = user.getLogin();
+        this.password = user.getPassword();
+    }
 
     @Id
     @Column(name = "id", nullable = false)
