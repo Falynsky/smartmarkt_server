@@ -1,28 +1,30 @@
 package com.falynsky.smartmarkt.models;
 
-import com.falynsky.smartmarkt.models.DTO.Users;
+import com.falynsky.smartmarkt.models.DTO.UsersDTO;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Objects;
 
 @Entity
-@Table(name = "users", schema = "smartmarkt", catalog = "")
-public class UsersEntity {
+public class Users {
     private int id;
     private String login;
     private String password;
 
-    public UsersEntity() {
+    public Users() {
     }
 
-    public UsersEntity(Users user) {
-        this.id = user.getId();
-        this.login = user.getLogin();
-        this.password = user.getPassword();
+    public Users(UsersDTO usersDTO) {
+        this.id = usersDTO.getId();
+        this.login = usersDTO.getLogin();
+        this.password = usersDTO.getPassword();
     }
 
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     public int getId() {
         return id;
     }
@@ -32,7 +34,7 @@ public class UsersEntity {
     }
 
     @Basic
-    @Column(name = "login", nullable = false, length = 45)
+    @Column(name = "login")
     public String getLogin() {
         return login;
     }
@@ -42,7 +44,7 @@ public class UsersEntity {
     }
 
     @Basic
-    @Column(name = "password", nullable = false, length = 45)
+    @Column(name = "password")
     public String getPassword() {
         return password;
     }
@@ -55,10 +57,10 @@ public class UsersEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UsersEntity that = (UsersEntity) o;
-        return id == that.id &&
-                Objects.equals(login, that.login) &&
-                Objects.equals(password, that.password);
+        Users users = (Users) o;
+        return id == users.id &&
+                Objects.equals(login, users.login) &&
+                Objects.equals(password, users.password);
     }
 
     @Override

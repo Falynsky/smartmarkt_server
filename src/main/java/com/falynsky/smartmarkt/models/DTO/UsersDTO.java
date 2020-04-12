@@ -1,12 +1,12 @@
 package com.falynsky.smartmarkt.models.DTO;
 
-public class Users {
+public class UsersDTO {
 
     private int id;
     private String login;
     private String password;
 
-    public Users(int id, String login, String password) {
+    public UsersDTO(int id, String login, String password) {
         this.id = id;
         this.login = login;
         this.password = password;
