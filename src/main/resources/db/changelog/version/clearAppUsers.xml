@@ -7,12 +7,13 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
       http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
 
-    <changeSet id="2" author="kfa">
-        <comment>A sample change log</comment>
-        <insert schemaName="dbo"
-                tableName="liquibaseTest">
-            <column name="address" value="Łukasińskiego" type="varchar(255)"/>
-        </insert>
+    <changeSet id="1" author="kfa">
+        <preConditions onFail="MARK_RAN">
+                <tableExists schemaName="dbo" tableName="app_users"/>
+        </preConditions>
+        <comment>Drop app user table</comment>
+        <delete tableName="app_users" schemaName="dbo"/>
+
     </changeSet>
 
 </databaseChangeLog>
