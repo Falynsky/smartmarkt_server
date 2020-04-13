@@ -10,8 +10,11 @@
     <changeSet id="2" author="kfa">
         <comment>A sample change log</comment>
         <insert schemaName="dbo"
-                tableName="liquibaseTest">
-            <column name="address" value="Łukasińskiego" type="varchar(255)"/>
+                tableName="app_users">
+            <column name="id" value="1" type="int"/>
+            <column name="username" value="guest" type="varchar(255)"/>
+            <column name="password" value="guest" type="varchar(255)"/>
+            <column name="role" value="guest" type="varchar(255)"/>
         </insert>
     </changeSet>
 
