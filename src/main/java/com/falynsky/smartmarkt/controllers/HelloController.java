@@ -2,9 +2,14 @@ package com.falynsky.smartmarkt.controllers;
 
 import com.falynsky.smartmarkt.models.AppUsers;
 import com.falynsky.smartmarkt.services.AppUsersService;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.Collection;
 
 @Controller
 public class HelloController {
@@ -16,19 +21,13 @@ public class HelloController {
     }
 
     @GetMapping("/hello")
-    @ResponseBody
-    public String hello() {
+    public String helloAdmin(Principal principal, Model model) {
+        model.addAttribute("name", principal.getName());
+        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        Object details = SecurityContextHolder.getContext().getAuthentication().getDetails();
+        model.addAttribute("authorities", authorities);
+        model.addAttribute("details", details);
         return "hello";
-    }
-
-    @GetMapping("/hello-user")
-    public String helloUser() {
-        return "hello-user";
-    }
-
-    @GetMapping("/hello-admin")
-    public String helloAdmin() {
-        return "hello-admin";
     }
 
     @GetMapping("/sing-up")
