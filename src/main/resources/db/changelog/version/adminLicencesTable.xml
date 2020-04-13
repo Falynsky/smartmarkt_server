@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+
+    <changeSet id="3" author="kfa">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists schemaName="dbo" tableName="licences"/>
+            </not>
+        </preConditions>
+        <comment>Create admin licences table</comment>
+        <createTable
+                schemaName="dbo"
+                tableName="licences">
+            <column name="id" type="int"/>
+            <column name="licence_key" type="varchar(255)"/>
+            <column name="licence_role" type="varchar(255)"/>
+        </createTable>
+        <addNotNullConstraint tableName="licences" columnName="licence_key" columnDataType="varchar(255)"/>
+        <addNotNullConstraint tableName="licences" columnName="licence_role" columnDataType="varchar(255)"/>
+        <addNotNullConstraint tableName="licences" columnName="id" columnDataType="int"/>
+        <addPrimaryKey tableName="licences" columnNames="id"/>
+        <addUniqueConstraint tableName="licences" columnNames="licence_key"/>
+
+    </changeSet>
+
+</databaseChangeLog>

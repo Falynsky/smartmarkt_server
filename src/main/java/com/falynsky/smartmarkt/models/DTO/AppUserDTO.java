@@ -1,15 +1,17 @@
 package com.falynsky.smartmarkt.models.DTO;
 
-public class UsersDTO {
+public class AppUserDTO {
 
     private int id;
     private String login;
     private String password;
+    private String role;
 
-    public UsersDTO(int id, String login, String password) {
+    public AppUserDTO(int id, String login, String password, String role) {
         this.id = id;
         this.login = login;
         this.password = password;
+        this.role = role;
     }
 
     public int getId() {
@@ -34,5 +36,13 @@ public class UsersDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
