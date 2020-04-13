@@ -8,4 +8,7 @@
 
     <include file="version/clearAppUsers.xml" relativeToChangelogFile="true"/>
     <include file="version/appUsersTable.xml" relativeToChangelogFile="true"/>
+    <include file="version/adminLicencesTable.xml" relativeToChangelogFile="true"/>
+    <include file="version/addDefaultLicenceKey.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>

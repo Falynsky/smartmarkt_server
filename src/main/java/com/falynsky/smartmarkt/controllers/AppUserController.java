@@ -1,7 +1,7 @@
 package com.falynsky.smartmarkt.controllers;
 
-import com.falynsky.smartmarkt.models.AppUsers;
-import com.falynsky.smartmarkt.models.DTO.AppUsersDTO;
+import com.falynsky.smartmarkt.models.AppUser;
+import com.falynsky.smartmarkt.models.DTO.AppUserDTO;
 import com.falynsky.smartmarkt.repositories.AppUserRepository;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,27 +13,27 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
 @RestController
 @RequestMapping("/users")
-public class AppUsersController {
+public class AppUserController {
 
     final AppUserRepository usersRepository;
 
-    public AppUsersController(AppUserRepository usersRepository) {
+    public AppUserController(AppUserRepository usersRepository) {
         this.usersRepository = usersRepository;
     }
 
     @GetMapping("/all")
-    public List<AppUsersDTO> getAllUsers() {
-        return usersRepository.retrieveAppUsersAsDTO();
+    public List<AppUserDTO> getAllUsers() {
+        return usersRepository.retrieveAppUserAsDTO();
     }
 
     @GetMapping("/{id}")
-    public AppUsersDTO getAllUsers(@PathVariable("id") Integer id) {
-        return usersRepository.retrieveAppUsersAsDTObyId(id);
+    public AppUserDTO getAllUsers(@PathVariable("id") Integer id) {
+        return usersRepository.retrieveAppUserAsDTObyId(id);
     }
 
     @DeleteMapping("/{userId}")
     public String deleteUser(@PathVariable Integer userId) {
-        Optional<AppUsers> userToDelete = usersRepository.findById(userId);
+        Optional<AppUser> userToDelete = usersRepository.findById(userId);
         if (userToDelete.isPresent()) {
             usersRepository.delete(userToDelete.get());
             return "User deleted with id = " + userId;
@@ -43,22 +43,22 @@ public class AppUsersController {
     }
 
     @GetMapping("/mocked")
-    public AppUsersDTO getMockedUser() {
-        AppUsersDTO mockedUser = new AppUsersDTO(1, "mockedUser", "mockedUser", "user");
+    public AppUserDTO getMockedUser() {
+        AppUserDTO mockedUser = new AppUserDTO(1, "mockedUser", "mockedUser", "user");
         return mockedUser;
     }
 
     @GetMapping("/mocked/{numberOfUsers}")
-    public List<AppUsersDTO> getAllMockedUsers(@PathVariable Integer numberOfUsers) {
-        List<AppUsersDTO> mockedUsers =
+    public List<AppUserDTO> getAllMockedUsers(@PathVariable Integer numberOfUsers) {
+        List<AppUserDTO> mockedUsers =
                 generateUsers(numberOfUsers);
         return mockedUsers;
     }
 
-    private List<AppUsersDTO> generateUsers(int numberOfUsers) {
-        List<AppUsersDTO> users = new ArrayList<>();
+    private List<AppUserDTO> generateUsers(int numberOfUsers) {
+        List<AppUserDTO> users = new ArrayList<>();
         for (int i = 1; i <= numberOfUsers; i++) {
-            users.add(new AppUsersDTO(i, "user" + i, "user" + i, "user"));
+            users.add(new AppUserDTO(i, "user" + i, "user" + i, "user"));
         }
         return users;
     }

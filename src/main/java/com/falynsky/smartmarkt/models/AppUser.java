@@ -13,7 +13,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "app_users")
-public class AppUsers implements UserDetails {
+public class AppUser implements UserDetails {
 
     @Id
     private Integer id;
@@ -85,11 +85,11 @@ public class AppUsers implements UserDetails {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AppUsers appUsers = (AppUsers) o;
-        return Objects.equals(id, appUsers.id) &&
-                Objects.equals(username, appUsers.username) &&
-                Objects.equals(password, appUsers.password) &&
-                Objects.equals(role, appUsers.role);
+        AppUser appUser = (AppUser) o;
+        return Objects.equals(id, appUser.id) &&
+                Objects.equals(username, appUser.username) &&
+                Objects.equals(password, appUser.password) &&
+                Objects.equals(role, appUser.role);
     }
 
     @Override

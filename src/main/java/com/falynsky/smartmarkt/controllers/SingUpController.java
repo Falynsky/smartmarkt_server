@@ -1,6 +1,7 @@
 package com.falynsky.smartmarkt.controllers;
 
-import com.falynsky.smartmarkt.models.AppUsers;
+import com.falynsky.smartmarkt.models.AppUser;
+import com.falynsky.smartmarkt.models.Licence;
 import com.falynsky.smartmarkt.services.AppUsersService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,11 +13,11 @@ import java.security.Principal;
 import java.util.Collection;
 
 @Controller
-public class HelloController {
+public class SingUpController {
 
     private AppUsersService appUsersService;
 
-    public HelloController(AppUsersService appUsersService) {
+    public SingUpController(AppUsersService appUsersService) {
         this.appUsersService = appUsersService;
     }
 
@@ -32,14 +33,16 @@ public class HelloController {
 
     @GetMapping("/sing-up")
     public String singUp(Model model) {
-        model.addAttribute("user", new AppUsers());
+        model.addAttribute("user", new AppUser());
+        model.addAttribute("licence", new Licence());
         return "sing-up";
     }
 
     @PostMapping("/register")
-    public String register(AppUsers appUsers) {
-        appUsersService.createAndAddUser(appUsers);
+    public String register(AppUser appUser, Licence licence) {
+        appUsersService.createAndAddUser(appUser, licence);
         return "sing-up";
     }
+
 
 }

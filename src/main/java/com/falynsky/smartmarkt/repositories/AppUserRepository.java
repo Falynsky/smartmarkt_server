@@ -1,7 +1,7 @@
 package com.falynsky.smartmarkt.repositories;
 
-import com.falynsky.smartmarkt.models.AppUsers;
-import com.falynsky.smartmarkt.models.DTO.AppUsersDTO;
+import com.falynsky.smartmarkt.models.AppUser;
+import com.falynsky.smartmarkt.models.DTO.AppUserDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,15 +11,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface AppUserRepository extends JpaRepository<AppUsers, Integer> {
+public interface AppUserRepository extends JpaRepository<AppUser, Integer> {
 
-    Optional<AppUsers> findByUsername(String username);
+    Optional<AppUser> findByUsername(String username);
 
-    AppUsers findFirstByOrderByIdDesc();
+    AppUser findFirstByOrderByIdDesc();
 
-    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.AppUsersDTO(u.id, u.username, u.password, u.role) FROM AppUsers u")
-    List<AppUsersDTO> retrieveAppUsersAsDTO();
+    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.AppUserDTO(u.id, u.username, u.password, u.role) FROM AppUser u")
+    List<AppUserDTO> retrieveAppUserAsDTO();
 
-    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.AppUsersDTO(u.id, u.username, u.password, u.role) FROM AppUsers u where u.id = :userId")
-    AppUsersDTO retrieveAppUsersAsDTObyId(@Param("userId") Integer userId);
+    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.AppUserDTO(u.id, u.username, u.password, u.role) FROM AppUser u where u.id = :userId")
+    AppUserDTO retrieveAppUserAsDTObyId(@Param("userId") Integer userId);
 }
