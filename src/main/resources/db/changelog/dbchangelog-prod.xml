@@ -6,5 +6,4 @@
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <include file="version/appUsersTable.xml" relativeToChangelogFile="true"/>
-    <include file="version/addGuestUser.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

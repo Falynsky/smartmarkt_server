@@ -31,5 +31,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.headers().disable();
+        http.authorizeRequests()
+                .antMatchers("/hello").authenticated()
+                .antMatchers("/for-admin").hasAuthority("ROLE_ADMIN")
+                .antMatchers("/users/all").hasAuthority("ROLE_ADMIN")
+                .and()
+                .formLogin().defaultSuccessUrl("/hello");
     }
 }
