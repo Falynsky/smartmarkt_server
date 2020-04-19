@@ -10,5 +10,6 @@
     <include file="version/appUsersTable.xml" relativeToChangelogFile="true"/>
     <include file="version/adminLicencesTable.xml" relativeToChangelogFile="true"/>
     <include file="version/addDefaultLicenceKey.xml" relativeToChangelogFile="true"/>
+    <include file="version/documentTable.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
