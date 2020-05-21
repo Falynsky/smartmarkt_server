@@ -16,7 +16,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    private UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
 
     public WebSecurityConfig(UserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
@@ -33,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().disable();
         http.authorizeRequests()
                 .antMatchers("/hello").authenticated()
-                .antMatchers("/users/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers("/accounts/**").hasAuthority("ROLE_ADMIN")
                 .antMatchers("/files/**").hasAuthority("ROLE_ADMIN")
                 .and()
                 .formLogin().defaultSuccessUrl("/hello");

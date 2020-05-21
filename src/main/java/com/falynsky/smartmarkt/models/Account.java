@@ -4,16 +4,16 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Id;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
 
 @Entity
-@Table(name = "app_users")
-public class AppUser implements UserDetails {
+@Table(name = "accounts")
+public class Account implements UserDetails {
 
     @Id
     private Integer id;
@@ -85,11 +85,11 @@ public class AppUser implements UserDetails {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AppUser appUser = (AppUser) o;
-        return Objects.equals(id, appUser.id) &&
-                Objects.equals(username, appUser.username) &&
-                Objects.equals(password, appUser.password) &&
-                Objects.equals(role, appUser.role);
+        Account account = (Account) o;
+        return Objects.equals(id, account.id) &&
+                Objects.equals(username, account.username) &&
+                Objects.equals(password, account.password) &&
+                Objects.equals(role, account.role);
     }
 
     @Override
