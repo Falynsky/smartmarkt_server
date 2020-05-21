@@ -34,6 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/hello").authenticated()
                 .antMatchers("/users/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers("/files/**").hasAuthority("ROLE_ADMIN")
                 .and()
                 .formLogin().defaultSuccessUrl("/hello");
     }
