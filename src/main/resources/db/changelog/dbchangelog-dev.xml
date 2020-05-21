@@ -14,6 +14,4 @@
 
     <!--    FIll database scripts -->
     <include file="version/addDefaultLicenceKey.xml" relativeToChangelogFile="true"/>
-    <include file="version/documentTable.xml" relativeToChangelogFile="true"/>
-
 </databaseChangeLog>
