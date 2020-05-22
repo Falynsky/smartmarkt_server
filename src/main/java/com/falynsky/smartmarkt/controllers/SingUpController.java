@@ -1,13 +1,14 @@
 package com.falynsky.smartmarkt.controllers;
 
-import com.falynsky.smartmarkt.models.AppUser;
+import com.falynsky.smartmarkt.models.Account;
 import com.falynsky.smartmarkt.models.Licence;
-import com.falynsky.smartmarkt.services.AppUsersService;
+import com.falynsky.smartmarkt.services.AccountService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
 import java.util.Collection;
@@ -15,10 +16,10 @@ import java.util.Collection;
 @Controller
 public class SingUpController {
 
-    private AppUsersService appUsersService;
+    private final AccountService accountService;
 
-    public SingUpController(AppUsersService appUsersService) {
-        this.appUsersService = appUsersService;
+    public SingUpController(AccountService accountService) {
+        this.accountService = accountService;
     }
 
     @GetMapping("/hello")
@@ -33,16 +34,14 @@ public class SingUpController {
 
     @GetMapping("/sing-up")
     public String singUp(Model model) {
-        model.addAttribute("user", new AppUser());
+        model.addAttribute("user", new Account());
         model.addAttribute("licence", new Licence());
         return "sing-up";
     }
 
     @PostMapping("/register")
-    public String register(AppUser appUser, Licence licence) {
-        appUsersService.createAndAddUser(appUser, licence);
+    public String register(Account account, Licence licence) {
+        accountService.createAndAddUser(account, licence);
         return "sing-up";
     }
-
-
 }

@@ -7,28 +7,27 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
       http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
 
-    <changeSet id="2" author="kfa">
+
+<changeSet id="1" author="kfa">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists schemaName="dbo" tableName="app_users"/>
+                <tableExists schemaName="dbo" tableName="accounts"/>
             </not>
         </preConditions>
-        <comment>Create app user table</comment>
-        <createTable
-                schemaName="dbo"
-                tableName="app_users">
+        <comment>Create accounts table</comment>
+        <createTable schemaName="dbo" tableName="accounts">
             <column name="id" type="int"/>
             <column name="username" type="varchar(255)"/>
             <column name="password" type="varchar(255)"/>
             <column name="role" type="varchar(255)"/>
         </createTable>
-        <addNotNullConstraint tableName="app_users" columnName="id" columnDataType="int"/>
-        <addNotNullConstraint tableName="app_users" columnName="username" columnDataType="varchar(255)"/>
-        <addNotNullConstraint tableName="app_users" columnName="password" columnDataType="varchar(255)"/>
-        <addNotNullConstraint tableName="app_users" columnName="role" columnDataType="varchar(255)"/>
-        <addPrimaryKey tableName="app_users" columnNames="id"/>
-        <addUniqueConstraint tableName="app_users" columnNames="username"/>
+
+        <addNotNullConstraint tableName="accounts" columnName="id" columnDataType="int"/>
+        <addNotNullConstraint tableName="accounts" columnName="username" columnDataType="varchar(255)"/>
+        <addNotNullConstraint tableName="accounts" columnName="password" columnDataType="varchar(255)"/>
+        <addNotNullConstraint tableName="accounts" columnName="role" columnDataType="varchar(255)"/>
+        <addPrimaryKey tableName="accounts" columnNames="id"/>
+        <addUniqueConstraint tableName="accounts" columnNames="username"/>
 
     </changeSet>
-
 </databaseChangeLog>

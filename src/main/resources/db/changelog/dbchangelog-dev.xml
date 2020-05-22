@@ -1,15 +1,17 @@
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
-    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <!-- Create tables-->
+    <include file="version/models/accountsTable.xml" relativeToChangelogFile="true"/>
+    <include file="version/models/usersTable.xml" relativeToChangelogFile="true"/>
+    <include file="version/models/baskets.xml" relativeToChangelogFile="true"/>
+    <include file="version/models/products.xml" relativeToChangelogFile="true"/>
+    <include file="version/models/baskets_products.xml" relativeToChangelogFile="true"/>
+    <include file="version/models/adminLicencesTable.xml" relativeToChangelogFile="true"/>
+    <include file="version/models/documentTable.xml" relativeToChangelogFile="true"/>
 
-    <include file="version/clearAppUsers.xml" relativeToChangelogFile="true"/>
-    <include file="version/appUsersTable.xml" relativeToChangelogFile="true"/>
-    <include file="version/adminLicencesTable.xml" relativeToChangelogFile="true"/>
+    <!--    FIll database scripts -->
     <include file="version/addDefaultLicenceKey.xml" relativeToChangelogFile="true"/>
-    <include file="version/documentTable.xml" relativeToChangelogFile="true"/>
-
 </databaseChangeLog>
