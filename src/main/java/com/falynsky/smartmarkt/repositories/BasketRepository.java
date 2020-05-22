@@ -18,8 +18,8 @@ public interface BasketRepository extends JpaRepository<Basket, Integer> {
     Basket findFirstByOrderByIdDesc();
 
     @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketDTO(b.id, b.name, b.userId.id) FROM Basket b")
-    List<BasketDTO> retrieveAccountAsDTO();
+    List<BasketDTO> retrieveBasketsAsDTO();
 
     @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketDTO(b.id, b.name, b.userId.id) FROM Basket b where b.id = :basketId")
-    BasketDTO retrieveAccountAsDTObyId(@Param("basketId") Integer basketId);
+    BasketDTO retrieveBasketAsDTObyId(@Param("basketId") Integer basketId);
 }
