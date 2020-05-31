@@ -4,14 +4,15 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <!-- Create tables-->
-    <include file="version/models/accountsTable.xml" relativeToChangelogFile="true"/>
-    <include file="version/models/usersTable.xml" relativeToChangelogFile="true"/>
-    <include file="version/models/baskets.xml" relativeToChangelogFile="true"/>
-    <include file="version/models/products.xml" relativeToChangelogFile="true"/>
-    <include file="version/models/baskets_products.xml" relativeToChangelogFile="true"/>
-    <include file="version/models/adminLicencesTable.xml" relativeToChangelogFile="true"/>
-    <include file="version/models/documentTable.xml" relativeToChangelogFile="true"/>
+    <include file="models/accountsTable.xml" relativeToChangelogFile="true"/>
+    <include file="models/usersTable.xml" relativeToChangelogFile="true"/>
+    <include file="models/baskets.xml" relativeToChangelogFile="true"/>
+    <include file="models/productTypes.xml" relativeToChangelogFile="true"/>
+    <include file="models/products.xml" relativeToChangelogFile="true"/>
+    <include file="models/baskets_products.xml" relativeToChangelogFile="true"/>
+    <include file="models/adminLicencesTable.xml" relativeToChangelogFile="true"/>
+    <include file="models/documentTable.xml" relativeToChangelogFile="true"/>
 
     <!--    FIll database scripts -->
-    <include file="version/addDefaultLicenceKey.xml" relativeToChangelogFile="true"/>
+    <include file="fillData/addDefaultLicenceKey.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
