@@ -22,7 +22,7 @@ public class SingUpController {
         this.accountService = accountService;
     }
 
-    @GetMapping("/hello")
+    @GetMapping("/helloOld")
     public String helloAdmin(Principal principal, Model model) {
         model.addAttribute("name", principal.getName());
         Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();

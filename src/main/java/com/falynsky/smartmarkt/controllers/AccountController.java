@@ -3,6 +3,7 @@ package com.falynsky.smartmarkt.controllers;
 import com.falynsky.smartmarkt.models.Account;
 import com.falynsky.smartmarkt.models.DTO.AccountDTO;
 import com.falynsky.smartmarkt.repositories.AccountRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 @CrossOrigin
 @RestController
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/accounts")
 public class AccountController {
 
