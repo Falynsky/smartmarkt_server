@@ -26,4 +26,7 @@ public interface ProductTypeRepository extends JpaRepository<Product, Integer> {
 
     @Query("SELECT new com.falynsky.smartmarkt.models.DTO.ProductTypeDTO(pt.id, pt.name) FROM Product pt where pt.name = :productName")
     ProductTypeDTO retrieveProductAsDTObyName(@Param("productName") String productName);
+
+    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.ProductTypeDTO(pt.id, pt.name) FROM ProductType pt where pt.id IN :ids OR pt.name IN :names")
+    List<ProductTypeDTO> retrieveProductTypesAllAsDTO(@Param("ids") List<Integer> ids, @Param("names") List<String> names);
 }
