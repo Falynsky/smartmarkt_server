@@ -23,5 +23,7 @@ public class Product {
     public String name;
     @Column(name = "quantity", nullable = false)
     public float quantity;
+    @Column(name = "product_type_id", nullable = false)
+    public int productTypeId;
 }
 

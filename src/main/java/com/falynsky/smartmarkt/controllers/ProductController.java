@@ -5,6 +5,7 @@ import com.falynsky.smartmarkt.repositories.ProductRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -17,13 +18,20 @@ public class ProductController {
         this.productRepository = productRepository;
     }
 
-    @GetMapping("/{id}")
-    public ProductDTO gatProductById(@PathVariable("id") Integer id) {
+    @PostMapping("/id")
+    public ProductDTO gatProductById(@RequestBody Map<String, Object> map) {
+        Integer id = (Integer) map.get("id");
         return productRepository.retrieveProductAsDTObyId(id);
     }
 
     @GetMapping("/all")
     public List<ProductDTO> getAllProducts() {
         return productRepository.retrieveProductAsDTO();
+    }
+
+    @PostMapping("/typeId")
+    public List<ProductDTO> getAllProductsByTypeId(@RequestBody Map<String, Object> map) {
+        Integer id = (Integer) map.get("id");
+        return productRepository.retrieveProductAsDTObyTypeId(id);
     }
 }

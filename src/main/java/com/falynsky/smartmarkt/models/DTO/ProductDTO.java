@@ -14,6 +14,7 @@ public class ProductDTO {
     public int id;
     public String name;
     public float quantity;
+    public int productTypeId;
 
 }
 
