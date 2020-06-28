@@ -1,7 +1,9 @@
 package com.falynsky.smartmarkt.repositories;
 
+import com.falynsky.smartmarkt.models.Basket;
 import com.falynsky.smartmarkt.models.BasketProduct;
 import com.falynsky.smartmarkt.models.DTO.BasketProductDTO;
+import com.falynsky.smartmarkt.models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,6 +18,8 @@ public interface BasketProductRepository extends JpaRepository<BasketProduct, In
     Optional<BasketProduct> findById(int id);
 
     BasketProduct findFirstByOrderByIdDesc();
+
+    BasketProduct findFirstByProductIdAndBasketId(Product product, Basket basket);
 
     @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketProductDTO(b.id, b.basketId.id, b.productId.id) FROM BasketProduct b")
     List<BasketProductDTO> retrieveBasketProductAsDTO();

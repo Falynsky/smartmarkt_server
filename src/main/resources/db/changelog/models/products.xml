@@ -19,11 +19,13 @@
             <column name="id" type="int"/>
             <column name="name" type="varchar(255)"/>
             <column name="quantity" type="float"/>
+            <column name="quantity_type" type="varchar(255)"/>
             <column name="product_type_id" type="int"/>
         </createTable>
         <addNotNullConstraint tableName="products" columnName="id" columnDataType="int"/>
         <addNotNullConstraint tableName="products" columnName="name" columnDataType="varchar(255)"/>
         <addNotNullConstraint tableName="products" columnName="quantity" columnDataType="float"/>
+        <addNotNullConstraint tableName="products" columnName="quantity_type" columnDataType="varchar(255)"/>
         <addNotNullConstraint tableName="products" columnName="product_type_id" columnDataType="int"/>
         <addPrimaryKey tableName="products" columnNames="id"/>
         <addUniqueConstraint tableName="products" columnNames="name"/>

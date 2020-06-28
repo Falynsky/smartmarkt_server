@@ -16,6 +16,13 @@ public class BasketProduct {
     @Id
     @Column(name = "id")
     int id;
+
+    @Column(name = "quantity")
+    float quantity;
+
+    @Column(name = "quantity_type")
+    String quantityType;
+
     @ManyToOne
     @JoinColumn(name = "basket_id")
     Basket basketId;
