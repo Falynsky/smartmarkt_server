@@ -3,6 +3,7 @@ package com.falynsky.smartmarkt.services;
 import com.falynsky.smartmarkt.models.Basket;
 import com.falynsky.smartmarkt.models.BasketProduct;
 import com.falynsky.smartmarkt.models.Product;
+import com.falynsky.smartmarkt.models.User;
 import com.falynsky.smartmarkt.repositories.BasketProductRepository;
 import com.falynsky.smartmarkt.repositories.BasketRepository;
 import com.falynsky.smartmarkt.repositories.ProductRepository;
@@ -25,7 +26,7 @@ public class BasketProductService {
         this.basketRepository = basketRepository;
     }
 
-    public BasketProduct createAndAddBasketProduct(Map<String, Object> map) {
+    public BasketProduct createAndAddBasketProduct(Map<String, Object> map, Basket basket) {
         BasketProduct basketProduct = new BasketProduct();
 
         Integer id = getIdForNewBasketProduct(basketProductRepository);
@@ -37,7 +38,7 @@ public class BasketProductService {
         Product product = getProduct(map);
         basketProduct.setProductId(product);
 
-        Basket basket = getBasket(map);
+//        Basket basket = getBasket(map);
         basketProduct.setBasketId(basket);
 
         basketProduct.setQuantityType("szt.");
@@ -51,8 +52,15 @@ public class BasketProductService {
     }
 
     private Float getQuantity(Map<String, Object> map) {
-        Double quantityData = (Double) map.get("quantity");
-        return quantityData.floatValue();
+        Object quantityValue =  map.get("quantity");
+
+        Float quantity = null;
+        if (quantityValue instanceof Double) {
+            quantity = ((Double) quantityValue).floatValue();
+        } else if (quantityValue instanceof Integer) {
+            quantity = ((Integer) quantityValue).floatValue();
+        }
+        return quantity;
     }
 
     private Product getProduct(Map<String, Object> map) {

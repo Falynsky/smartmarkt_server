@@ -1,5 +1,6 @@
 package com.falynsky.smartmarkt.repositories;
 
+import com.falynsky.smartmarkt.models.Account;
 import com.falynsky.smartmarkt.models.DTO.UserDTO;
 import com.falynsky.smartmarkt.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +17,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByFirstNameAndLastName(String firstName, String lastName);
 
     User findFirstByOrderByIdDesc();
+
+    Optional<User> findFirstByAccountId(Account account);
 
     @Query("SELECT new com.falynsky.smartmarkt.models.DTO.UserDTO(u.id, u.firstName, u.lastName, u.accountId.id) FROM User u")
     List<UserDTO> retrieveUserAsDTO();
