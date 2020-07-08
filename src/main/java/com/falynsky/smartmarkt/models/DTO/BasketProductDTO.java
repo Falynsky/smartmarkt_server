@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 public class BasketProductDTO {
 
     int id;
+    float quantity;
+    String quantityType;
+    String name;
     int basketId;
     int productId;
-
 }
