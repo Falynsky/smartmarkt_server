@@ -43,10 +43,16 @@ public class BasketProductController {
     }
 
     @GetMapping("/getUserProducts")
-    public List<BasketProductDTO> getBasketProductsByUsername(
+    public Map<String, Object> getBasketProductsByUsername(
             @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
-        Basket basket = basketProductService.getUserBasket(userToken);
-        return basketProductRepository.retrieveBasketProductAsDTObyBasketId(basket.getId());
+
+        Basket basket = basketProductService.getUserBasketByUserToken(userToken);
+        List<Map<String, Object>> basketProductsData = basketProductService.getSelectedBasketProductsData(basket);
+
+        return Map.of(
+                "success", true,
+                "data", basketProductsData
+        );
     }
 
     @GetMapping("/product/{id}")

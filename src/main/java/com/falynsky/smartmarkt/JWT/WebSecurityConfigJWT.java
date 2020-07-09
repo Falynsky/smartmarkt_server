@@ -53,6 +53,8 @@ public class WebSecurityConfigJWT extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/auth/login").permitAll()
+                .antMatchers("/sing-up").permitAll()
+                .antMatchers("/register").permitAll()
                 .anyRequest().authenticated()
                 .and().
                 exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)

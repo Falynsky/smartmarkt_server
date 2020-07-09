@@ -2,12 +2,12 @@ package com.falynsky.smartmarkt.services;
 
 import com.falynsky.smartmarkt.JWT.JwtTokenUtil;
 import com.falynsky.smartmarkt.models.*;
+import com.falynsky.smartmarkt.models.DTO.BasketProductDTO;
 import com.falynsky.smartmarkt.repositories.*;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class BasketProductService {
@@ -36,13 +36,13 @@ public class BasketProductService {
     public BasketProduct getOrCreateBasketProduct(Map<String, Object> map, String userToken) throws Exception {
         Integer productId = (Integer) map.get("productId");
         Float quantity = getQuantity(map);
-        Basket basket = getUserBasket(userToken);
+        Basket basket = getUserBasketByUserToken(userToken);
         Product product = getSelectedProduct(productId);
         return updateOrCreateBasketProduct(map, quantity, basket, product);
     }
 
     @SneakyThrows
-    public Basket getUserBasket(String userToken) {
+    public Basket getUserBasketByUserToken(String userToken) {
         User user = getCurrentUser(userToken);
         return getCurrentUserBasket(user);
     }
@@ -143,4 +143,40 @@ public class BasketProductService {
         Integer productId = (Integer) map.get("productId");
         return productRepository.getOne(productId);
     }
+
+    public List<Map<String, Object>> getSelectedBasketProductsData(Basket basket) {
+        List<BasketProductDTO> basketProductDTOS =
+                basketProductRepository.retrieveBasketProductAsDTObyBasketId(basket.getId());
+        List<Map<String, Object>> basketProductsData = new ArrayList<>();
+
+        for (BasketProductDTO basketProductDTO : basketProductDTOS) {
+            Map<String, Object> productData = buildProductData(basketProductDTO);
+            basketProductsData.add(productData);
+        }
+        return basketProductsData;
+    }
+
+    private Map<String, Object> buildProductData(BasketProductDTO basketProductDTO) {
+        Map<String, Object> productData = new LinkedHashMap<>();
+        int id = basketProductDTO.getId();
+        float quantity = basketProductDTO.getQuantity();
+        int productId = basketProductDTO.getProductId();
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        Float price = null;
+        String currency = null;
+        String name = null;
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            price = product.getPrice();
+            currency = product.getCurrency();
+            name = product.getName();
+        }
+        productData.put("id", id);
+        productData.put("name", name);
+        productData.put("quantity", quantity);
+        productData.put("price", price);
+        productData.put("currency", currency);
+        return productData;
+    }
+
 }

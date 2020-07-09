@@ -22,20 +22,17 @@ public interface BasketProductRepository extends JpaRepository<BasketProduct, In
     Optional<BasketProduct> findFirstByProductIdAndBasketId(Product product, Basket basket);
 
     @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketProductDTO" +
-            "(b.id, b.quantity, b.quantityType, p.name,  b.basketId.id, b.productId.id)" +
-            " FROM BasketProduct b " +
-            "JOIN Product p ON  p.id = b.productId.id")
+            "(b.id, b.quantity, b.quantityType, b.basketId.id, b.productId.id)" +
+            " FROM BasketProduct b ")
     List<BasketProductDTO> retrieveBasketProductAsDTO();
 
     @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketProductDTO" +
-            "(b.id,  b.quantity, b.quantityType,p.name,  b.basketId.id, b.productId.id) " +
-            "FROM BasketProduct b  JOIN Product p ON  p.id = b.productId.id " +
-            "WHERE b.basketId.id = :basketId")
+            "(b.id,  b.quantity, b.quantityType,b.basketId.id, b.productId.id) " +
+            "FROM BasketProduct b WHERE b.basketId.id = :basketId")
     List<BasketProductDTO> retrieveBasketProductAsDTObyBasketId(@Param("basketId") Integer basketId);
 
     @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketProductDTO" +
-            "(b.id, b.quantity, b.quantityType, p.name, b.basketId.id, b.productId.id) " +
-            "FROM BasketProduct b  JOIN Product p ON  p.id = b.productId.id " +
-            "WHERE b.productId.id = :productId")
+            "(b.id, b.quantity, b.quantityType, b.basketId.id, b.productId.id) " +
+            "FROM BasketProduct b WHERE b.productId.id = :productId")
     BasketProductDTO retrieveBasketProductAsDTObyProductId(@Param("productId") Integer productId);
 }

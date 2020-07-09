@@ -23,6 +23,10 @@ public class Product {
     public String name;
     @Column(name = "quantity", nullable = false)
     public float quantity;
+    @Column(name = "price", nullable = false)
+    public float price;
+    @Column(name = "currency", nullable = false)
+    public String currency;
     @Column(name = "product_type_id", nullable = false)
     public int productTypeId;
 }

@@ -23,8 +23,8 @@
             <column name="product_id" type="int"/>
         </createTable>
         <addNotNullConstraint tableName="baskets_products" columnName="id" columnDataType="int"/>
-        <addNotNullConstraint tableName="products" columnName="quantity" columnDataType="float"/>
-        <addNotNullConstraint tableName="products" columnName="quantity_type" columnDataType="varchar(255)"/>
+        <addNotNullConstraint tableName="baskets_products" columnName="quantity" columnDataType="float"/>
+        <addNotNullConstraint tableName="baskets_products" columnName="quantity_type" columnDataType="varchar(255)"/>
         <addNotNullConstraint tableName="baskets_products" columnName="basket_id" columnDataType="int"/>
         <addNotNullConstraint tableName="baskets_products" columnName="product_id" columnDataType="int"/>
         <addPrimaryKey tableName="baskets_products" columnNames="id"/>
