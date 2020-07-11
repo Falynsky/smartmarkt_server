@@ -18,7 +18,7 @@ public class BasketProduct {
     int id;
 
     @Column(name = "quantity")
-    float quantity;
+    int quantity;
 
     @Column(name = "quantity_type")
     String quantityType;

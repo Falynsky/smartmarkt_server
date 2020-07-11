@@ -21,6 +21,7 @@ public interface BasketProductRepository extends JpaRepository<BasketProduct, In
 
     Optional<BasketProduct> findFirstByProductIdAndBasketId(Product product, Basket basket);
 
+
     @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketProductDTO" +
             "(b.id, b.quantity, b.quantityType, b.basketId.id, b.productId.id)" +
             " FROM BasketProduct b ")
@@ -35,4 +36,9 @@ public interface BasketProductRepository extends JpaRepository<BasketProduct, In
             "(b.id, b.quantity, b.quantityType, b.basketId.id, b.productId.id) " +
             "FROM BasketProduct b WHERE b.productId.id = :productId")
     BasketProductDTO retrieveBasketProductAsDTObyProductId(@Param("productId") Integer productId);
+
+    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketProductDTO" +
+            "(b.id, b.quantity, b.quantityType, b.basketId.id, b.productId.id) " +
+            "FROM BasketProduct b WHERE b.productId.id = :productId")
+    BasketProductDTO retrieveBasketProductAsDTObyBasketProductId(@Param("productId") Integer productId);
 }

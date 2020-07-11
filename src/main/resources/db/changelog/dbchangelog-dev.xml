@@ -8,11 +8,13 @@
     <include file="models/usersTable.xml" relativeToChangelogFile="true"/>
     <include file="models/baskets.xml" relativeToChangelogFile="true"/>
     <include file="models/productTypes.xml" relativeToChangelogFile="true"/>
+    <include file="models/documentTable.xml" relativeToChangelogFile="true"/>
     <include file="models/products.xml" relativeToChangelogFile="true"/>
     <include file="models/baskets_products.xml" relativeToChangelogFile="true"/>
     <include file="models/adminLicencesTable.xml" relativeToChangelogFile="true"/>
-    <include file="models/documentTable.xml" relativeToChangelogFile="true"/>
 
     <!--    FIll database scripts -->
     <include file="fillData/addDefaultLicenceKey.xml" relativeToChangelogFile="true"/>
+    <include file="fillData/addToProductTypes.xml" relativeToChangelogFile="true"/>
+    <include file="fillData/addToProducts.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

@@ -3,6 +3,7 @@ package com.falynsky.smartmarkt.controllers;
 import com.falynsky.smartmarkt.models.Basket;
 import com.falynsky.smartmarkt.models.BasketProduct;
 import com.falynsky.smartmarkt.models.DTO.BasketProductDTO;
+import com.falynsky.smartmarkt.models.Product;
 import com.falynsky.smartmarkt.repositories.*;
 import com.falynsky.smartmarkt.services.BasketProductService;
 import lombok.SneakyThrows;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -79,23 +81,66 @@ public class BasketProductController {
             @RequestBody Map<String, Object> map,
             @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
         BasketProduct basketProduct = basketProductService.getOrCreateBasketProduct(map, userToken);
-        Map<String, Object> body = new HashMap<>();
         try {
             basketProductRepository.save(basketProduct);
         } catch (Exception ex) {
-            return sendErrorResponse(body, ex);
+            return sendErrorResponse(ex);
         }
-        return setCorrectResponse(body);
+        return setCorrectResponse();
     }
 
-    private ResponseEntity<Map<String, Object>> sendErrorResponse(Map<String, Object> body, Exception ex) {
+    @SneakyThrows
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/removeOne")
+    public ResponseEntity<Map<String, Object>> removeOneFromBasket(
+            @RequestBody Map<String, Object> map,
+            @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
+        BasketProduct basketProduct = basketProductService.getOrCreateBasketProduct(map, userToken);
+        try {
+            if (basketProduct.getQuantity() == 1) {
+                basketProductRepository.delete(basketProduct);
+            } else {
+                int newQuantity = basketProduct.getQuantity() - 1;
+                basketProduct.setQuantity(newQuantity);
+                basketProductRepository.save(basketProduct);
+            }
+            basketProductRepository.save(basketProduct);
+        } catch (Exception ex) {
+            return sendErrorResponse(ex);
+        }
+        return setCorrectResponse();
+    }
+
+    @SneakyThrows
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/remove")
+    public ResponseEntity<Map<String, Object>> removeFromBasket(
+            @RequestBody Map<String, Object> map,
+            @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
+        Integer productId = (Integer) map.get("productId");
+        Basket basket = basketProductService.getUserBasketByUserToken(userToken);
+        Product product = basketProductService.getSelectedProduct(productId);
+        Optional<BasketProduct> optionalBasketProduct = basketProductRepository.findFirstByProductIdAndBasketId(product, basket);
+        BasketProduct basketProduct = optionalBasketProduct.get();
+        try {
+            basketProductRepository.delete(basketProduct);
+        } catch (Exception ex) {
+            return sendErrorResponse(ex);
+        }
+        return setCorrectResponse();
+    }
+
+    private ResponseEntity<Map<String, Object>> sendErrorResponse(Exception ex) {
+        Map<String, Object> body = new HashMap<>();
         body.put("success", "false");
         body.put("msg", ex.getMessage());
         return ResponseEntity.badRequest().body(body);
     }
 
-    private ResponseEntity<Map<String, Object>> setCorrectResponse(Map<String, Object> body) {
-        body.put("success", "true");
+    private ResponseEntity<Map<String, Object>> setCorrectResponse() {
+        Map<String, Object> body = new HashMap<>();
         return ResponseEntity.ok(body);
     }
+
+
 }

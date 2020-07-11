@@ -2,13 +2,13 @@ package com.falynsky.smartmarkt.controllers;
 
 import com.falynsky.smartmarkt.models.DTO.ProductDTO;
 import com.falynsky.smartmarkt.repositories.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -27,7 +27,12 @@ public class ProductController {
     @PostMapping("/id")
     public ProductDTO gatProductById(@RequestBody Map<String, Object> map) {
         Integer id = (Integer) map.get("id");
-        return productRepository.retrieveProductAsDTObyId(id);
+        Optional<ProductDTO> productDTO = productRepository.retrieveProductAsDTObyId(id);
+        if (productDTO.isPresent()) {
+            return productDTO.get();
+        } else {
+            return null;
+        }
     }
 
     @GetMapping("/all")

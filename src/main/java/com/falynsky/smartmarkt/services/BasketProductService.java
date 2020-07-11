@@ -3,11 +3,16 @@ package com.falynsky.smartmarkt.services;
 import com.falynsky.smartmarkt.JWT.JwtTokenUtil;
 import com.falynsky.smartmarkt.models.*;
 import com.falynsky.smartmarkt.models.DTO.BasketProductDTO;
+import com.falynsky.smartmarkt.models.DTO.ProductDTO;
 import com.falynsky.smartmarkt.repositories.*;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BasketProductService {
@@ -35,7 +40,7 @@ public class BasketProductService {
 
     public BasketProduct getOrCreateBasketProduct(Map<String, Object> map, String userToken) throws Exception {
         Integer productId = (Integer) map.get("productId");
-        Float quantity = getQuantity(map);
+        Integer quantity = getQuantity(map);
         Basket basket = getUserBasketByUserToken(userToken);
         Product product = getSelectedProduct(productId);
         return updateOrCreateBasketProduct(map, quantity, basket, product);
@@ -80,7 +85,7 @@ public class BasketProductService {
         }
     }
 
-    private Product getSelectedProduct(Integer productId) throws Exception {
+    public Product getSelectedProduct(Integer productId) throws Exception {
         Optional<Product> product = productRepository.findById(productId);
         if (product.isEmpty()) {
             throw new Exception("PRODUCT NOT FOUND");
@@ -89,14 +94,14 @@ public class BasketProductService {
     }
 
     private BasketProduct updateOrCreateBasketProduct(Map<String, Object> map,
-                                                      Float quantity,
+                                                      Integer quantity,
                                                       Basket basket,
                                                       Product product) {
         Optional<BasketProduct> optionalBasketProduct = basketProductRepository.findFirstByProductIdAndBasketId(product, basket);
         BasketProduct basketProduct;
         if (optionalBasketProduct.isPresent()) {
             basketProduct = optionalBasketProduct.get();
-            Float oldQuantity = basketProduct.getQuantity() + quantity;
+            Integer oldQuantity = basketProduct.getQuantity() + quantity;
             basketProduct.setQuantity(oldQuantity);
         } else {
             basketProduct = createAndAddBasketProduct(map, basket);
@@ -108,7 +113,7 @@ public class BasketProductService {
         BasketProduct basketProduct = new BasketProduct();
         Integer id = getIdForNewBasketProduct(basketProductRepository);
         basketProduct.setId(id);
-        Float quantity = getQuantity(map);
+        Integer quantity = getQuantity(map);
         basketProduct.setQuantity(quantity);
         Product product = getProduct(map);
         basketProduct.setProductId(product);
@@ -128,12 +133,10 @@ public class BasketProductService {
     }
 
     @SneakyThrows
-    private Float getQuantity(Map<String, Object> map) {
+    private Integer getQuantity(Map<String, Object> map) {
         Object quantityValue = map.get("quantity");
-        if (quantityValue instanceof Double) {
-            return ((Double) quantityValue).floatValue();
-        } else if (quantityValue instanceof Integer) {
-            return ((Integer) quantityValue).floatValue();
+        if (quantityValue instanceof Integer) {
+            return (Integer) quantityValue;
         } else {
             throw new Exception("NO QUANTITY");
         }
@@ -145,38 +148,39 @@ public class BasketProductService {
     }
 
     public List<Map<String, Object>> getSelectedBasketProductsData(Basket basket) {
+
         List<BasketProductDTO> basketProductDTOS =
                 basketProductRepository.retrieveBasketProductAsDTObyBasketId(basket.getId());
-        List<Map<String, Object>> basketProductsData = new ArrayList<>();
 
-        for (BasketProductDTO basketProductDTO : basketProductDTOS) {
-            Map<String, Object> productData = buildProductData(basketProductDTO);
-            basketProductsData.add(productData);
-        }
-        return basketProductsData;
+        return basketProductDTOS.stream()
+                .map(this::buildProductData)
+                .collect(Collectors.toList());
     }
 
     private Map<String, Object> buildProductData(BasketProductDTO basketProductDTO) {
-        Map<String, Object> productData = new LinkedHashMap<>();
-        int id = basketProductDTO.getId();
-        float quantity = basketProductDTO.getQuantity();
-        int productId = basketProductDTO.getProductId();
-        Optional<Product> optionalProduct = productRepository.findById(productId);
-        Float price = null;
-        String currency = null;
-        String name = null;
+
+        int basketProductDTOId = basketProductDTO.getProductId();
+        Optional<ProductDTO> optionalProduct = productRepository.retrieveProductAsDTObyId(basketProductDTOId);
+
         if (optionalProduct.isPresent()) {
-            Product product = optionalProduct.get();
-            price = product.getPrice();
-            currency = product.getCurrency();
-            name = product.getName();
+            int id = basketProductDTO.getId();
+            ProductDTO product = optionalProduct.get();
+            int productId = product.getId();
+            String name = product.getName();
+            int quantity = basketProductDTO.getQuantity();
+            Float price = product.getPrice();
+            String currency = product.getCurrency();
+
+            Map<String, Object> productData = new LinkedHashMap<>();
+            productData.put("id", id);
+            productData.put("productId", productId);
+            productData.put("name", name);
+            productData.put("quantity", quantity);
+            productData.put("price", price);
+            productData.put("currency", currency);
+            return productData;
         }
-        productData.put("id", id);
-        productData.put("name", name);
-        productData.put("quantity", quantity);
-        productData.put("price", price);
-        productData.put("currency", currency);
-        return productData;
+        return null;
     }
 
 }

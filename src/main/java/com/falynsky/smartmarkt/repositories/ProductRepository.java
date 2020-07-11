@@ -17,12 +17,12 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     Product findFirstByOrderByIdDesc();
 
-    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.ProductDTO(p.id, p.name, p.quantity, p.productTypeId) FROM Product p")
+    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.ProductDTO(p.id, p.name, p.quantity, p.price, p.currency, p.productTypeId, p.productInfo) FROM Product p")
     List<ProductDTO> retrieveProductAsDTO();
 
-    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.ProductDTO(p.id, p.name, p.quantity, p.productTypeId) FROM Product p where p.id = :productId")
-    ProductDTO retrieveProductAsDTObyId(@Param("productId") Integer productId);
+    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.ProductDTO(p.id, p.name, p.quantity, p.price, p.currency,p.productTypeId, p.productInfo) FROM Product p where p.id = :productId")
+    Optional<ProductDTO> retrieveProductAsDTObyId(@Param("productId") Integer productId);
 
-    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.ProductDTO(p.id, p.name, p.quantity, p.productTypeId) FROM Product p where p.productTypeId = :typeID")
+    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.ProductDTO(p.id, p.name, p.quantity,p.price, p.currency, p.productTypeId, p.productInfo) FROM Product p where p.productTypeId = :typeID")
     List<ProductDTO> retrieveProductAsDTObyTypeId(@Param("typeID") Integer typeID);
 }

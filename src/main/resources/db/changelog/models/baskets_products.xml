@@ -6,7 +6,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
 
-    <changeSet id="6" author="kfa">
+    <changeSet id="7" author="kfa">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists schemaName="dbo" tableName="baskets_products"/>
@@ -17,13 +17,13 @@
                 schemaName="dbo"
                 tableName="baskets_products">
             <column name="id" type="int"/>
-            <column name="quantity" type="float"/>
+            <column name="quantity" type="int"/>
             <column name="quantity_type" type="varchar(255)"/>
             <column name="basket_id" type="int"/>
             <column name="product_id" type="int"/>
         </createTable>
         <addNotNullConstraint tableName="baskets_products" columnName="id" columnDataType="int"/>
-        <addNotNullConstraint tableName="baskets_products" columnName="quantity" columnDataType="float"/>
+        <addNotNullConstraint tableName="baskets_products" columnName="quantity" columnDataType="int"/>
         <addNotNullConstraint tableName="baskets_products" columnName="quantity_type" columnDataType="varchar(255)"/>
         <addNotNullConstraint tableName="baskets_products" columnName="basket_id" columnDataType="int"/>
         <addNotNullConstraint tableName="baskets_products" columnName="product_id" columnDataType="int"/>
