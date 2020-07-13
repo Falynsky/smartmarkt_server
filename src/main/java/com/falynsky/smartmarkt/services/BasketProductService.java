@@ -43,7 +43,7 @@ public class BasketProductService {
     @Transactional(rollbackFor = Exception.class)
     public void updateOrCreateBasketProduct(Map<String, Object> map, String userToken) throws Exception {
         Integer productId = (Integer) map.get("productId");
-        Integer quantity = getQuantity(map);
+        int quantity = getQuantity(map);
         Basket basket = getUserBasketByUserToken(userToken);
         Product product = getSelectedProduct(productId);
 
@@ -57,7 +57,7 @@ public class BasketProductService {
         BasketProduct basketProduct;
         if (optionalBasketProduct.isPresent()) {
             basketProduct = optionalBasketProduct.get();
-            Integer oldQuantity = basketProduct.getQuantity() + quantity;
+            int oldQuantity = basketProduct.getQuantity() + quantity;
             basketProduct.setQuantity(oldQuantity);
         } else {
             basketProduct = createAndAddBasketProduct(map, basket);
