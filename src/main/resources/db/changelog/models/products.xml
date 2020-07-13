@@ -6,7 +6,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
 
-    <changeSet id="5" author="kfa">
+    <changeSet id="6" author="kfa">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists schemaName="dbo" tableName="products"/>
@@ -18,18 +18,32 @@
                 tableName="products">
             <column name="id" type="int"/>
             <column name="name" type="varchar(255)"/>
-            <column name="quantity" type="float"/>
+            <column name="quantity" type="int"/>
+            <column name="price" type="float"/>
+            <column name="currency" type="varchar(255)"/>
             <column name="product_type_id" type="int"/>
+            <column name="productInfo" type="varchar(255)"/>
+            <column name="document_id" type="int"/>
         </createTable>
         <addNotNullConstraint tableName="products" columnName="id" columnDataType="int"/>
         <addNotNullConstraint tableName="products" columnName="name" columnDataType="varchar(255)"/>
-        <addNotNullConstraint tableName="products" columnName="quantity" columnDataType="float"/>
+        <addNotNullConstraint tableName="products" columnName="quantity" columnDataType="int"/>
+        <addNotNullConstraint tableName="products" columnName="price" columnDataType="float"/>
+        <addNotNullConstraint tableName="products" columnName="currency" columnDataType="varchar(255)"/>
+        <addNotNullConstraint tableName="products" columnName="productInfo" columnDataType="varchar(255)"/>
         <addNotNullConstraint tableName="products" columnName="product_type_id" columnDataType="int"/>
+
         <addPrimaryKey tableName="products" columnNames="id"/>
+
         <addUniqueConstraint tableName="products" columnNames="name"/>
+
         <addForeignKeyConstraint baseTableName="products" baseColumnNames="product_type_id"
                                  constraintName="product_product_types_FK"
                                  referencedTableName="product_types"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="products" baseColumnNames="document_id"
+                                 constraintName="product_documents_FK"
+                                 referencedTableName="documents"
                                  referencedColumnNames="id"/>
     </changeSet>
 </databaseChangeLog>

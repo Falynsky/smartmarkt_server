@@ -2,6 +2,7 @@ package com.falynsky.smartmarkt.controllers;
 
 import com.falynsky.smartmarkt.models.Account;
 import com.falynsky.smartmarkt.models.Licence;
+import com.falynsky.smartmarkt.models.User;
 import com.falynsky.smartmarkt.services.AccountService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,16 +33,17 @@ public class SingUpController {
         return "hello";
     }
 
-    @GetMapping("/sing-up")
-    public String singUp(Model model) {
-        model.addAttribute("user", new Account());
+    @GetMapping("/sign-up")
+    public String signUp(Model model) {
+        model.addAttribute("account", new Account());
+        model.addAttribute("user", new User());
         model.addAttribute("licence", new Licence());
-        return "sing-up";
+        return "sign-up";
     }
 
     @PostMapping("/register")
-    public String register(Account account, Licence licence) {
-        accountService.createAndAddUser(account, licence);
-        return "sing-up";
+    public String register(Account newAccount, Licence newLicence, User newUser) {
+        accountService.createNewAccountData(newAccount, newLicence, newUser);
+        return "sign-up";
     }
 }

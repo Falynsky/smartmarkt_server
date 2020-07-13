@@ -2,6 +2,7 @@ package com.falynsky.smartmarkt.repositories;
 
 import com.falynsky.smartmarkt.models.Basket;
 import com.falynsky.smartmarkt.models.DTO.BasketDTO;
+import com.falynsky.smartmarkt.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +15,8 @@ import java.util.Optional;
 public interface BasketRepository extends JpaRepository<Basket, Integer> {
 
     Optional<Basket> findByName(String name);
+
+    Optional<Basket> findByUserId(User user);
 
     Basket findFirstByOrderByIdDesc();
 

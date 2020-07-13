@@ -1,7 +1,9 @@
 package com.falynsky.smartmarkt.repositories;
 
+import com.falynsky.smartmarkt.models.Basket;
 import com.falynsky.smartmarkt.models.BasketProduct;
 import com.falynsky.smartmarkt.models.DTO.BasketProductDTO;
+import com.falynsky.smartmarkt.models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,12 +19,26 @@ public interface BasketProductRepository extends JpaRepository<BasketProduct, In
 
     BasketProduct findFirstByOrderByIdDesc();
 
-    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketProductDTO(b.id, b.basketId.id, b.productId.id) FROM BasketProduct b")
+    Optional<BasketProduct> findFirstByProductIdAndBasketId(Product product, Basket basket);
+
+
+    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketProductDTO" +
+            "(b.id, b.quantity, b.quantityType, b.basketId.id, b.productId.id)" +
+            " FROM BasketProduct b ")
     List<BasketProductDTO> retrieveBasketProductAsDTO();
 
-    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketProductDTO(b.id, b.basketId.id, b.productId.id) FROM BasketProduct b where b.basketId.id = :basketId")
-    BasketProductDTO retrieveBasketProductAsDTObyBasketId(@Param("basketId") Integer basketId);
+    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketProductDTO" +
+            "(b.id,  b.quantity, b.quantityType,b.basketId.id, b.productId.id) " +
+            "FROM BasketProduct b WHERE b.basketId.id = :basketId")
+    List<BasketProductDTO> retrieveBasketProductAsDTObyBasketId(@Param("basketId") Integer basketId);
 
-    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketProductDTO(b.id, b.basketId.id, b.productId.id) FROM BasketProduct b where b.productId.id = :productId")
+    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketProductDTO" +
+            "(b.id, b.quantity, b.quantityType, b.basketId.id, b.productId.id) " +
+            "FROM BasketProduct b WHERE b.productId.id = :productId")
     BasketProductDTO retrieveBasketProductAsDTObyProductId(@Param("productId") Integer productId);
+
+    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketProductDTO" +
+            "(b.id, b.quantity, b.quantityType, b.basketId.id, b.productId.id) " +
+            "FROM BasketProduct b WHERE b.productId.id = :productId")
+    BasketProductDTO retrieveBasketProductAsDTObyBasketProductId(@Param("productId") Integer productId);
 }

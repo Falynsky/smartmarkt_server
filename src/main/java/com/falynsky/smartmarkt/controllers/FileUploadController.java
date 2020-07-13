@@ -71,7 +71,8 @@ public class FileUploadController {
 
     @GetMapping("/download/{fileName:.+}/db")
     public ResponseEntity downloadFromDatabase(@PathVariable String fileName) {
-        Document document = documentRepository.findByDocName(fileName);
+        String[] fileNameType = fileName.split("\\.");
+        Document document = documentRepository.findByDocName(fileNameType[0]);
         String mimeType = getMimeType(document);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(mimeType))
