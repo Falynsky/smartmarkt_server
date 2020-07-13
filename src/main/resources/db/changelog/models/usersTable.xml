@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+<changeSet id="2" author="kfa">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists schemaName="dbo" tableName="users"/>
+            </not>
+        </preConditions>
+        <comment>Create account table</comment>
+        <createTable schemaName="dbo" tableName="users">
+            <column name="id" type="int"/>
+            <column name="first_name" type="varchar(255)"/>
+            <column name="last_name" type="varchar(255)"/>
+            <column name="account_id" type="int"/>
+        </createTable>
+
+        <addNotNullConstraint tableName="users" columnName="id" columnDataType="int"/>
+        <addNotNullConstraint tableName="users" columnName="first_name" columnDataType="varchar(255)"/>
+        <addNotNullConstraint tableName="users" columnName="last_name" columnDataType="varchar(255)"/>
+        <addNotNullConstraint tableName="users" columnName="account_id" columnDataType="int"/>
+        <addPrimaryKey tableName="users" columnNames="id"/>
+        <addUniqueConstraint tableName="users" columnNames="account_id"/>
+        <addForeignKeyConstraint baseTableName="users" baseColumnNames="account_id" constraintName="users_accounts_FK"
+                                 referencedTableName="accounts"
+                                 referencedColumnNames="id"/>
+
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,13 +1,15 @@
 package com.falynsky.smartmarkt.controllers;
 
-import com.falynsky.smartmarkt.models.AppUser;
+import com.falynsky.smartmarkt.models.Account;
 import com.falynsky.smartmarkt.models.Licence;
-import com.falynsky.smartmarkt.services.AppUsersService;
+import com.falynsky.smartmarkt.models.User;
+import com.falynsky.smartmarkt.services.AccountService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
 import java.util.Collection;
@@ -15,13 +17,13 @@ import java.util.Collection;
 @Controller
 public class SingUpController {
 
-    private AppUsersService appUsersService;
+    private final AccountService accountService;
 
-    public SingUpController(AppUsersService appUsersService) {
-        this.appUsersService = appUsersService;
+    public SingUpController(AccountService accountService) {
+        this.accountService = accountService;
     }
 
-    @GetMapping("/hello")
+    @GetMapping("/helloOld")
     public String helloAdmin(Principal principal, Model model) {
         model.addAttribute("name", principal.getName());
         Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
@@ -31,18 +33,17 @@ public class SingUpController {
         return "hello";
     }
 
-    @GetMapping("/sing-up")
-    public String singUp(Model model) {
-        model.addAttribute("user", new AppUser());
+    @GetMapping("/sign-up")
+    public String signUp(Model model) {
+        model.addAttribute("account", new Account());
+        model.addAttribute("user", new User());
         model.addAttribute("licence", new Licence());
-        return "sing-up";
+        return "sign-up";
     }
 
     @PostMapping("/register")
-    public String register(AppUser appUser, Licence licence) {
-        appUsersService.createAndAddUser(appUser, licence);
-        return "sing-up";
+    public String register(Account newAccount, Licence newLicence, User newUser) {
+        accountService.createNewAccountData(newAccount, newLicence, newUser);
+        return "sign-up";
     }
-
-
 }
