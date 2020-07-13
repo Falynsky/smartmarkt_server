@@ -3,11 +3,11 @@ package com.falynsky.smartmarkt.controllers;
 import com.falynsky.smartmarkt.models.Basket;
 import com.falynsky.smartmarkt.models.BasketProduct;
 import com.falynsky.smartmarkt.models.DTO.BasketProductDTO;
-import com.falynsky.smartmarkt.models.Product;
 import com.falynsky.smartmarkt.repositories.*;
 import com.falynsky.smartmarkt.services.BasketProductService;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -67,26 +66,47 @@ public class BasketProductController {
         return basketProductRepository.retrieveBasketProductAsDTO();
     }
 
-    @GetMapping("/log")
-    public void log() {
-        log.info("An INFO Message");
-        log.warn("A WARN Message");
-        log.error("An ERROR Message");
-    }
-
     @SneakyThrows
     @Transactional(rollbackFor = Exception.class)
     @PostMapping("/add")
     public ResponseEntity<Map<String, Object>> addToBasket(
             @RequestBody Map<String, Object> map,
             @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
-        BasketProduct basketProduct = basketProductService.getOrCreateBasketProduct(map, userToken);
+
+        basketProductService.updateOrCreateBasketProduct(map, userToken);
+        return sendCorrectResponse();
+    }
+
+    @SneakyThrows
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/addOne")
+    public ResponseEntity<Map<String, Object>> addOneToBasket(
+            @RequestBody Map<String, Object> map,
+            @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
+
+
         try {
-            basketProductRepository.save(basketProduct);
+            basketProductService.addOneToBasketProduct(map, userToken);
+
         } catch (Exception ex) {
-            return sendErrorResponse(ex);
+            return sendErrorResponse(ex.getMessage());
         }
-        return setCorrectResponse();
+        return sendCorrectResponse();
+    }
+
+
+    @SneakyThrows
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/remove")
+    public ResponseEntity<Map<String, Object>> removeFromBasket(
+            @RequestBody Map<String, Object> map,
+            @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
+        try {
+            basketProductService.removeProductFromBasket(map, userToken);
+        } catch (Exception ex) {
+            return sendErrorResponse(ex.getMessage());
+        }
+        return sendCorrectResponse();
     }
 
     @SneakyThrows
@@ -95,52 +115,41 @@ public class BasketProductController {
     public ResponseEntity<Map<String, Object>> removeOneFromBasket(
             @RequestBody Map<String, Object> map,
             @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
-        BasketProduct basketProduct = basketProductService.getOrCreateBasketProduct(map, userToken);
+        BasketProduct basketProduct = basketProductService.getBasketProduct(map, userToken);
+        if (basketProduct == null) {
+            return elementNotFoundResponse();
+        }
         try {
             if (basketProduct.getQuantity() == 1) {
                 basketProductRepository.delete(basketProduct);
-            } else {
+            } else if (basketProduct.getQuantity() > 1) {
                 int newQuantity = basketProduct.getQuantity() - 1;
                 basketProduct.setQuantity(newQuantity);
                 basketProductRepository.save(basketProduct);
             }
-            basketProductRepository.save(basketProduct);
         } catch (Exception ex) {
-            return sendErrorResponse(ex);
+            return sendErrorResponse(ex.getMessage());
         }
-        return setCorrectResponse();
+        return sendCorrectResponse();
     }
 
-    @SneakyThrows
-    @Transactional(rollbackFor = Exception.class)
-    @PostMapping("/remove")
-    public ResponseEntity<Map<String, Object>> removeFromBasket(
-            @RequestBody Map<String, Object> map,
-            @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
-        Integer productId = (Integer) map.get("productId");
-        Basket basket = basketProductService.getUserBasketByUserToken(userToken);
-        Product product = basketProductService.getSelectedProduct(productId);
-        Optional<BasketProduct> optionalBasketProduct = basketProductRepository.findFirstByProductIdAndBasketId(product, basket);
-        BasketProduct basketProduct = optionalBasketProduct.get();
-        try {
-            basketProductRepository.delete(basketProduct);
-        } catch (Exception ex) {
-            return sendErrorResponse(ex);
-        }
-        return setCorrectResponse();
-    }
-
-    private ResponseEntity<Map<String, Object>> sendErrorResponse(Exception ex) {
+    private ResponseEntity<Map<String, Object>> sendErrorResponse(String msg) {
         Map<String, Object> body = new HashMap<>();
         body.put("success", "false");
-        body.put("msg", ex.getMessage());
-        return ResponseEntity.badRequest().body(body);
+        body.put("msg", msg);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
 
-    private ResponseEntity<Map<String, Object>> setCorrectResponse() {
+    private ResponseEntity<Map<String, Object>> sendCorrectResponse() {
         Map<String, Object> body = new HashMap<>();
         return ResponseEntity.ok(body);
     }
 
+    private ResponseEntity<Map<String, Object>> elementNotFoundResponse() {
+        Map<String, Object> body = new HashMap<>();
+        body.put("success", "false");
+        body.put("msg", "ObjectNotFound");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+    }
 
 }

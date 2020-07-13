@@ -1,12 +1,14 @@
 package com.falynsky.smartmarkt.services;
 
 import com.falynsky.smartmarkt.JWT.JwtTokenUtil;
+import com.falynsky.smartmarkt.exceptions.NotEnoughQuantity;
 import com.falynsky.smartmarkt.models.*;
 import com.falynsky.smartmarkt.models.DTO.BasketProductDTO;
 import com.falynsky.smartmarkt.models.DTO.ProductDTO;
 import com.falynsky.smartmarkt.repositories.*;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,12 +40,34 @@ public class BasketProductService {
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
-    public BasketProduct getOrCreateBasketProduct(Map<String, Object> map, String userToken) throws Exception {
+    @Transactional(rollbackFor = Exception.class)
+    public void updateOrCreateBasketProduct(Map<String, Object> map, String userToken) throws Exception {
         Integer productId = (Integer) map.get("productId");
         Integer quantity = getQuantity(map);
         Basket basket = getUserBasketByUserToken(userToken);
         Product product = getSelectedProduct(productId);
-        return updateOrCreateBasketProduct(map, quantity, basket, product);
+
+        Optional<BasketProduct> optionalBasketProduct = basketProductRepository.findFirstByProductIdAndBasketId(product, basket);
+
+        int productQuantity = product.getQuantity();
+        if (productQuantity < quantity) {
+            throw new NotEnoughQuantity();
+        }
+
+        BasketProduct basketProduct;
+        if (optionalBasketProduct.isPresent()) {
+            basketProduct = optionalBasketProduct.get();
+            Integer oldQuantity = basketProduct.getQuantity() + quantity;
+            basketProduct.setQuantity(oldQuantity);
+        } else {
+            basketProduct = createAndAddBasketProduct(map, basket);
+        }
+
+        int newQuantity = product.getQuantity() - quantity;
+        product.setQuantity(newQuantity);
+        productRepository.save(product);
+        basketProductRepository.save(basketProduct);
+
     }
 
     @SneakyThrows
@@ -93,20 +117,22 @@ public class BasketProductService {
         return product.get();
     }
 
-    private BasketProduct updateOrCreateBasketProduct(Map<String, Object> map,
-                                                      Integer quantity,
-                                                      Basket basket,
-                                                      Product product) {
+    public BasketProduct getBasketProduct(Map<String, Object> map, String userToken) throws Exception {
+        Integer productId = (Integer) map.get("productId");
+        Basket basket = getUserBasketByUserToken(userToken);
+        Product product = getSelectedProduct(productId);
         Optional<BasketProduct> optionalBasketProduct = basketProductRepository.findFirstByProductIdAndBasketId(product, basket);
-        BasketProduct basketProduct;
-        if (optionalBasketProduct.isPresent()) {
-            basketProduct = optionalBasketProduct.get();
-            Integer oldQuantity = basketProduct.getQuantity() + quantity;
-            basketProduct.setQuantity(oldQuantity);
-        } else {
-            basketProduct = createAndAddBasketProduct(map, basket);
-        }
-        return basketProduct;
+        return optionalBasketProduct.orElse(null);
+    }
+
+    public void removeProductFromBasket(Map<String, Object> map, String userToken) throws Exception {
+        BasketProduct basketProduct = getBasketProduct(map, userToken);
+        Integer productId = (Integer) map.get("productId");
+        Product product = getSelectedProduct(productId);
+        int basketProductQuantity = product.getQuantity() + basketProduct.getQuantity();
+        product.setQuantity(basketProductQuantity);
+        productRepository.save(product);
+        basketProductRepository.delete(basketProduct);
     }
 
     public BasketProduct createAndAddBasketProduct(Map<String, Object> map, Basket basket) {
@@ -183,4 +209,13 @@ public class BasketProductService {
         return null;
     }
 
+    public void addOneToBasketProduct(Map<String, Object> map, String userToken) throws Exception {
+        BasketProduct basketProduct = getBasketProduct(map, userToken);
+        if (basketProduct == null) {
+            throw new Exception("No element found");
+        }
+        int newQuantity = basketProduct.getQuantity() + 1;
+        basketProduct.setQuantity(newQuantity);
+        basketProductRepository.save(basketProduct);
+    }
 }
