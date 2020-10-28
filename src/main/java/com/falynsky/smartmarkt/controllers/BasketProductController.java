@@ -45,15 +45,18 @@ public class BasketProductController {
 
     @GetMapping("/getUserProducts")
     public Map<String, Object> getBasketProductsByUsername(
-            @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
+            @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) throws Exception {
 
         Basket basket = basketProductService.getUserBasketByUserToken(userToken);
         List<Map<String, Object>> basketProductsData = basketProductService.getSelectedBasketProductsData(basket);
 
-        return Map.of(
-                "success", true,
-                "data", basketProductsData
-        );
+        return new HashMap<String, Object>() {
+            {
+                put("success", true);
+                put("data", basketProductsData);
+            }
+        };
+
     }
 
     @GetMapping("/product/{id}")
@@ -73,7 +76,11 @@ public class BasketProductController {
             @RequestBody Map<String, Object> map,
             @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
 
-        basketProductService.updateOrCreateBasketProduct(map, userToken);
+        try {
+            basketProductService.updateOrCreateBasketProduct(map, userToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return sendCorrectResponse();
     }
 
@@ -114,7 +121,7 @@ public class BasketProductController {
     @PostMapping("/removeOne")
     public ResponseEntity<Map<String, Object>> removeOneFromBasket(
             @RequestBody Map<String, Object> map,
-            @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
+            @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) throws Exception {
         BasketProduct basketProduct = basketProductService.getBasketProduct(map, userToken);
         if (basketProduct == null) {
             return elementNotFoundResponse();
