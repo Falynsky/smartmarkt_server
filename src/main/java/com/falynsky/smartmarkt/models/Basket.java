@@ -8,10 +8,15 @@ import javax.persistence.*;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "baskets")
 public class Basket {
+
+    public Basket(int id, String name, User userId) {
+        this.id = id;
+        this.name = name;
+        this.userId = userId;
+    }
 
     @Id
     @Column(name = "id")
@@ -21,5 +26,29 @@ public class Basket {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     public User userId;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public User getUserId() {
+        return userId;
+    }
+
+    public void setUserId(User userId) {
+        this.userId = userId;
+    }
 }
 

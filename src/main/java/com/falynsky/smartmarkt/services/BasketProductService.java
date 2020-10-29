@@ -71,7 +71,7 @@ public class BasketProductService {
     }
 
     @SneakyThrows
-    public Basket getUserBasketByUserToken(String userToken) {
+    public Basket getUserBasketByUserToken(String userToken) throws Exception {
         User user = getCurrentUser(userToken);
         return getCurrentUserBasket(user);
     }
@@ -85,7 +85,7 @@ public class BasketProductService {
         String currentUserUsername = jwtTokenUtil.getUsernameFromToken(userToken.substring(5));
 
         Optional<Account> optionalAccount = accountRepository.findByUsername(currentUserUsername);
-        if (optionalAccount.isEmpty()) {
+        if (!optionalAccount.isPresent()) {
             throw new Exception("ACCOUNT NOT FOUND");
         }
         return optionalAccount.get();
@@ -93,7 +93,7 @@ public class BasketProductService {
 
     private User getCurrentUserByAccount(Account account) throws Exception {
         Optional<User> optionalUser = userRepository.findFirstByAccountId(account);
-        if (optionalUser.isEmpty()) {
+        if (!optionalUser.isPresent()) {
             throw new Exception("USER NOT FOUND");
         }
         return optionalUser.get();
@@ -111,7 +111,7 @@ public class BasketProductService {
 
     public Product getSelectedProduct(Integer productId) throws Exception {
         Optional<Product> product = productRepository.findById(productId);
-        if (product.isEmpty()) {
+        if (!product.isPresent()) {
             throw new Exception("PRODUCT NOT FOUND");
         }
         return product.get();
@@ -135,7 +135,7 @@ public class BasketProductService {
         basketProductRepository.delete(basketProduct);
     }
 
-    public BasketProduct createAndAddBasketProduct(Map<String, Object> map, Basket basket) {
+    public BasketProduct createAndAddBasketProduct(Map<String, Object> map, Basket basket) throws Exception {
         BasketProduct basketProduct = new BasketProduct();
         Integer id = getIdForNewBasketProduct(basketProductRepository);
         basketProduct.setId(id);
@@ -159,7 +159,7 @@ public class BasketProductService {
     }
 
     @SneakyThrows
-    private Integer getQuantity(Map<String, Object> map) {
+    private Integer getQuantity(Map<String, Object> map) throws Exception {
         Object quantityValue = map.get("quantity");
         if (quantityValue instanceof Integer) {
             return (Integer) quantityValue;

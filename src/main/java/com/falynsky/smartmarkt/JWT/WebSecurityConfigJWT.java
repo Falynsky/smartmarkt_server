@@ -54,6 +54,7 @@ public class WebSecurityConfigJWT extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/auth/login").permitAll()
                 .antMatchers("/sing-up").permitAll()
+                .antMatchers("/signUp/register").permitAll()
                 .antMatchers("/register").permitAll()
                 .anyRequest().authenticated()
                 .and().
