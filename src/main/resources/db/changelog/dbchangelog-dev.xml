@@ -4,17 +4,17 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <!-- Create tables-->
-    <include file="models/accountsTable.xml" relativeToChangelogFile="true"/>
-    <include file="models/usersTable.xml" relativeToChangelogFile="true"/>
-    <include file="models/baskets.xml" relativeToChangelogFile="true"/>
-    <include file="models/productTypes.xml" relativeToChangelogFile="true"/>
-    <include file="models/documentTable.xml" relativeToChangelogFile="true"/>
-    <include file="models/products.xml" relativeToChangelogFile="true"/>
-    <include file="models/baskets_products.xml" relativeToChangelogFile="true"/>
-    <include file="models/adminLicencesTable.xml" relativeToChangelogFile="true"/>
+    <include file="createTablesFiles/accountsTable.xml" relativeToChangelogFile="true"/>
+    <include file="createTablesFiles/usersTable.xml" relativeToChangelogFile="true"/>
+    <include file="createTablesFiles/baskets.xml" relativeToChangelogFile="true"/>
+    <include file="createTablesFiles/productTypes.xml" relativeToChangelogFile="true"/>
+    <include file="createTablesFiles/documentTable.xml" relativeToChangelogFile="true"/>
+    <include file="createTablesFiles/products.xml" relativeToChangelogFile="true"/>
+    <include file="createTablesFiles/baskets_products.xml" relativeToChangelogFile="true"/>
+    <include file="createTablesFiles/adminLicencesTable.xml" relativeToChangelogFile="true"/>
 
     <!--    FIll database scripts -->
-    <include file="fillData/addDefaultLicenceKey.xml" relativeToChangelogFile="true"/>
-    <include file="fillData/addToProductTypes.xml" relativeToChangelogFile="true"/>
-    <include file="fillData/addToProducts.xml" relativeToChangelogFile="true"/>
+    <include file="fillDatabase/addDefaultLicenceKey.xml" relativeToChangelogFile="true"/>
+    <include file="fillDatabase/addToProductTypes.xml" relativeToChangelogFile="true"/>
+    <include file="fillDatabase/addToProducts.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

@@ -5,9 +5,9 @@ import com.falynsky.smartmarkt.models.BasketProduct;
 import com.falynsky.smartmarkt.models.DTO.BasketProductDTO;
 import com.falynsky.smartmarkt.repositories.*;
 import com.falynsky.smartmarkt.services.BasketProductService;
+import com.falynsky.smartmarkt.services.ResponseMsgService;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -29,12 +29,13 @@ public class BasketProductController {
     UserRepository userRepository;
     BasketProductService basketProductService;
 
-    public BasketProductController(BasketProductRepository basketProductRepository,
-                                   BasketRepository basketRepository,
-                                   ProductRepository productRepository,
-                                   BasketProductService basketProductService,
-                                   AccountRepository accountRepository,
-                                   UserRepository userRepository) {
+    public BasketProductController(
+            BasketProductRepository basketProductRepository,
+            BasketRepository basketRepository,
+            ProductRepository productRepository,
+            BasketProductService basketProductService,
+            AccountRepository accountRepository,
+            UserRepository userRepository) {
         this.basketProductRepository = basketProductRepository;
         this.basketRepository = basketRepository;
         this.productRepository = productRepository;
@@ -81,7 +82,7 @@ public class BasketProductController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return sendCorrectResponse();
+        return ResponseMsgService.sendCorrectResponse();
     }
 
     @SneakyThrows
@@ -91,14 +92,12 @@ public class BasketProductController {
             @RequestBody Map<String, Object> map,
             @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
 
-
         try {
             basketProductService.addOneToBasketProduct(map, userToken);
-
         } catch (Exception ex) {
-            return sendErrorResponse(ex.getMessage());
+            return ResponseMsgService.errorResponse(ex.getMessage());
         }
-        return sendCorrectResponse();
+        return ResponseMsgService.sendCorrectResponse();
     }
 
 
@@ -111,9 +110,9 @@ public class BasketProductController {
         try {
             basketProductService.removeProductFromBasket(map, userToken);
         } catch (Exception ex) {
-            return sendErrorResponse(ex.getMessage());
+            return ResponseMsgService.errorResponse(ex.getMessage());
         }
-        return sendCorrectResponse();
+        return ResponseMsgService.sendCorrectResponse();
     }
 
     @SneakyThrows
@@ -124,7 +123,7 @@ public class BasketProductController {
             @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) throws Exception {
         BasketProduct basketProduct = basketProductService.getBasketProduct(map, userToken);
         if (basketProduct == null) {
-            return elementNotFoundResponse();
+            return ResponseMsgService.elementNotFoundResponse();
         }
         try {
             if (basketProduct.getQuantity() == 1) {
@@ -135,28 +134,9 @@ public class BasketProductController {
                 basketProductRepository.save(basketProduct);
             }
         } catch (Exception ex) {
-            return sendErrorResponse(ex.getMessage());
+            return ResponseMsgService.errorResponse(ex.getMessage());
         }
-        return sendCorrectResponse();
-    }
-
-    private ResponseEntity<Map<String, Object>> sendErrorResponse(String msg) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("success", "false");
-        body.put("msg", msg);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
-    }
-
-    private ResponseEntity<Map<String, Object>> sendCorrectResponse() {
-        Map<String, Object> body = new HashMap<>();
-        return ResponseEntity.ok(body);
-    }
-
-    private ResponseEntity<Map<String, Object>> elementNotFoundResponse() {
-        Map<String, Object> body = new HashMap<>();
-        body.put("success", "false");
-        body.put("msg", "ObjectNotFound");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+        return ResponseMsgService.sendCorrectResponse();
     }
 
 }

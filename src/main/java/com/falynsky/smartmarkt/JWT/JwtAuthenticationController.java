@@ -1,5 +1,6 @@
 package com.falynsky.smartmarkt.JWT;
 
+import com.falynsky.smartmarkt.services.ResponseMsgService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -28,10 +29,16 @@ public class JwtAuthenticationController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 
-        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        String username = authenticationRequest.getUsername();
+        String password = authenticationRequest.getPassword();
 
-        final UserDetails userDetails = userDetailsService
-                .loadUserByUsername(authenticationRequest.getUsername());
+        authenticate(username, password);
+
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+        if (userDetails == null) {
+            return ResponseMsgService.errorResponse("No UserDetails found!");
+        }
 
         final String token = jwtTokenUtil.generateToken(userDetails);
 
@@ -40,7 +47,9 @@ public class JwtAuthenticationController {
 
     private void authenticate(String username, String password) throws Exception {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(username, password);
+            authenticationManager.authenticate(authentication);
         } catch (DisabledException e) {
             throw new Exception("USER_DISABLED", e);
         } catch (BadCredentialsException e) {

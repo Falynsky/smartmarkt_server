@@ -71,35 +71,35 @@ public class AccountService {
     }
 
     private void createNewUser(Account account, User user) {
-        Integer newUserId = getIdForNewUser();
+        int newUserId = getIdForNewUser();
         user.setId(newUserId);
         user.setAccountId(account);
 
         userRepository.save(user);
     }
 
-    private Integer getIdForNewUser() {
+    private int getIdForNewUser() {
         User lastUser = userRepository.findFirstByOrderByIdDesc();
         if (lastUser == null) {
             return 1;
         }
-        Integer lastId = lastUser.getId();
+        int lastId = lastUser.getId();
         return ++lastId;
     }
 
     private void createNewUserBasket(Account account, User user) {
-        Integer newBasketId = getIdForNewBasket();
+        int newBasketId = getIdForNewBasket();
         String userBasketName = account.getUsername().toUpperCase() + "_BASKET";
         Basket newUserBasket = new Basket(newBasketId, userBasketName, user);
         basketRepository.save(newUserBasket);
     }
 
-    private Integer getIdForNewBasket() {
+    private int getIdForNewBasket() {
         Basket lastUser = basketRepository.findFirstByOrderByIdDesc();
         if (lastUser == null) {
             return 1;
         }
-        Integer lastId = lastUser.getId();
+        int lastId = lastUser.getId();
         return ++lastId;
     }
 }

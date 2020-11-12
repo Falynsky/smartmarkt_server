@@ -8,26 +8,32 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Objects;
 
 @Service
 public class DocumentService {
 
     DocumentRepository documentRepository;
-    private String fileBasePath = "C:\\Users\\kamil\\Desktop\\SmartMarktProject\\smartmarkt\\src\\main\\resources\\files\\";
+    final int FILE_NAME_INDEX = 0;
+    final int FILE_TYPE_INDEX = 1;
 
     public DocumentService(DocumentRepository documentRepository) {
         this.documentRepository = documentRepository;
     }
 
     public String uploadDocumentLocally(@RequestParam("file") MultipartFile file) {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String originalFilename = file.getOriginalFilename();
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(originalFilename));
+        String fileBasePath = "C:\\Users\\kamil\\Desktop\\SmartMarktProject\\smartmarkt\\src\\main\\resources\\files\\";
         Path path = Paths.get(fileBasePath + fileName);
         try {
-            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            final InputStream inputStream = file.getInputStream();
+            Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -36,10 +42,13 @@ public class DocumentService {
 
     public String saveDocumentToDatabase(@RequestParam("file") MultipartFile file) {
         Document doc = new Document();
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String originalFilename = file.getOriginalFilename();
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(originalFilename));
         String[] fileNameType = fileName.split("\\.");
-        doc.setDocName(fileNameType[0]);
-        doc.setDocType(fileNameType[1]);
+
+        doc.setDocName(fileNameType[FILE_NAME_INDEX]);
+
+        doc.setDocType(fileNameType[FILE_TYPE_INDEX]);
         try {
             doc.setFileBytes(file.getBytes());
         } catch (IOException e) {

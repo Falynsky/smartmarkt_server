@@ -36,7 +36,7 @@ public class FileUploadController {
 
 
     @PostMapping("/upload")
-    public ResponseEntity uploadToLocalFileSystem(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> uploadToLocalFileSystem(@RequestParam("file") MultipartFile file) {
         String fileName = documentService.uploadDocumentLocally(file);
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/files/download/")
@@ -46,7 +46,7 @@ public class FileUploadController {
     }
 
     @PostMapping("/multi-upload")
-    public ResponseEntity multiUpload(@RequestParam("files") MultipartFile[] files) {
+    public ResponseEntity<List<Object>> multiUpload(@RequestParam("files") MultipartFile[] files) {
         List<Object> fileDownloadUrls = new ArrayList<>();
         Arrays.stream(files)
                 .forEach(file -> fileDownloadUrls.add(uploadToLocalFileSystem(file).getBody()));
@@ -54,13 +54,13 @@ public class FileUploadController {
     }
 
     @PostMapping("/upload-extra-param")
-    public ResponseEntity uploadWithExtraParams(@RequestParam("file") MultipartFile file, @RequestParam String extraParam) {
+    public ResponseEntity<String> uploadWithExtraParams(@RequestParam("file") MultipartFile file, @RequestParam String extraParam) {
         logger.info("Extra param " + extraParam);
         return uploadToLocalFileSystem(file);
     }
 
     @PostMapping("/upload/db")
-    public ResponseEntity uploadToDatabase(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> uploadToDatabase(@RequestParam("file") MultipartFile file) {
         String fileName = documentService.saveDocumentToDatabase(file);
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/files/download/")
@@ -70,7 +70,7 @@ public class FileUploadController {
     }
 
     @GetMapping("/download/{fileName:.+}/db")
-    public ResponseEntity downloadFromDatabase(@PathVariable String fileName) {
+    public ResponseEntity<Object> downloadFromDatabase(@PathVariable String fileName) {
         String[] fileNameType = fileName.split("\\.");
         Document document = documentRepository.findByDocName(fileNameType[0]);
         String mimeType = getMimeType(document);

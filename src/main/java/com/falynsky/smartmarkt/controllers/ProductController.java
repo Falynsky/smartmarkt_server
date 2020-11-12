@@ -18,7 +18,6 @@ public class ProductController {
     final ProductRepository productRepository;
     final JdbcTemplate jdbcTemplate;
 
-
     public ProductController(ProductRepository productRepository, JdbcTemplate jdbcTemplate) {
         this.productRepository = productRepository;
         this.jdbcTemplate = jdbcTemplate;
@@ -28,11 +27,7 @@ public class ProductController {
     public ProductDTO gatProductById(@RequestBody Map<String, Object> map) {
         Integer id = (Integer) map.get("id");
         Optional<ProductDTO> productDTO = productRepository.retrieveProductAsDTObyId(id);
-        if (productDTO.isPresent()) {
-            return productDTO.get();
-        } else {
-            return null;
-        }
+        return productDTO.orElse(null);
     }
 
     @GetMapping("/all")

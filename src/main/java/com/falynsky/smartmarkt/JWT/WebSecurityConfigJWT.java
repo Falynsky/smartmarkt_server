@@ -57,8 +57,8 @@ public class WebSecurityConfigJWT extends WebSecurityConfigurerAdapter {
                 .antMatchers("/signUp/register").permitAll()
                 .antMatchers("/register").permitAll()
                 .anyRequest().authenticated()
-                .and().
-                exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .and()
+                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

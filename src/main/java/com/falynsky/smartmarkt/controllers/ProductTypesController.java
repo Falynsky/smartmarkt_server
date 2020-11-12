@@ -30,6 +30,7 @@ public class ProductTypesController {
         return productTypeRepository.retrieveProductAsDTObyName(name);
     }
 
+    @SuppressWarnings("unchecked")
     @GetMapping("/get")
     public List<ProductTypeDTO> getProducts(@RequestBody Map<String, Object> map) {
         List<Integer> ids = (List<Integer>) map.get("ids");

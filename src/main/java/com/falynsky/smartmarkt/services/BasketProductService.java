@@ -137,7 +137,7 @@ public class BasketProductService {
 
     public BasketProduct createAndAddBasketProduct(Map<String, Object> map, Basket basket) throws Exception {
         BasketProduct basketProduct = new BasketProduct();
-        Integer id = getIdForNewBasketProduct(basketProductRepository);
+        int id = getIdForNewBasketProduct(basketProductRepository);
         basketProduct.setId(id);
         Integer quantity = getQuantity(map);
         basketProduct.setQuantity(quantity);
@@ -149,12 +149,12 @@ public class BasketProductService {
         return basketProduct;
     }
 
-    private Integer getIdForNewBasketProduct(BasketProductRepository basketProductRepository) {
+    private int getIdForNewBasketProduct(BasketProductRepository basketProductRepository) {
         BasketProduct lastBasketProduct = basketProductRepository.findFirstByOrderByIdDesc();
         if (lastBasketProduct == null) {
             return 1;
         }
-        Integer lastId = lastBasketProduct.getId();
+        int lastId = lastBasketProduct.getId();
         return ++lastId;
     }
 
