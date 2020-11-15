@@ -1,5 +1,8 @@
 package com.falynsky.smartmarkt.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,8 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Objects;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "accounts")
 public class Account implements UserDetails {
@@ -20,10 +25,6 @@ public class Account implements UserDetails {
     private String username;
     private String password;
     private String role;
-
-    public Integer getId() {
-        return id;
-    }
 
     @Override
     public String getUsername() {
@@ -35,31 +36,10 @@ public class Account implements UserDetails {
         return password;
     }
 
-    public String getRole() {
-        return role;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority(role));
     }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
 
     @Override
     public boolean isAccountNonExpired() {
@@ -81,29 +61,27 @@ public class Account implements UserDetails {
         return true;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Account account = (Account) o;
-        return Objects.equals(id, account.id) &&
-                Objects.equals(username, account.username) &&
-                Objects.equals(password, account.password) &&
-                Objects.equals(role, account.role);
+    public Integer getId() {
+        return id;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, username, password, role);
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    @Override
-    public String toString() {
-        return "AppUsers{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
-                '}';
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

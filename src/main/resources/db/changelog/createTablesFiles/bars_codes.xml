@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+    <changeSet id="12" author="kfa">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists schemaName="dbo" tableName="bars_codes"/>
+            </not>
+        </preConditions>
+        <comment>Create bars code table</comment>
+        <createTable
+                schemaName="dbo"
+                tableName="bars_codes">
+            <column name="id" type="int"/>
+            <column name="code" type="int"/>
+            <column name="product_id" type="int"/>
+        </createTable>
+        <addNotNullConstraint tableName="bars_codes" columnName="id" columnDataType="int"/>
+        <addNotNullConstraint tableName="bars_codes" columnName="code" columnDataType="int"/>
+        <addNotNullConstraint tableName="bars_codes" columnName="product_id" columnDataType="int"/>
+
+        <addPrimaryKey tableName="bars_codes" columnNames="id"/>
+
+        <addUniqueConstraint tableName="bars_codes" columnNames="code"/>
+        <addUniqueConstraint tableName="bars_codes" columnNames="product_id"/>
+
+        <addForeignKeyConstraint baseTableName="bars_codes" baseColumnNames="product_id"
+                                 constraintName="bars_codes_product_FK"
+                                 referencedTableName="products"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

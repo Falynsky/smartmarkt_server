@@ -11,7 +11,7 @@ import java.util.List;
 @RequestMapping("/baskets")
 public class BasketController {
 
-    BasketRepository basketRepository;
+    private final BasketRepository basketRepository;
 
     public BasketController(BasketRepository basketRepository) {
         this.basketRepository = basketRepository;

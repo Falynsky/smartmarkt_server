@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="13" author="kfa">
+        <sql>
+            INSERT INTO bars_codes VALUES (1,1,1);
+            INSERT INTO bars_codes VALUES (2,2,2);
+            INSERT INTO bars_codes VALUES (3,3,3);
+            INSERT INTO bars_codes VALUES (4,4,4);
+            INSERT INTO bars_codes VALUES (5,5,5);
+            INSERT INTO bars_codes VALUES (6,6,6);
+            INSERT INTO bars_codes VALUES (7,7,7);
+            INSERT INTO bars_codes VALUES (8,8,8);
+            INSERT INTO bars_codes VALUES (9,9,9);
+            INSERT INTO bars_codes VALUES (10,10,10);
+            INSERT INTO bars_codes VALUES (11,11,11);
+            INSERT INTO bars_codes VALUES (12,12,12);
+            INSERT INTO bars_codes VALUES (13,13,13);
+            INSERT INTO bars_codes VALUES (14,14,14);
+            INSERT INTO bars_codes VALUES (15,15,15);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

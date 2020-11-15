@@ -22,7 +22,7 @@
             <column name="price" type="float"/>
             <column name="currency" type="varchar(255)"/>
             <column name="product_type_id" type="int"/>
-            <column name="productInfo" type="varchar(255)"/>
+            <column name="product_info" type="varchar(255)"/>
             <column name="document_id" type="int"/>
         </createTable>
         <addNotNullConstraint tableName="products" columnName="id" columnDataType="int"/>
@@ -30,7 +30,7 @@
         <addNotNullConstraint tableName="products" columnName="quantity" columnDataType="int"/>
         <addNotNullConstraint tableName="products" columnName="price" columnDataType="float"/>
         <addNotNullConstraint tableName="products" columnName="currency" columnDataType="varchar(255)"/>
-        <addNotNullConstraint tableName="products" columnName="productInfo" columnDataType="varchar(255)"/>
+        <addNotNullConstraint tableName="products" columnName="product_info" columnDataType="varchar(255)"/>
         <addNotNullConstraint tableName="products" columnName="product_type_id" columnDataType="int"/>
 
         <addPrimaryKey tableName="products" columnNames="id"/>

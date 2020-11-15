@@ -26,6 +26,7 @@
         <addNotNullConstraint tableName="baskets" columnName="user_id" columnDataType="int"/>
         <addPrimaryKey tableName="baskets" columnNames="id"/>
         <addUniqueConstraint tableName="baskets" columnNames="name"/>
+
         <addForeignKeyConstraint baseTableName="baskets" baseColumnNames="user_id"
                                  constraintName="baskets_users_FK"
                                  referencedTableName="users"

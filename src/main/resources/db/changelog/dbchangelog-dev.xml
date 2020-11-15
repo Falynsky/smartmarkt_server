@@ -12,9 +12,11 @@
     <include file="createTablesFiles/products.xml" relativeToChangelogFile="true"/>
     <include file="createTablesFiles/baskets_products.xml" relativeToChangelogFile="true"/>
     <include file="createTablesFiles/adminLicencesTable.xml" relativeToChangelogFile="true"/>
+    <include file="createTablesFiles/bars_codes.xml" relativeToChangelogFile="true"/>
 
     <!--    FIll database scripts -->
     <include file="fillDatabase/addDefaultLicenceKey.xml" relativeToChangelogFile="true"/>
     <include file="fillDatabase/addToProductTypes.xml" relativeToChangelogFile="true"/>
     <include file="fillDatabase/addToProducts.xml" relativeToChangelogFile="true"/>
+    <include file="fillDatabase/addToBarsCodes.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
