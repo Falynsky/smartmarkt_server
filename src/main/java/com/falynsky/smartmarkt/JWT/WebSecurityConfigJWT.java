@@ -56,6 +56,8 @@ public class WebSecurityConfigJWT extends WebSecurityConfigurerAdapter {
                 .antMatchers("/sing-up").permitAll()
                 .antMatchers("/signUp/register").permitAll()
                 .antMatchers("/register").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/swagger").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
