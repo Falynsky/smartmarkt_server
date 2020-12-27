@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="16" author="kfa">
+        <sql>
+            INSERT INTO sales VALUES (1,'Pralka', 'Bardzo ladna i wydajna pralka na super promce');
+            INSERT INTO sales VALUES (2,'HotDog', 'Smaczny hotdog na super promce');
+            INSERT INTO sales VALUES (3,'PS4', 'świetna konsola na super promce');
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+
+    <changeSet id="15" author="kfa">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists schemaName="dbo" tableName="sales"/>
+            </not>
+        </preConditions>
+        <comment>Create sales table</comment>
+        <createTable
+                schemaName="dbo"
+                tableName="sales">
+            <column name="id" type="int"/>
+            <column name="title" type="varchar(255)"/>
+            <column name="description" type="varchar(255)"/>
+        </createTable>
+        <addNotNullConstraint tableName="sales" columnName="id" columnDataType="int"/>
+        <addNotNullConstraint tableName="sales" columnName="title" columnDataType="varchar(255)"/>
+        <addNotNullConstraint tableName="sales" columnName="description" columnDataType="varchar(255)"/>
+
+        <addPrimaryKey tableName="sales" columnNames="id"/>
+        <addUniqueConstraint tableName="sales" columnNames="title"/>
+    </changeSet>
+</databaseChangeLog>
