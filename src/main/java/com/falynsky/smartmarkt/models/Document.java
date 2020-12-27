@@ -1,10 +1,17 @@
 package com.falynsky.smartmarkt.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Objects;
 
+@Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "documents")
 public class Document {
 
@@ -34,14 +41,6 @@ public class Document {
         this.docName = docName;
     }
 
-    public byte[] getFileBytes() {
-        return fileBytes;
-    }
-
-    public void setFileBytes(byte[] file) {
-        this.fileBytes = file;
-    }
-
     public String getDocType() {
         return docType;
     }
@@ -50,31 +49,11 @@ public class Document {
         this.docType = docType;
     }
 
-    @Override
-    public String toString() {
-        return "Document{" +
-                "id=" + id +
-                ", docName='" + docName + '\'' +
-                ", docType='" + docType + '\'' +
-                ", fileBytes=" + Arrays.toString(fileBytes) +
-                '}';
+    public byte[] getFileBytes() {
+        return fileBytes;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Document document = (Document) o;
-        return Objects.equals(id, document.id) &&
-                Objects.equals(docName, document.docName) &&
-                Objects.equals(docType, document.docType) &&
-                Arrays.equals(fileBytes, document.fileBytes);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(id, docName, docType);
-        result = 31 * result + Arrays.hashCode(fileBytes);
-        return result;
+    public void setFileBytes(byte[] fileBytes) {
+        this.fileBytes = fileBytes;
     }
 }

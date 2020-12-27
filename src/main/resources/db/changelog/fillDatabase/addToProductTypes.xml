@@ -6,15 +6,14 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="10" author="kfa">
-        <sql>INSERT INTO product_types VALUES (1, 'GAMING');
-            INSERT INTO product_types VALUES (2, 'AGD');
-            INSERT INTO product_types VALUES (3, 'FOOD');
-            INSERT INTO product_types VALUES (4, 'ART');
-            INSERT INTO product_types VALUES (5, 'CLOTHES');
-            INSERT INTO product_types VALUES (6, 'OFFICE');
-            INSERT INTO product_types VALUES (7, 'FURNITURE');
-            INSERT INTO product_types VALUES (8, 'OTHER');
-            INSERT INTO product_types VALUES (9, 'JP2');
+        <sql>INSERT INTO product_types VALUES (1, 'Gry/Konsole');
+            INSERT INTO product_types VALUES (2, 'Agd');
+            INSERT INTO product_types VALUES (3, 'Jedzenie');
+            INSERT INTO product_types VALUES (4, 'Sztuka');
+            INSERT INTO product_types VALUES (5, 'Ubrania');
+            INSERT INTO product_types VALUES (6, 'Biurowe');
+            INSERT INTO product_types VALUES (7, 'Meble');
+            INSERT INTO product_types VALUES (8, 'Inne');
         </sql>
     </changeSet>
 </databaseChangeLog>

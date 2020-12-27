@@ -17,19 +17,19 @@ import javax.persistence.Table;
 public class Product {
 
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(nullable = false)
     public int id;
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     public String name;
-    @Column(name = "quantity", nullable = false)
+    @Column(nullable = false)
     public int quantity;
-    @Column(name = "price", nullable = false)
+    @Column(nullable = false)
     public float price;
-    @Column(name = "currency", nullable = false)
+    @Column(nullable = false)
     public String currency;
     @Column(name = "product_type_id", nullable = false)
     public int productTypeId;
-    @Column(name = "productInfo", nullable = false)
+    @Column(name = "product_info", nullable = false)
     public String productInfo;
 
     public int getId() {

@@ -40,20 +40,26 @@ public class BasketProductService {
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public void updateOrCreateBasketProduct(Map<String, Object> map, String userToken) throws Exception {
+
+    public String updateOrCreateBasketProduct(Map<String, Object> map, String userToken) throws Exception {
         Integer productId = (Integer) map.get("productId");
         int quantity = getQuantity(map);
-        Basket basket = getUserBasketByUserToken(userToken);
         Product product = getSelectedProduct(productId);
-
-        Optional<BasketProduct> optionalBasketProduct = basketProductRepository.findFirstByProductIdAndBasketId(product, basket);
 
         int productQuantity = product.getQuantity();
         if (productQuantity < quantity) {
-            throw new NotEnoughQuantity();
+            throw new NotEnoughQuantity(product.name);
         }
 
+        return addProductToBasket(map, product, userToken);
+
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    private String addProductToBasket(Map<String, Object> map, Product product, String userToken) throws Exception {
+        int quantity = getQuantity(map);
+        Basket basket = getUserBasketByUserToken(userToken);
+        Optional<BasketProduct> optionalBasketProduct = basketProductRepository.findFirstByProductIdAndBasketId(product, basket);
         BasketProduct basketProduct;
         if (optionalBasketProduct.isPresent()) {
             basketProduct = optionalBasketProduct.get();
@@ -67,7 +73,7 @@ public class BasketProductService {
         product.setQuantity(newQuantity);
         productRepository.save(product);
         basketProductRepository.save(basketProduct);
-
+        return product.name;
     }
 
     @SneakyThrows
@@ -164,7 +170,7 @@ public class BasketProductService {
         if (quantityValue instanceof Integer) {
             return (Integer) quantityValue;
         } else {
-            throw new Exception("NO QUANTITY");
+            throw new NotEnoughQuantity();
         }
     }
 

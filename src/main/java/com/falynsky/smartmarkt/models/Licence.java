@@ -1,12 +1,18 @@
 package com.falynsky.smartmarkt.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Objects;
 
+@Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "licences")
 public class Licence {
 
@@ -29,39 +35,15 @@ public class Licence {
         return licenceKey;
     }
 
-    public void setLicenceKey(String licence_key) {
-        this.licenceKey = licence_key;
+    public void setLicenceKey(String licenceKey) {
+        this.licenceKey = licenceKey;
     }
 
     public String getLicenceRole() {
         return licenceRole;
     }
 
-    public void setLicenceRole(String licence_role) {
-        this.licenceRole = licence_role;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Licence licence = (Licence) o;
-        return id.equals(licence.id) &&
-                licenceKey.equals(licence.licenceKey) &&
-                licenceRole.equals(licence.licenceRole);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, licenceKey, licenceRole);
-    }
-
-    @Override
-    public String toString() {
-        return "Licence{" +
-                "id=" + id +
-                ", licenceKey='" + licenceKey + '\'' +
-                ", licenceRole='" + licenceRole + '\'' +
-                '}';
+    public void setLicenceRole(String licenceRole) {
+        this.licenceRole = licenceRole;
     }
 }

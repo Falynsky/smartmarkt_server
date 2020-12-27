@@ -1,5 +1,6 @@
 package com.falynsky.smartmarkt.controllers;
 
+import com.falynsky.smartmarkt.exceptions.NotEnoughQuantity;
 import com.falynsky.smartmarkt.models.Basket;
 import com.falynsky.smartmarkt.models.BasketProduct;
 import com.falynsky.smartmarkt.models.DTO.BasketProductDTO;
@@ -76,13 +77,15 @@ public class BasketProductController {
     public ResponseEntity<Map<String, Object>> addToBasket(
             @RequestBody Map<String, Object> map,
             @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
-
+        String productName = "";
         try {
-            basketProductService.updateOrCreateBasketProduct(map, userToken);
+            productName = basketProductService.updateOrCreateBasketProduct(map, userToken);
+        } catch (NotEnoughQuantity e) {
+            return ResponseMsgService.errorResponse(e.getLocalizedMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseMsgService.sendCorrectResponse();
+        return ResponseMsgService.sendCorrectResponse("Dodano " + productName + " do koszyka.");
     }
 
     @SneakyThrows

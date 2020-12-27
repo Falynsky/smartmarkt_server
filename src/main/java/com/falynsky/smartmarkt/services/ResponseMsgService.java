@@ -13,6 +13,13 @@ public class ResponseMsgService {
         return ResponseEntity.ok(body);
     }
 
+    public static ResponseEntity<Map<String, Object>> sendCorrectResponse(String message) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("msg", message);
+        return ResponseEntity.ok(body);
+    }
+
+
     public static ResponseEntity<Map<String, Object>> errorResponse(String msg) {
         Map<String, Object> body = new HashMap<>();
         body.put("success", "false");

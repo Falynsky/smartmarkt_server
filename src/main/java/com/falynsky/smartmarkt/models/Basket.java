@@ -22,6 +22,7 @@ public class Basket {
     public int id;
     @Column(name = "name")
     public String name;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     public User userId;

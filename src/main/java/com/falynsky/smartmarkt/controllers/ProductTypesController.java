@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -21,7 +22,8 @@ public class ProductTypesController {
     @GetMapping("/id")
     public ProductTypeDTO gatProductById(@RequestBody Map<String, Object> map) {
         Integer id = (Integer) map.get("id");
-        return productTypeRepository.retrieveProductTypeAsDTObyId(id);
+        Optional<ProductTypeDTO> productTypeDTO = productTypeRepository.retrieveProductTypeAsDTObyId(id);
+        return productTypeDTO.orElse(null);
     }
 
     @GetMapping("/name")
