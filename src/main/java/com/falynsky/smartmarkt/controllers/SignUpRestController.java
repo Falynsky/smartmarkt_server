@@ -5,6 +5,7 @@ import com.falynsky.smartmarkt.models.Licence;
 import com.falynsky.smartmarkt.models.User;
 import com.falynsky.smartmarkt.services.AccountService;
 import com.falynsky.smartmarkt.services.ResponseMsgService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,16 +29,20 @@ public class SignUpRestController {
             Licence newLicence = createLicence(map);
             User newUser = createUser(map);
             accountService.createNewAccountData(newAccount, newLicence, newUser);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseMsgService.errorResponse("Podany użytkownik już istnieje.");
         } catch (Exception e) {
-            e.printStackTrace();
+            return ResponseMsgService.errorResponse("Błąd serwera!", "Spróbuj ponownie później.");
         }
         return ResponseMsgService.sendCorrectResponse();
     }
 
     private Account createAccount(Map<String, Object> map) {
         Account newAccount = new Account();
-        newAccount.setUsername((String) map.get("username"));
-        newAccount.setPassword((String) map.get("password"));
+        String username = (String) map.get("username");
+        newAccount.setUsername(username);
+        String password = (String) map.get("password");
+        newAccount.setPassword(password);
         return newAccount;
     }
 

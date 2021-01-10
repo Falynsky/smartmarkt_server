@@ -21,8 +21,11 @@ import java.util.Collection;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    private final JwtUserDetailsService jwtUserDetailsService;
+    private final static String REQUEST_HEADER_BEGIN = "Wave ";
+    private final static int REQUEST_HEADER_BEGIN_LENGTH = REQUEST_HEADER_BEGIN.length();
 
+
+    private final JwtUserDetailsService jwtUserDetailsService;
     private final JwtTokenUtil jwtTokenUtil;
 
     public JwtRequestFilter(JwtUserDetailsService jwtUserDetailsService, JwtTokenUtil jwtTokenUtil) {
@@ -39,8 +42,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String username = null;
         String jwtToken = null;
 
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Wave ")) {
-            jwtToken = requestTokenHeader.substring(5);
+        boolean requestTokenHeaderStartsWithWave = requestTokenHeader != null && requestTokenHeader.startsWith(REQUEST_HEADER_BEGIN);
+        if (requestTokenHeaderStartsWithWave) {
+            jwtToken = requestTokenHeader.substring(REQUEST_HEADER_BEGIN_LENGTH);
             try {
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
@@ -53,19 +57,28 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         SecurityContext context = SecurityContextHolder.getContext();
-        if (username != null && context.getAuthentication() == null) {
-            UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
-            if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
+
+        boolean usernameExists = username != null && !username.isEmpty();
+        boolean contextHasAuthentication = context.getAuthentication() != null;
+
+        if (usernameExists && !contextHasAuthentication) {
+
+            UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(username);
+            Boolean isTokenValidate = jwtTokenUtil.validateToken(jwtToken, userDetails);
+
+            if (isTokenValidate) {
 
                 Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                UsernamePasswordAuthenticationToken usernamePasswordAuthToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+
                 WebAuthenticationDetails details = new WebAuthenticationDetailsSource().buildDetails(request);
 
-                usernamePasswordAuthenticationToken.setDetails(details);
-                context.setAuthentication(usernamePasswordAuthenticationToken);
+                usernamePasswordAuthToken.setDetails(details);
+                context.setAuthentication(usernamePasswordAuthToken);
             }
         }
+
         chain.doFilter(request, response);
     }
 

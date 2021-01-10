@@ -34,9 +34,9 @@ public class BasketProductController {
             BasketProductRepository basketProductRepository,
             BasketRepository basketRepository,
             ProductRepository productRepository,
-            BasketProductService basketProductService,
             AccountRepository accountRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            BasketProductService basketProductService) {
         this.basketProductRepository = basketProductRepository;
         this.basketRepository = basketRepository;
         this.productRepository = productRepository;

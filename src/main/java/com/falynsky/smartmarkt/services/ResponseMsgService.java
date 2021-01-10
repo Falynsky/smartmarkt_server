@@ -27,6 +27,14 @@ public class ResponseMsgService {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
 
+    public static ResponseEntity<Map<String, Object>> errorResponse(String title, String msg) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("success", "false");
+        body.put("title", title);
+        body.put("msg", msg);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+    }
+
     public static ResponseEntity<Map<String, Object>> elementNotFoundResponse() {
         Map<String, Object> body = new HashMap<>();
         body.put("success", "false");

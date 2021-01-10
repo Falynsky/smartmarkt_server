@@ -24,6 +24,7 @@ public class BarsCodesController {
 
     @GetMapping("/{code}")
     public Map<String, Object> getAllUsers(@PathVariable("code") Integer barsCodeCode) {
+
         final ProductDTO productDTO = productService.getProductDTOByBarsCode(barsCodeCode);
         if (productDTO == null) {
             return new HashMap<>();
