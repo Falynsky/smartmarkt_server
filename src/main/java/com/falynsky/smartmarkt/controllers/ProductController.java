@@ -2,6 +2,7 @@ package com.falynsky.smartmarkt.controllers;
 
 import com.falynsky.smartmarkt.models.DTO.ProductDTO;
 import com.falynsky.smartmarkt.repositories.ProductRepository;
+import com.falynsky.smartmarkt.utils.ResponseMapBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -23,22 +24,24 @@ public class ProductController {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @PostMapping("/id")
-    public ProductDTO gatProductById(@RequestBody Map<String, Object> map) {
-        Integer id = (Integer) map.get("id");
-        Optional<ProductDTO> productDTO = productRepository.retrieveProductAsDTObyId(id);
-        return productDTO.orElse(null);
-    }
-
-    @GetMapping("/all")
-    public List<ProductDTO> getAllProducts() {
-        return productRepository.retrieveProductAsDTO();
-    }
+//    @PostMapping("/id")
+//    public ProductDTO gatProductById(@RequestBody Map<String, Object> map) {
+//        Integer id = (Integer) map.get("id");
+//        Optional<ProductDTO> productDTO = productRepository.retrieveProductAsDTObyId(id);
+//        return productDTO.orElse(null);
+//    }
+//
+//    @GetMapping("/all")
+//    public List<ProductDTO> getAllProducts() {
+//        return productRepository.retrieveProductAsDTO();
+//    }
 
     @PostMapping("/typeId")
-    public ResponseEntity<List<ProductDTO>> getAllProductsByTypeId(@RequestBody Map<String, Object> map) {
+    public ResponseEntity<Map<String, Object>> getAllProductsByTypeId(@RequestBody Map<String, Object> map) {
         Integer id = (Integer) map.get("id");
         List<ProductDTO> productsList = productRepository.retrieveProductAsDTObyTypeId(id);
-        return ResponseEntity.ok(productsList);
+        ResponseMapBuilder<List<ProductDTO>> responseMapBuilder = new ResponseMapBuilder<>();
+        Map<String, Object> body = responseMapBuilder.buildResponse(productsList);
+        return ResponseEntity.ok(body);
     }
 }

@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @CrossOrigin
 @RestController
@@ -25,6 +27,11 @@ public class SignUpRestController {
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> register(@RequestBody Map<String, Object> map) {
         try {
+
+            boolean isInvalidRegisterInput = isInvalidRegisterInput(map);
+            if (isInvalidRegisterInput) {
+                return ResponseMsgService.errorResponse("Wartości są wymagane i puste znaki są zabronione.");
+            }
             Account newAccount = createAccount(map);
             Licence newLicence = createLicence(map);
             User newUser = createUser(map);
@@ -35,6 +42,31 @@ public class SignUpRestController {
             return ResponseMsgService.errorResponse("Błąd serwera!", "Spróbuj ponownie później.");
         }
         return ResponseMsgService.sendCorrectResponse();
+    }
+
+    private boolean isInvalidRegisterInput(Map<String, Object> map) {
+
+        String username = ((String) map.get("username"));
+        String password = (String) map.get("password");
+        String firstName = (String) map.get("firstName");
+        String lastName = (String) map.get("lastName");
+
+        if (username == null || password == null || firstName == null || lastName == null) {
+            return true;
+        }
+
+        boolean isUsernameValid = isDataValid(username);
+        boolean isPasswordValid = isDataValid(password);
+        boolean isFirstNameValid = isDataValid(firstName);
+        boolean isLastNameValid = isDataValid(lastName);
+
+        return isUsernameValid || isPasswordValid || isFirstNameValid || isLastNameValid;
+    }
+
+    private boolean isDataValid(String username) {
+        Pattern pattern = Pattern.compile("\\s");
+        Matcher usernameMatcher = pattern.matcher(username);
+        return usernameMatcher.find();
     }
 
     private Account createAccount(Map<String, Object> map) {

@@ -54,21 +54,11 @@ public class BasketProductController {
 
         return new HashMap<String, Object>() {
             {
-                put("success", true);
                 put("data", basketProductsData);
+                put("success", true);
             }
         };
 
-    }
-
-    @GetMapping("/product/{id}")
-    public BasketProductDTO getBasketsByProductId(@PathVariable("id") Integer id) {
-        return basketProductRepository.retrieveBasketProductAsDTObyProductId(id);
-    }
-
-    @GetMapping("/all")
-    public List<BasketProductDTO> getAllBaskets() {
-        return basketProductRepository.retrieveBasketProductAsDTO();
     }
 
     @SneakyThrows
@@ -90,22 +80,6 @@ public class BasketProductController {
 
     @SneakyThrows
     @Transactional(rollbackFor = Exception.class)
-    @PostMapping("/addOne")
-    public ResponseEntity<Map<String, Object>> addOneToBasket(
-            @RequestBody Map<String, Object> map,
-            @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
-
-        try {
-            basketProductService.addOneToBasketProduct(map, userToken);
-        } catch (Exception ex) {
-            return ResponseMsgService.errorResponse(ex.getMessage());
-        }
-        return ResponseMsgService.sendCorrectResponse();
-    }
-
-
-    @SneakyThrows
-    @Transactional(rollbackFor = Exception.class)
     @PostMapping("/remove")
     public ResponseEntity<Map<String, Object>> removeFromBasket(
             @RequestBody Map<String, Object> map,
@@ -115,31 +89,31 @@ public class BasketProductController {
         } catch (Exception ex) {
             return ResponseMsgService.errorResponse(ex.getMessage());
         }
-        return ResponseMsgService.sendCorrectResponse();
+        return ResponseMsgService.sendCorrectResponse("Produk został usunięty z koszyka");
     }
-
-    @SneakyThrows
-    @Transactional(rollbackFor = Exception.class)
-    @PostMapping("/removeOne")
-    public ResponseEntity<Map<String, Object>> removeOneFromBasket(
-            @RequestBody Map<String, Object> map,
-            @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) throws Exception {
-        BasketProduct basketProduct = basketProductService.getBasketProduct(map, userToken);
-        if (basketProduct == null) {
-            return ResponseMsgService.elementNotFoundResponse();
-        }
-        try {
-            if (basketProduct.getQuantity() == 1) {
-                basketProductRepository.delete(basketProduct);
-            } else if (basketProduct.getQuantity() > 1) {
-                int newQuantity = basketProduct.getQuantity() - 1;
-                basketProduct.setQuantity(newQuantity);
-                basketProductRepository.save(basketProduct);
-            }
-        } catch (Exception ex) {
-            return ResponseMsgService.errorResponse(ex.getMessage());
-        }
-        return ResponseMsgService.sendCorrectResponse();
-    }
+//
+//    @SneakyThrows
+//    @Transactional(rollbackFor = Exception.class)
+//    @PostMapping("/removeOne")
+//    public ResponseEntity<Map<String, Object>> removeOneFromBasket(
+//            @RequestBody Map<String, Object> map,
+//            @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) throws Exception {
+//        BasketProduct basketProduct = basketProductService.getBasketProduct(map, userToken);
+//        if (basketProduct == null) {
+//            return ResponseMsgService.elementNotFoundResponse();
+//        }
+//        try {
+//            if (basketProduct.getQuantity() == 1) {
+//                basketProductRepository.delete(basketProduct);
+//            } else if (basketProduct.getQuantity() > 1) {
+//                int newQuantity = basketProduct.getQuantity() - 1;
+//                basketProduct.setQuantity(newQuantity);
+//                basketProductRepository.save(basketProduct);
+//            }
+//        } catch (Exception ex) {
+//            return ResponseMsgService.errorResponse(ex.getMessage());
+//        }
+//        return ResponseMsgService.sendCorrectResponse();
+//    }
 
 }

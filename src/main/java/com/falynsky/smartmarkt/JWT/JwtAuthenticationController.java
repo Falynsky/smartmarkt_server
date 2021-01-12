@@ -9,6 +9,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/auth")
@@ -41,8 +44,10 @@ public class JwtAuthenticationController {
         }
 
         final String token = jwtTokenUtil.generateToken(userDetails);
-
-        return ResponseEntity.ok(new JwtResponse(token));
+        Map<String, Object> response = new HashMap<>();
+        JwtResponse jwtResponse = new JwtResponse(token);
+        response.put("data", jwtResponse);
+        return ResponseEntity.ok(response);
     }
 
     private void authenticate(String username, String password) throws Exception {
