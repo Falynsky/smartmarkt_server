@@ -13,4 +13,7 @@ public class SalesDTO {
     public int id;
     public String title;
     public String description;
+    public double discount;
+    public float originalPrice;
+    public int productId;
 }

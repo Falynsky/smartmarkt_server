@@ -7,9 +7,9 @@
 
     <changeSet id="16" author="kfa">
         <sql>
-            INSERT INTO sales VALUES (1,'Pralka', 'Bardzo ladna i wydajna pralka na super promce');
-            INSERT INTO sales VALUES (2,'HotDog', 'Smaczny hotdog na super promce');
-            INSERT INTO sales VALUES (3,'PS4', 'świetna konsola na super promce');
+            INSERT INTO sales VALUES (1,'Bardzo ladna i wydajna pralka w super promce', 0.20, 1);
+            INSERT INTO sales VALUES (2,'świetna konsola ps3 w super promce',0.15,2);
+            INSERT INTO sales VALUES (3,'świetna konsola ps4 w super promce',0.10,3);
         </sql>
     </changeSet>
 </databaseChangeLog>

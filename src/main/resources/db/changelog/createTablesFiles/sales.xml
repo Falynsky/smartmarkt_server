@@ -17,14 +17,21 @@
                 schemaName="dbo"
                 tableName="sales">
             <column name="id" type="int"/>
-            <column name="title" type="varchar(255)"/>
             <column name="description" type="varchar(255)"/>
+            <column name="discount" type="double"/>
+            <column name="product_id" type="int"/>
         </createTable>
+
         <addNotNullConstraint tableName="sales" columnName="id" columnDataType="int"/>
-        <addNotNullConstraint tableName="sales" columnName="title" columnDataType="varchar(255)"/>
-        <addNotNullConstraint tableName="sales" columnName="description" columnDataType="varchar(255)"/>
+        <addNotNullConstraint tableName="sales" columnName="product_id" columnDataType="int"/>
 
         <addPrimaryKey tableName="sales" columnNames="id"/>
-        <addUniqueConstraint tableName="sales" columnNames="title"/>
+        <addUniqueConstraint tableName="sales" columnNames="product_id"/>
+
+        <addForeignKeyConstraint baseTableName="sales" baseColumnNames="product_id"
+                                 constraintName="products_sales_FK"
+                                 referencedTableName="products"
+                                 referencedColumnNames="id"/>
+
     </changeSet>
 </databaseChangeLog>

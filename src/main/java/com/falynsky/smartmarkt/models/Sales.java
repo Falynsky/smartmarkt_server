@@ -3,10 +3,7 @@ package com.falynsky.smartmarkt.models;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Data
 @NoArgsConstructor
@@ -17,8 +14,12 @@ public class Sales {
     @Id
     @Column(name = "id")
     public int id;
-    @Column(name = "title")
-    public String title;
     @Column(name = "description")
     public String description;
+    @Column(name = "discount")
+    public double discount;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    public Product productId;
 }

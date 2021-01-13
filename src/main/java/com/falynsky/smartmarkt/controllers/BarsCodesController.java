@@ -43,6 +43,11 @@ public class BarsCodesController {
         productData.put("productTypeId", productTypeDTO.id);
         productData.put("productType", productTypeDTO.name);
 
-        return productData;
+        return new HashMap<String, Object>() {
+            {
+                put("data", productData);
+                put("success", true);
+            }
+        };
     }
 }

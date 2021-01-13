@@ -61,6 +61,9 @@ public class JwtTokenUtil implements Serializable {
 
     private boolean areUsernamesEqual(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
+        if (userDetails == null) {
+            return false;
+        }
         String userDetailsUsername = userDetails.getUsername();
         return username.equals(userDetailsUsername);
     }
