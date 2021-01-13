@@ -10,10 +10,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -179,10 +176,8 @@ public class BasketProductService {
         return productRepository.getOne(productId);
     }
 
-    public List<Map<String, Object>> getSelectedBasketProductsData(Basket basket) {
+    public List<Map<String, Object>> getSelectedBasketProductsData(List<BasketProductDTO> basketProductDTOS) {
 
-        List<BasketProductDTO> basketProductDTOS =
-                basketProductRepository.retrieveBasketProductAsDTObyBasketId(basket.getId());
 
         return basketProductDTOS.stream()
                 .map(this::buildProductData)
@@ -224,4 +219,23 @@ public class BasketProductService {
         basketProduct.setQuantity(newQuantity);
         basketProductRepository.save(basketProduct);
     }
+
+    public Map<String, Object> getSelectedBasketSummary(List<BasketProductDTO> basketProductDTOS) {
+        Map<String, Object> data = new HashMap<>();
+        float summaryPrice = 0;
+        for (BasketProductDTO basketProductDTO : basketProductDTOS) {
+            int basketProductDTOId = basketProductDTO.getProductId();
+            Optional<ProductDTO> optionalProduct = productRepository.retrieveProductAsDTObyId(basketProductDTOId);
+            if (optionalProduct.isPresent()) {
+                ProductDTO product = optionalProduct.get();
+                float price = product.getPrice();
+                summaryPrice += price * basketProductDTO.getQuantity();
+            }
+        }
+        data.put("summary", summaryPrice);
+        return data;
+
+    }
+
+
 }

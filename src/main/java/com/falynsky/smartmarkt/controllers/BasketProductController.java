@@ -2,7 +2,6 @@ package com.falynsky.smartmarkt.controllers;
 
 import com.falynsky.smartmarkt.exceptions.NotEnoughQuantity;
 import com.falynsky.smartmarkt.models.Basket;
-import com.falynsky.smartmarkt.models.BasketProduct;
 import com.falynsky.smartmarkt.models.DTO.BasketProductDTO;
 import com.falynsky.smartmarkt.repositories.*;
 import com.falynsky.smartmarkt.services.BasketProductService;
@@ -45,12 +44,32 @@ public class BasketProductController {
         this.userRepository = userRepository;
     }
 
+
+    @GetMapping("/getSummary")
+    public Map<String, Object> getBasketSummaryByUsername(
+            @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) throws Exception {
+
+        Basket basket = basketProductService.getUserBasketByUserToken(userToken);
+        List<BasketProductDTO> basketProductDTOS = basketProductRepository.retrieveBasketProductAsDTObyBasketId(basket.getId());
+
+        Map<String, Object> data = basketProductService.getSelectedBasketSummary(basketProductDTOS);
+
+        return new HashMap<String, Object>() {
+            {
+                put("data", data);
+                put("success", true);
+            }
+        };
+
+    }
+
     @GetMapping("/getUserProducts")
     public Map<String, Object> getBasketProductsByUsername(
             @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) throws Exception {
 
         Basket basket = basketProductService.getUserBasketByUserToken(userToken);
-        List<Map<String, Object>> basketProductsData = basketProductService.getSelectedBasketProductsData(basket);
+        List<BasketProductDTO> basketProductDTOS = basketProductRepository.retrieveBasketProductAsDTObyBasketId(basket.getId());
+        List<Map<String, Object>> basketProductsData = basketProductService.getSelectedBasketProductsData(basketProductDTOS);
 
         return new HashMap<String, Object>() {
             {

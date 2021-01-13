@@ -14,7 +14,6 @@ import javax.persistence.*;
 public class BasketProduct {
 
     @Id
-
     @Column(name = "id")
     int id;
 
