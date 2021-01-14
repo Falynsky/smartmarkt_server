@@ -17,6 +17,8 @@ public class ProductDTO {
     public int productTypeId;
     public String productInfo;
     public Integer documentId;
+    public String documentName;
+    public String documentType;
 
 }
 
