@@ -16,11 +16,12 @@ import java.util.stream.Collectors;
 @Service
 public class BasketProductService {
 
-    BasketRepository basketRepository;
-    BasketProductRepository basketProductRepository;
-    ProductRepository productRepository;
-    AccountRepository accountRepository;
-    UserRepository userRepository;
+    private final BasketRepository basketRepository;
+    private final BasketProductRepository basketProductRepository;
+    private final ProductRepository productRepository;
+    private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
+    private final DocumentRepository documentRepository;
     private final JwtTokenUtil jwtTokenUtil;
 
     BasketProductService(BasketProductRepository basketProductRepository,
@@ -28,12 +29,13 @@ public class BasketProductService {
                          BasketRepository basketRepository,
                          AccountRepository accountRepository,
                          UserRepository userRepository,
-                         JwtTokenUtil jwtTokenUtil) {
+                         DocumentRepository documentRepository, JwtTokenUtil jwtTokenUtil) {
         this.basketProductRepository = basketProductRepository;
         this.productRepository = productRepository;
         this.basketRepository = basketRepository;
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
+        this.documentRepository = documentRepository;
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
@@ -132,11 +134,32 @@ public class BasketProductService {
         BasketProduct basketProduct = getBasketProduct(map, userToken);
         Integer productId = (Integer) map.get("productId");
         Product product = getSelectedProduct(productId);
+        updateProductQuantity(basketProduct, product);
+        basketProductRepository.delete(basketProduct);
+    }
+
+    public void removeAllProductsFromBasket(String userToken) throws Exception {
+        Basket basket = getUserBasketByUserToken(userToken);
+
+        List<BasketProductDTO> basketProductDTOS = basketProductRepository.retrieveBasketProductAsDTObyBasketId(basket.id);
+        for (BasketProductDTO basketProductDTO : basketProductDTOS) {
+            Optional<BasketProduct> optionalBasketProduct = basketProductRepository.findById(basketProductDTO.getId());
+            if (optionalBasketProduct.isPresent()) {
+                BasketProduct basketProduct = optionalBasketProduct.get();
+                Product product = basketProduct.getProductId();
+                updateProductQuantity(basketProduct, product);
+                basketProductRepository.delete(basketProduct);
+            }
+        }
+
+    }
+
+    private void updateProductQuantity(BasketProduct basketProduct, Product product) {
         int basketProductQuantity = product.getQuantity() + basketProduct.getQuantity();
         product.setQuantity(basketProductQuantity);
         productRepository.save(product);
-        basketProductRepository.delete(basketProduct);
     }
+
 
     public BasketProduct createAndAddBasketProduct(Map<String, Object> map, Basket basket) throws Exception {
         BasketProduct basketProduct = new BasketProduct();
@@ -191,12 +214,12 @@ public class BasketProductService {
 
         if (optionalProduct.isPresent()) {
             int id = basketProductDTO.getId();
-            ProductDTO product = optionalProduct.get();
-            int productId = product.getId();
-            String name = product.getName();
+            ProductDTO productDTO = optionalProduct.get();
+            int productId = productDTO.getId();
+            String name = productDTO.getName();
             int quantity = basketProductDTO.getQuantity();
-            Float price = product.getPrice();
-            String currency = product.getCurrency();
+            Float price = productDTO.getPrice();
+            String currency = productDTO.getCurrency();
 
             Map<String, Object> productData = new LinkedHashMap<>();
             productData.put("id", id);
@@ -205,6 +228,15 @@ public class BasketProductService {
             productData.put("quantity", quantity);
             productData.put("price", price);
             productData.put("currency", currency);
+
+            Integer documentId = productDTO.documentId;
+            Optional<Document> optionalDocument = documentRepository.findById(documentId);
+            if (optionalDocument.isPresent()) {
+                Document document = optionalDocument.get();
+                productData.put("documentId", documentId);
+                productData.put("documentName", document.getDocName());
+                productData.put("documentType", document.getDocType());
+            }
             return productData;
         }
         return null;

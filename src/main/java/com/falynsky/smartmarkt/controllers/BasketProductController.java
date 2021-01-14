@@ -100,11 +100,24 @@ public class BasketProductController {
     @SneakyThrows
     @Transactional(rollbackFor = Exception.class)
     @PostMapping("/remove")
-    public ResponseEntity<Map<String, Object>> removeFromBasket(
+    public ResponseEntity<Map<String, Object>> removeSelectedProductFromBasket(
             @RequestBody Map<String, Object> map,
             @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
         try {
             basketProductService.removeProductFromBasket(map, userToken);
+        } catch (Exception ex) {
+            return ResponseMsgService.errorResponse(ex.getMessage());
+        }
+        return ResponseMsgService.sendCorrectResponse("Produk został usunięty z koszyka");
+    }
+
+    @SneakyThrows
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/removeAll")
+    public ResponseEntity<Map<String, Object>> removeAllProductsFromBasket(
+            @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
+        try {
+            basketProductService.removeAllProductsFromBasket(userToken);
         } catch (Exception ex) {
             return ResponseMsgService.errorResponse(ex.getMessage());
         }
