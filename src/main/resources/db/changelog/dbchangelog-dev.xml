@@ -3,7 +3,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <!-- Create tables-->
+    <!-- Create tables - 10 -->
     <include file="createTablesFiles/accountsTable.xml" relativeToChangelogFile="true"/>
     <include file="createTablesFiles/usersTable.xml" relativeToChangelogFile="true"/>
     <include file="createTablesFiles/baskets.xml" relativeToChangelogFile="true"/>
@@ -15,7 +15,8 @@
     <include file="createTablesFiles/bars_codes.xml" relativeToChangelogFile="true"/>
     <include file="createTablesFiles/sales.xml" relativeToChangelogFile="true"/>
 
-    <!--    FIll database scripts -->
+    <!--    FIll database scripts - 6 -->
+    <include file="fillDatabase/addToDocuments.xml" relativeToChangelogFile="true"/>
     <include file="fillDatabase/addDefaultLicenceKey.xml" relativeToChangelogFile="true"/>
     <include file="fillDatabase/addToProductTypes.xml" relativeToChangelogFile="true"/>
     <include file="fillDatabase/addToProducts.xml" relativeToChangelogFile="true"/>

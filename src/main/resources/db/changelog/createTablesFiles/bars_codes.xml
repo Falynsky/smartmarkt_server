@@ -6,7 +6,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
 
-    <changeSet id="12" author="kfa">
+    <changeSet id="13" author="kfa">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists schemaName="dbo" tableName="bars_codes"/>

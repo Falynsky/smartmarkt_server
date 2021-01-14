@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="9" author="kfa">
+        <insert schemaName="dbo"
+                tableName="documents">
+            <column name="id" type="int" value="1"/>
+            <column name="file_bytes" type="varbinary(MAX)" valueBlobFile="../../../images/a450.png"/>
+            <column name="doc_name" type="varchar(255)" value="a450"/>
+            <column name="doc_type" type="varchar(255)" value="png"/>
+        </insert>
+
+        <insert schemaName="dbo"
+                tableName="documents">
+            <column name="id" type="int" value="2"/>
+            <column name="file_bytes" type="varbinary(MAX)" valueBlobFile="../../../images/bulka.png"/>
+            <column name="doc_name" type="varchar(255)" value="bulka"/>
+            <column name="doc_type" type="varchar(255)" value="png"/>
+        </insert>
+
+        <insert schemaName="dbo"
+                tableName="documents">
+            <column name="id" type="int" value="3"/>
+            <column name="file_bytes" type="varbinary(MAX)" valueBlobFile="../../../images/carrotFit.png"/>
+            <column name="doc_name" type="varchar(255)" value="carrotFit"/>
+            <column name="doc_type" type="varchar(255)" value="png"/>
+        </insert>
+
+        <insert schemaName="dbo"
+                tableName="documents">
+            <column name="id" type="int" value="4"/>
+            <column name="file_bytes" type="varbinary(MAX)" valueBlobFile="../../../images/liptonPeach.png"/>
+            <column name="doc_name" type="varchar(255)" value="liptonPeach"/>
+            <column name="doc_type" type="varchar(255)" value="png"/>
+        </insert>
+
+        <insert schemaName="dbo"
+                tableName="documents">
+            <column name="id" type="int" value="5"/>
+            <column name="file_bytes" type="varbinary(MAX)" valueBlobFile="../../../images/pralka.png"/>
+            <column name="doc_name" type="varchar(255)" value="pralka"/>
+            <column name="doc_type" type="varchar(255)" value="png"/>
+        </insert>
+
+        <insert schemaName="dbo"
+                tableName="documents">
+            <column name="id" type="int" value="6"/>
+            <column name="file_bytes" type="varbinary(MAX)" valueBlobFile="../../../images/ps1.png"/>
+            <column name="doc_name" type="varchar(255)" value="ps1"/>
+            <column name="doc_type" type="varchar(255)" value="png"/>
+        </insert>
+
+        <insert schemaName="dbo"
+                tableName="documents">
+            <column name="id" type="int" value="7"/>
+            <column name="file_bytes" type="varbinary(MAX)" valueBlobFile="../../../images/ps3.png"/>
+            <column name="doc_name" type="varchar(255)" value="ps3"/>
+            <column name="doc_type" type="varchar(255)" value="png"/>
+        </insert>
+
+        <insert schemaName="dbo"
+                tableName="documents">
+            <column name="id" type="int" value="8"/>
+            <column name="file_bytes" type="varbinary(MAX)" valueBlobFile="../../../images/ps4.png"/>
+            <column name="doc_name" type="varchar(255)" value="ps4"/>
+            <column name="doc_type" type="varchar(255)" value="png"/>
+        </insert>
+
+        <insert schemaName="dbo"
+                tableName="documents">
+            <column name="id" type="int" value="9"/>
+            <column name="file_bytes" type="varbinary(MAX)" valueBlobFile="../../../images/stolik.png"/>
+            <column name="doc_name" type="varchar(255)" value="stolik"/>
+            <column name="doc_type" type="varchar(255)" value="png"/>
+        </insert>
+
+        <insert schemaName="dbo"
+                tableName="documents">
+            <column name="id" type="int" value="10"/>
+            <column name="file_bytes" type="varbinary(MAX)" valueBlobFile="../../../images/szafka.png"/>
+            <column name="doc_name" type="varchar(255)" value="szafka"/>
+            <column name="doc_type" type="varchar(255)" value="png"/>
+        </insert>
+
+        <insert schemaName="dbo"
+                tableName="documents">
+            <column name="id" type="int" value="11"/>
+            <column name="file_bytes" type="varbinary(MAX)" valueBlobFile="../../../images/tshirt.png"/>
+            <column name="doc_name" type="varchar(255)" value="tshirt"/>
+            <column name="doc_type" type="varchar(255)" value="png"/>
+        </insert>
+
+        <insert schemaName="dbo"
+                tableName="documents">
+            <column name="id" type="int" value="12"/>
+            <column name="file_bytes" type="varbinary(MAX)" valueBlobFile="../../../images/woda1l.png"/>
+            <column name="doc_name" type="varchar(255)" value="woda1l"/>
+            <column name="doc_type" type="varchar(255)" value="png"/>
+        </insert>
+
+        <insert schemaName="dbo"
+                tableName="documents">
+            <column name="id" type="int" value="13"/>
+            <column name="file_bytes" type="varbinary(MAX)" valueBlobFile="../../../images/xbox360.png"/>
+            <column name="doc_name" type="varchar(255)" value="xbox360"/>
+            <column name="doc_type" type="varchar(255)" value="png"/>
+        </insert>
+
+        <insert schemaName="dbo"
+                tableName="documents">
+            <column name="id" type="int" value="14"/>
+            <column name="file_bytes" type="varbinary(MAX)" valueBlobFile="../../../images/xboxOne.png"/>
+            <column name="doc_name" type="varchar(255)" value="xboxOne"/>
+            <column name="doc_type" type="varchar(255)" value="png"/>
+        </insert>
+
+    </changeSet>
+</databaseChangeLog>

@@ -4,14 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "products")
 public class Product {
@@ -31,6 +28,9 @@ public class Product {
     public int productTypeId;
     @Column(name = "product_info", nullable = false)
     public String productInfo;
+    @OneToOne
+    @JoinColumn(name = "document_id")
+    public Document documentId;
 
     public int getId() {
         return id;
@@ -86,6 +86,14 @@ public class Product {
 
     public void setProductInfo(String productInfo) {
         this.productInfo = productInfo;
+    }
+
+    public Document getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(Document documentId) {
+        this.documentId = documentId;
     }
 }
 

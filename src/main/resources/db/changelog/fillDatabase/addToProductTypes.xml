@@ -5,7 +5,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="10" author="kfa">
+    <changeSet id="11" author="kfa">
         <sql>INSERT INTO product_types VALUES (1, 'Gry/Konsole');
             INSERT INTO product_types VALUES (2, 'Agd');
             INSERT INTO product_types VALUES (3, 'Jedzenie');

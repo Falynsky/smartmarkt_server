@@ -2,8 +2,6 @@ package com.falynsky.smartmarkt.repositories;
 
 import com.falynsky.smartmarkt.models.BarsCodes;
 import com.falynsky.smartmarkt.models.DTO.BarsCodesDTO;
-import com.falynsky.smartmarkt.models.DTO.ProductDTO;
-import com.falynsky.smartmarkt.models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
