@@ -19,26 +19,12 @@ public interface BasketProductRepository extends JpaRepository<BasketProduct, In
 
     BasketProduct findFirstByOrderByIdDesc();
 
-    Optional<BasketProduct> findFirstByProductIdAndBasketId(Product product, Basket basket);
+    Optional<BasketProduct> findFirstByProductIdAndBasketIdAndClosedFalse(Product product, Basket basket);
 
 
     @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketProductDTO" +
-            "(b.id, b.quantity, b.quantityType, b.basketId.id, b.productId.id)" +
-            " FROM BasketProduct b ")
-    List<BasketProductDTO> retrieveBasketProductAsDTO();
+            "(b.id,  b.quantity, b.quantityType, b.purchased, b.closed, b.basketId.id, b.productId.id) " +
+            "FROM BasketProduct b WHERE b.basketId.id = :basketId AND b.closed = FALSE")
+    List<BasketProductDTO> retrieveBasketProductAsDTObyBasketIdAndNotClosedYet(@Param("basketId") Integer basketId);
 
-    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketProductDTO" +
-            "(b.id,  b.quantity, b.quantityType,b.basketId.id, b.productId.id) " +
-            "FROM BasketProduct b WHERE b.basketId.id = :basketId")
-    List<BasketProductDTO> retrieveBasketProductAsDTObyBasketId(@Param("basketId") Integer basketId);
-
-    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketProductDTO" +
-            "(b.id, b.quantity, b.quantityType, b.basketId.id, b.productId.id) " +
-            "FROM BasketProduct b WHERE b.productId.id = :productId")
-    BasketProductDTO retrieveBasketProductAsDTObyProductId(@Param("productId") Integer productId);
-
-    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketProductDTO" +
-            "(b.id, b.quantity, b.quantityType, b.basketId.id, b.productId.id) " +
-            "FROM BasketProduct b WHERE b.productId.id = :productId")
-    BasketProductDTO retrieveBasketProductAsDTObyBasketProductId(@Param("productId") Integer productId);
 }

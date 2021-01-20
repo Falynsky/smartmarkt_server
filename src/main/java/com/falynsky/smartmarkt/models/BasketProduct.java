@@ -1,5 +1,6 @@
 package com.falynsky.smartmarkt.models;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,12 @@ public class BasketProduct {
     @Column(name = "quantity_type")
     String quantityType;
 
+    @Column(name = "purchased")
+    Boolean purchased;
+
+    @Column(name = "closed")
+    Boolean closed;
+
     @ManyToOne
     @JoinColumn(name = "basket_id")
     Basket basketId;
@@ -30,6 +37,14 @@ public class BasketProduct {
     @ManyToOne
     @JoinColumn(name = "product_id")
     Product productId;
+
+    @ManyToOne(    cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinColumn(name = "baskets_history_id")
+    BasketHistory basketsHistoryId;
+
 
     public int getId() {
         return id;
@@ -69,5 +84,21 @@ public class BasketProduct {
 
     public void setProductId(Product productId) {
         this.productId = productId;
+    }
+
+    public boolean isPurchased() {
+        return purchased;
+    }
+
+    public void setPurchased(boolean purchased) {
+        this.purchased = purchased;
+    }
+
+    public BasketHistory getBasketsHistoryId() {
+        return basketsHistoryId;
+    }
+
+    public void setBasketsHistoryId(BasketHistory basketsHistoryId) {
+        this.basketsHistoryId = basketsHistoryId;
     }
 }

@@ -4,22 +4,21 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <!-- Create tables - 10 -->
-    <include file="createTablesFiles/accountsTable.xml" relativeToChangelogFile="true"/>
-    <include file="createTablesFiles/usersTable.xml" relativeToChangelogFile="true"/>
-    <include file="createTablesFiles/baskets.xml" relativeToChangelogFile="true"/>
-    <include file="createTablesFiles/productTypes.xml" relativeToChangelogFile="true"/>
-    <include file="createTablesFiles/documentTable.xml" relativeToChangelogFile="true"/>
-    <include file="createTablesFiles/products.xml" relativeToChangelogFile="true"/>
-    <include file="createTablesFiles/baskets_products.xml" relativeToChangelogFile="true"/>
-    <include file="createTablesFiles/adminLicencesTable.xml" relativeToChangelogFile="true"/>
-    <include file="createTablesFiles/bars_codes.xml" relativeToChangelogFile="true"/>
-    <include file="createTablesFiles/sales.xml" relativeToChangelogFile="true"/>
+    <include file="createTablesFiles/accountsTable.xml" relativeToChangelogFile="true"/> <!--1-->
+    <include file="createTablesFiles/usersTable.xml" relativeToChangelogFile="true"/> <!--2-->
+    <include file="createTablesFiles/baskets.xml" relativeToChangelogFile="true"/> <!--3-->
+    <include file="createTablesFiles/productTypes.xml" relativeToChangelogFile="true"/> <!--4-->
+    <include file="createTablesFiles/documentTable.xml" relativeToChangelogFile="true"/> <!--5-->
+    <include file="createTablesFiles/products.xml" relativeToChangelogFile="true"/> <!--6 -->
+    <include file="createTablesFiles/baskets_histories.xml" relativeToChangelogFile="true"/> <!--7-->
+    <include file="createTablesFiles/baskets_products.xml" relativeToChangelogFile="true"/> <!--10-->
+    <include file="createTablesFiles/bars_codes.xml" relativeToChangelogFile="true"/> <!--13-->
+    <include file="createTablesFiles/sales.xml" relativeToChangelogFile="true"/> <!--15-->
 
     <!--    FIll database scripts - 6 -->
-    <include file="fillDatabase/addToDocuments.xml" relativeToChangelogFile="true"/>
-    <include file="fillDatabase/addDefaultLicenceKey.xml" relativeToChangelogFile="true"/>
-    <include file="fillDatabase/addToProductTypes.xml" relativeToChangelogFile="true"/>
-    <include file="fillDatabase/addToProducts.xml" relativeToChangelogFile="true"/>
-    <include file="fillDatabase/addToBarsCodes.xml" relativeToChangelogFile="true"/>
-    <include file="fillDatabase/addToSales.xml" relativeToChangelogFile="true"/>
+    <include file="fillDatabase/addToDocuments.xml" relativeToChangelogFile="true"/> <!--9-->
+    <include file="fillDatabase/addToProductTypes.xml" relativeToChangelogFile="true"/> <!--11-->
+    <include file="fillDatabase/addToProducts.xml" relativeToChangelogFile="true"/> <!--12-->
+    <include file="fillDatabase/addToBarsCodes.xml" relativeToChangelogFile="true"/> <!--14-->
+    <include file="fillDatabase/addToSales.xml" relativeToChangelogFile="true"/> <!--16-->
 </databaseChangeLog>

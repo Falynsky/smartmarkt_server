@@ -1,7 +1,6 @@
 package com.falynsky.smartmarkt.controllers;
 
 import com.falynsky.smartmarkt.models.Account;
-import com.falynsky.smartmarkt.models.Licence;
 import com.falynsky.smartmarkt.models.User;
 import com.falynsky.smartmarkt.services.AccountService;
 import com.falynsky.smartmarkt.services.ResponseMsgService;
@@ -16,11 +15,11 @@ import java.util.regex.Pattern;
 @CrossOrigin
 @RestController
 @RequestMapping("/signUp")
-public class SignUpRestController {
+public class SignUpController {
 
     private final AccountService accountService;
 
-    public SignUpRestController(AccountService accountService) {
+    public SignUpController(AccountService accountService) {
         this.accountService = accountService;
     }
 
@@ -33,9 +32,8 @@ public class SignUpRestController {
                 return ResponseMsgService.errorResponse("Wartości są wymagane i puste znaki są zabronione.");
             }
             Account newAccount = createAccount(map);
-            Licence newLicence = createLicence(map);
             User newUser = createUser(map);
-            accountService.createNewAccountData(newAccount, newLicence, newUser);
+            accountService.createNewAccountData(newAccount, newUser);
         } catch (DataIntegrityViolationException e) {
             return ResponseMsgService.errorResponse("Podany użytkownik już istnieje.");
         } catch (Exception e) {
@@ -76,12 +74,6 @@ public class SignUpRestController {
         String password = (String) map.get("password");
         newAccount.setPassword(password);
         return newAccount;
-    }
-
-    private Licence createLicence(Map<String, Object> map) {
-        Licence newLicence = new Licence();
-        newLicence.setLicenceKey((String) map.get("licenceKey"));
-        return newLicence;
     }
 
     private User createUser(Map<String, Object> map) {

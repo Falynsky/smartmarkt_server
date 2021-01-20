@@ -6,7 +6,6 @@ import com.falynsky.smartmarkt.models.DTO.BasketProductDTO;
 import com.falynsky.smartmarkt.repositories.*;
 import com.falynsky.smartmarkt.services.BasketProductService;
 import com.falynsky.smartmarkt.services.ResponseMsgService;
-import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,12 +44,29 @@ public class BasketProductController {
     }
 
 
+    @GetMapping("/getBasketId")
+    public Map<String, Object> getBasketIdByUsername(
+            @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) throws Exception {
+
+        Basket basket = basketProductService.getUserBasketByUserToken(userToken);
+        Map<String, Object> data = new HashMap<>();
+        data.put("basketId", basket.getId());
+
+        return new HashMap<String, Object>() {
+            {
+                put("data", data);
+                put("success", true);
+            }
+        };
+
+    }
+
     @GetMapping("/getSummary")
     public Map<String, Object> getBasketSummaryByUsername(
             @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) throws Exception {
 
         Basket basket = basketProductService.getUserBasketByUserToken(userToken);
-        List<BasketProductDTO> basketProductDTOS = basketProductRepository.retrieveBasketProductAsDTObyBasketId(basket.getId());
+        List<BasketProductDTO> basketProductDTOS = basketProductRepository.retrieveBasketProductAsDTObyBasketIdAndNotClosedYet(basket.getId());
 
         Map<String, Object> data = basketProductService.getSelectedBasketSummary(basketProductDTOS);
 
@@ -68,7 +84,7 @@ public class BasketProductController {
             @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) throws Exception {
 
         Basket basket = basketProductService.getUserBasketByUserToken(userToken);
-        List<BasketProductDTO> basketProductDTOS = basketProductRepository.retrieveBasketProductAsDTObyBasketId(basket.getId());
+        List<BasketProductDTO> basketProductDTOS = basketProductRepository.retrieveBasketProductAsDTObyBasketIdAndNotClosedYet(basket.getId());
         List<Map<String, Object>> basketProductsData = basketProductService.getSelectedBasketProductsData(basketProductDTOS);
 
         return new HashMap<String, Object>() {
@@ -80,7 +96,7 @@ public class BasketProductController {
 
     }
 
-    @SneakyThrows
+
     @Transactional(rollbackFor = Exception.class)
     @PostMapping("/add")
     public ResponseEntity<Map<String, Object>> addToBasket(
@@ -97,7 +113,7 @@ public class BasketProductController {
         return ResponseMsgService.sendCorrectResponse("Dodano " + productName + " do koszyka.");
     }
 
-    @SneakyThrows
+
     @Transactional(rollbackFor = Exception.class)
     @PostMapping("/remove")
     public ResponseEntity<Map<String, Object>> removeSelectedProductFromBasket(
@@ -111,7 +127,6 @@ public class BasketProductController {
         return ResponseMsgService.sendCorrectResponse("Produk został usunięty z koszyka");
     }
 
-    @SneakyThrows
     @Transactional(rollbackFor = Exception.class)
     @PostMapping("/removeAll")
     public ResponseEntity<Map<String, Object>> removeAllProductsFromBasket(
@@ -121,31 +136,18 @@ public class BasketProductController {
         } catch (Exception ex) {
             return ResponseMsgService.errorResponse(ex.getMessage());
         }
-        return ResponseMsgService.sendCorrectResponse("Produk został usunięty z koszyka");
+        return ResponseMsgService.sendCorrectResponse("Produkty zostały usunięte z koszyka");
     }
-//
-//    @SneakyThrows
-//    @Transactional(rollbackFor = Exception.class)
-//    @PostMapping("/removeOne")
-//    public ResponseEntity<Map<String, Object>> removeOneFromBasket(
-//            @RequestBody Map<String, Object> map,
-//            @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) throws Exception {
-//        BasketProduct basketProduct = basketProductService.getBasketProduct(map, userToken);
-//        if (basketProduct == null) {
-//            return ResponseMsgService.elementNotFoundResponse();
-//        }
-//        try {
-//            if (basketProduct.getQuantity() == 1) {
-//                basketProductRepository.delete(basketProduct);
-//            } else if (basketProduct.getQuantity() > 1) {
-//                int newQuantity = basketProduct.getQuantity() - 1;
-//                basketProduct.setQuantity(newQuantity);
-//                basketProductRepository.save(basketProduct);
-//            }
-//        } catch (Exception ex) {
-//            return ResponseMsgService.errorResponse(ex.getMessage());
-//        }
-//        return ResponseMsgService.sendCorrectResponse();
-//    }
 
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/purchaseAll")
+    public ResponseEntity<Map<String, Object>> purchaseAllProductsFromBasket(
+            @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
+        try {
+            basketProductService.purchaseAllProductsFromBasket(userToken);
+        } catch (Exception ex) {
+            return ResponseMsgService.errorResponse(ex.getMessage());
+        }
+        return ResponseMsgService.sendCorrectResponse("Produkty zostały zakupione");
+    }
 }

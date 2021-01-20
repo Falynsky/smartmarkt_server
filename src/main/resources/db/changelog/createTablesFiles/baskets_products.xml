@@ -6,7 +6,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
 
-    <changeSet id="7" author="kfa">
+    <changeSet id="10" author="kfa">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists schemaName="dbo" tableName="baskets_products"/>
@@ -19,8 +19,11 @@
             <column name="id" type="int"/>
             <column name="quantity" type="int"/>
             <column name="quantity_type" type="varchar(255)"/>
+            <column name="purchased" type="boolean"/>
+            <column name="closed" type="boolean"/>
             <column name="basket_id" type="int"/>
             <column name="product_id" type="int"/>
+            <column name="baskets_history_id" type="int"/>
         </createTable>
         <addNotNullConstraint tableName="baskets_products" columnName="id" columnDataType="int"/>
         <addNotNullConstraint tableName="baskets_products" columnName="quantity" columnDataType="int"/>
@@ -33,8 +36,12 @@
                                  referencedTableName="baskets"
                                  referencedColumnNames="id"/>
         <addForeignKeyConstraint baseTableName="baskets_products" baseColumnNames="product_id"
-                                 constraintName="products_buskets_products_FK"
+                                 constraintName="products_baskets_products_FK"
                                  referencedTableName="products"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="baskets_products" baseColumnNames="baskets_history_id"
+                                 constraintName="baskets_history_baskets_products_FK"
+                                 referencedTableName="baskets_histories"
                                  referencedColumnNames="id"/>
 
     </changeSet>

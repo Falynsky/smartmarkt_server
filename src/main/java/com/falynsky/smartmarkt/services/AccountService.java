@@ -2,12 +2,11 @@ package com.falynsky.smartmarkt.services;
 
 import com.falynsky.smartmarkt.models.Account;
 import com.falynsky.smartmarkt.models.Basket;
-import com.falynsky.smartmarkt.models.DTO.LicenceDTO;
-import com.falynsky.smartmarkt.models.Licence;
+import com.falynsky.smartmarkt.models.BasketHistory;
 import com.falynsky.smartmarkt.models.User;
 import com.falynsky.smartmarkt.repositories.AccountRepository;
+import com.falynsky.smartmarkt.repositories.BasketHistoryRepository;
 import com.falynsky.smartmarkt.repositories.BasketRepository;
-import com.falynsky.smartmarkt.repositories.LicenceRepository;
 import com.falynsky.smartmarkt.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,40 +18,34 @@ public class AccountService {
     private final UserRepository userRepository;
     private final BasketRepository basketRepository;
     private final PasswordEncoder passwordEncoder;
-    private final LicenceRepository licenceRepository;
+    private final BasketHistoryRepository basketHistoryRepository;
 
     public AccountService(
             AccountRepository accountRepository,
             UserRepository userRepository,
-            BasketRepository basketRepository, PasswordEncoder passwordEncoder,
-            LicenceRepository licenceRepository) {
+            BasketRepository basketRepository,
+            PasswordEncoder passwordEncoder,
+            BasketHistoryRepository basketHistoryRepository) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
         this.basketRepository = basketRepository;
         this.passwordEncoder = passwordEncoder;
-        this.licenceRepository = licenceRepository;
+        this.basketHistoryRepository = basketHistoryRepository;
     }
 
-    public void createNewAccountData(Account account, Licence formLicence, User user) {
-        createNewAccount(account, formLicence);
+    public void createNewAccountData(Account account, User user) {
+        createNewAccount(account);
         createNewUser(account, user);
         createNewUserBasket(account, user);
     }
 
-    private void createNewAccount(Account account, Licence formLicence) {
+    private void createNewAccount(Account account) {
         String encodePassword = getEncodedPassword(account);
         account.setPassword(encodePassword);
 
         Integer newAccountId = getIdForNewAccount();
         account.setId(newAccountId);
-
-        String licenceKey = formLicence.getLicenceKey();
-        LicenceDTO licenceDTO = licenceRepository.getLicenceByLicenceKey(licenceKey);
-        if (licenceDTO != null || licenceKey.contains("338338")) {
-            account.setRole("ROLE_ADMIN");
-        } else {
-            account.setRole("ROLE_USER");
-        }
+        account.setRole("ROLE_USER");
         accountRepository.save(account);
     }
 

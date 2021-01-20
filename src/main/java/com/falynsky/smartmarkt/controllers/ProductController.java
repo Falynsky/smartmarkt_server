@@ -24,18 +24,6 @@ public class ProductController {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-//    @PostMapping("/id")
-//    public ProductDTO gatProductById(@RequestBody Map<String, Object> map) {
-//        Integer id = (Integer) map.get("id");
-//        Optional<ProductDTO> productDTO = productRepository.retrieveProductAsDTObyId(id);
-//        return productDTO.orElse(null);
-//    }
-//
-//    @GetMapping("/all")
-//    public List<ProductDTO> getAllProducts() {
-//        return productRepository.retrieveProductAsDTO();
-//    }
-
     @PostMapping("/typeId")
     public ResponseEntity<Map<String, Object>> getAllProductsByTypeId(@RequestBody Map<String, Object> map) {
         Integer id = (Integer) map.get("id");

@@ -7,13 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BasketProductDTO {
+public class BasketHistoryDTO {
 
     int id;
-    int quantity;
-    String quantityType;
     Boolean purchased;
     Boolean closed;
     int basketId;
-    int productId;
 }
