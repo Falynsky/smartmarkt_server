@@ -7,20 +7,20 @@
 
     <changeSet id="12" author="kfa">
         <sql>
-            INSERT INTO products VALUES (1,'Pralka', 12, 400.99, 'zł',2, 'Bardzo ladna i wydajna pralka',5);
-            INSERT INTO products VALUES (2,'PS4', 12, 1250.98, 'zł',1,'Konsola ps4 do grania firmy sony',8);
-            INSERT INTO products VALUES (3,'PS3', 12, 900.99, 'zł',1, 'Konsola ps3 do grania firmy sony',7);
-            INSERT INTO products VALUES (4,'PS1', 12, 249.99, 'zł',1, 'Konsola ps1 do grania firmy sony',6);
-            INSERT INTO products VALUES (5,'XBOX ONE', 12, 850.99, 'zł',1,'Konsola xbox one do grania firmy microsoft',14);
-            INSERT INTO products VALUES (6,'XBOX 360', 12, 400.99, 'zł',1, 'Konsola xbox 360 do grania firmy microsoft',13);
-            INSERT INTO products VALUES (7,'Bułka', 12, 0.75, 'zł',3, 'Smaczna bulka',2);
-            INSERT INTO products VALUES (8,'Woda 1l', 12, 0.99, 'zł',3, 'Woda, dobra do nawodnienia',12);
-            INSERT INTO products VALUES (9,'Lipton peach 1l', 12, 3.99, 'zł',3, 'Mrozona herbata',4);
-            INSERT INTO products VALUES (10,'T-shirt', 12, 29.99, 'zł',5, 'Spoko koszulka',11);
-            INSERT INTO products VALUES (11,'Jeansy carrot fit', 12, 79.99, 'zł',5, 'Marchwiowe spodnie',3);
-            INSERT INTO products VALUES (12,'Zeszyt A4 50 kartek', 12, 1.99, 'zł',6, 'Zeszyt do matmy 50 kartkowy',1);
-            INSERT INTO products VALUES (13,'Szafka', 12, 340.99, 'zł',7, 'Szafka na ciuchy',10);
-            INSERT INTO products VALUES (14,'Stolik', 12, 120.99, 'zł',7, 'Stolik do kawy',9);
+            INSERT INTO products VALUES (1,'Pralka', 12, 400.99, 80.2, 2, 'Bardzo ladna i wydajna pralka',5);
+            INSERT INTO products VALUES (2,'PS4', 12, 1250.98, 2.3, 1,'Konsola ps4 do grania firmy sony',8);
+            INSERT INTO products VALUES (3,'PS3', 12, 900.99, 2.3, 1, 'Konsola ps3 do grania firmy sony',7);
+            INSERT INTO products VALUES (4,'PS1', 12, 249.99, 4.2, 1, 'Konsola ps1 do grania firmy sony',6);
+            INSERT INTO products VALUES (5,'XBOX ONE', 12, 850.99, 5.3,1,'Konsola xbox one do grania firmy microsoft',14);
+            INSERT INTO products VALUES (6,'XBOX 360', 12, 400.99, 4.6,1, 'Konsola xbox 360 do grania firmy microsoft',13);
+            INSERT INTO products VALUES (7,'Bułka', 12, 0.75, 0.2,3, 'Smaczna bulka',2);
+            INSERT INTO products VALUES (8,'Woda 1l', 12, 0.99, 1,3, 'Woda, dobra do nawodnienia',12);
+            INSERT INTO products VALUES (9,'Lipton peach 1l', 12, 3.99, 1,3, 'Mrozona herbata',4);
+            INSERT INTO products VALUES (10,'T-shirt', 12, 29.99, 0.2,5, 'Spoko koszulka',11);
+            INSERT INTO products VALUES (11,'Jeansy carrot fit', 12, 79.99, 0.4,5, 'Marchwiowe spodnie',3);
+            INSERT INTO products VALUES (12,'Zeszyt A4 50 kartek', 12, 1.99, 0.05,6, 'Zeszyt do matmy 50 kartkowy',1);
+            INSERT INTO products VALUES (13,'Szafka', 12, 340.99, 20.0,7, 'Szafka na ciuchy',10);
+            INSERT INTO products VALUES (14,'Stolik', 12, 120.99, 10.0,7, 'Stolik do kawy',9);
         </sql>
     </changeSet>
 </databaseChangeLog>

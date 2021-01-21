@@ -1,11 +1,11 @@
 package com.falynsky.smartmarkt.models;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -24,8 +24,17 @@ public class BasketProduct {
     @Column(name = "quantity_type")
     String quantityType;
 
+    @Column(name = "weight")
+    double weight;
+
+    @Column(name = "purchased_price")
+    double purchasedPrice;
+
     @Column(name = "purchased")
     Boolean purchased;
+
+    @Column(name = "purchase_date_time")
+    Date purchaseDateTime;
 
     @Column(name = "closed")
     Boolean closed;
@@ -38,67 +47,11 @@ public class BasketProduct {
     @JoinColumn(name = "product_id")
     Product productId;
 
-    @ManyToOne(    cascade = {
+    @ManyToOne(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
     })
     @JoinColumn(name = "baskets_history_id")
     BasketHistory basketsHistoryId;
 
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getQuantityType() {
-        return quantityType;
-    }
-
-    public void setQuantityType(String quantityType) {
-        this.quantityType = quantityType;
-    }
-
-    public Basket getBasketId() {
-        return basketId;
-    }
-
-    public void setBasketId(Basket basketId) {
-        this.basketId = basketId;
-    }
-
-    public Product getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Product productId) {
-        this.productId = productId;
-    }
-
-    public boolean isPurchased() {
-        return purchased;
-    }
-
-    public void setPurchased(boolean purchased) {
-        this.purchased = purchased;
-    }
-
-    public BasketHistory getBasketsHistoryId() {
-        return basketsHistoryId;
-    }
-
-    public void setBasketsHistoryId(BasketHistory basketsHistoryId) {
-        this.basketsHistoryId = basketsHistoryId;
-    }
 }

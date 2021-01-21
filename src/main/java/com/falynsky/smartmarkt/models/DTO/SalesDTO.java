@@ -14,6 +14,6 @@ public class SalesDTO {
     public String title;
     public String description;
     public double discount;
-    public float originalPrice;
+    public double originalPrice;
     public int productId;
 }

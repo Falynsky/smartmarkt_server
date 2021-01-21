@@ -5,7 +5,9 @@ import com.falynsky.smartmarkt.exceptions.NotEnoughQuantity;
 import com.falynsky.smartmarkt.models.*;
 import com.falynsky.smartmarkt.models.DTO.BasketProductDTO;
 import com.falynsky.smartmarkt.models.DTO.ProductDTO;
+import com.falynsky.smartmarkt.models.DTO.SalesDTO;
 import com.falynsky.smartmarkt.repositories.*;
+import com.falynsky.smartmarkt.utils.PriceUtils;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 public class BasketProductService {
 
     private final BasketRepository basketRepository;
+    private final SalesRepository salesRepository;
     private final BasketProductRepository basketProductRepository;
     private final ProductRepository productRepository;
     private final AccountRepository accountRepository;
@@ -28,12 +31,13 @@ public class BasketProductService {
     BasketProductService(BasketProductRepository basketProductRepository,
                          ProductRepository productRepository,
                          BasketRepository basketRepository,
-                         AccountRepository accountRepository,
+                         SalesRepository salesRepository, AccountRepository accountRepository,
                          UserRepository userRepository,
                          DocumentRepository documentRepository, BasketHistoryRepository basketHistoryRepository, JwtTokenUtil jwtTokenUtil) {
         this.basketProductRepository = basketProductRepository;
         this.productRepository = productRepository;
         this.basketRepository = basketRepository;
+        this.salesRepository = salesRepository;
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
         this.documentRepository = documentRepository;
@@ -78,7 +82,7 @@ public class BasketProductService {
     }
 
     @SneakyThrows
-    public Basket getUserBasketByUserToken(String userToken) throws Exception {
+    public Basket getUserBasketByUserToken(String userToken) {
         User user = getCurrentUser(userToken);
         return getCurrentUserBasket(user);
     }
@@ -140,7 +144,7 @@ public class BasketProductService {
         basketProductRepository.delete(basketProduct);
     }
 
-    public void removeAllProductsFromBasket(String userToken) throws Exception {
+    public void removeAllProductsFromBasket(String userToken) {
         Basket basket = getUserBasketByUserToken(userToken);
 
         List<BasketProductDTO> basketProductDTOS = basketProductRepository.retrieveBasketProductAsDTObyBasketIdAndNotClosedYet(basket.id);
@@ -163,7 +167,7 @@ public class BasketProductService {
     }
 
 
-    public BasketProduct createAndAddBasketProduct(Map<String, Object> map, Basket basket) throws Exception {
+    public BasketProduct createAndAddBasketProduct(Map<String, Object> map, Basket basket) {
         BasketProduct basketProduct = new BasketProduct();
         int id = getIdForNewBasketProduct(basketProductRepository);
         basketProduct.setId(id);
@@ -189,7 +193,7 @@ public class BasketProductService {
     }
 
     @SneakyThrows
-    private Integer getQuantity(Map<String, Object> map) throws Exception {
+    private Integer getQuantity(Map<String, Object> map) {
         Object quantityValue = map.get("quantity");
         if (quantityValue instanceof Integer) {
             return (Integer) quantityValue;
@@ -222,8 +226,7 @@ public class BasketProductService {
             int productId = productDTO.getId();
             String name = productDTO.getName();
             int quantity = basketProductDTO.getQuantity();
-            Float price = productDTO.getPrice();
-            String currency = productDTO.getCurrency();
+            Double price = productDTO.getPrice();
 
             Map<String, Object> productData = new LinkedHashMap<>();
             productData.put("id", id);
@@ -231,7 +234,11 @@ public class BasketProductService {
             productData.put("name", name);
             productData.put("quantity", quantity);
             productData.put("price", price);
-            productData.put("currency", currency);
+            double summary = price * quantity;
+            double roundSummary = PriceUtils.roundPrice(summary);
+            productData.put("summary", roundSummary);
+            Double productDiscount = getProductPriceAfterDiscount(roundSummary, productDTO);
+            productData.put("discountPrice", productDiscount != null ? PriceUtils.roundPrice(productDiscount) : null);
 
             Integer documentId = productDTO.documentId;
             Optional<Document> optionalDocument = documentRepository.findById(documentId);
@@ -258,25 +265,45 @@ public class BasketProductService {
 
     public Map<String, Object> getSelectedBasketSummary(List<BasketProductDTO> basketProductDTOS) {
         Map<String, Object> data = new HashMap<>();
-        float summaryPrice = 0;
+        double summary = 0;
+        double summaryAfterDiscount = 0;
         for (BasketProductDTO basketProductDTO : basketProductDTOS) {
             int basketProductDTOId = basketProductDTO.getProductId();
             Optional<ProductDTO> optionalProduct = productRepository.retrieveProductAsDTObyId(basketProductDTOId);
             if (optionalProduct.isPresent()) {
                 ProductDTO product = optionalProduct.get();
-                float price = product.getPrice();
-                summaryPrice += price * basketProductDTO.getQuantity();
+                double productSummary = getProductSummary(basketProductDTO, product);
+                summary += productSummary;
+                Double productPriceAfterDiscount = getProductPriceAfterDiscount(productSummary, product);
+                summaryAfterDiscount += productPriceAfterDiscount != null ? productPriceAfterDiscount : productSummary;
             }
         }
-        data.put("summary", summaryPrice);
+        data.put("summary", PriceUtils.roundPrice(summary));
+        data.put("summaryAfterDiscount", PriceUtils.roundPrice(summaryAfterDiscount));
         return data;
 
     }
 
+    private double getProductSummary(BasketProductDTO basketProductDTO, ProductDTO product) {
+        double price = product.getPrice();
+        int quantity = basketProductDTO.getQuantity();
+        return price * quantity;
+    }
 
-    public void purchaseAllProductsFromBasket(String userToken) throws Exception {
+    private Double getProductPriceAfterDiscount(double productSummary, ProductDTO product) {
+        SalesDTO salesDTO = salesRepository.retrieveSaleAsDTOByProductId(product.id);
+        if (salesDTO != null) {
+            double discount = salesDTO.discount;
+            return productSummary * (1 - discount);
+        }
+        return null;
+    }
+
+
+    public void purchaseAllProductsFromBasket(String userToken) {
         Basket basket = getUserBasketByUserToken(userToken);
         BasketHistory basketHistory = basketHistoryRepository.findByClosedFalse();
+        List<SalesDTO> salesDTO = salesRepository.retrieveSalesAsDTO();
         if (basketHistory == null) {
             int newBasketHistoryId = getIdForNewBasketHistory();
             basketHistory = new BasketHistory(newBasketHistoryId, false, false, basket);
@@ -284,13 +311,27 @@ public class BasketProductService {
         }
 
         List<BasketProductDTO> basketProductDTOS = basketProductRepository.retrieveBasketProductAsDTObyBasketIdAndNotClosedYet(basket.id);
+        Date purchaseDateTime = new Date();
         for (BasketProductDTO basketProductDTO : basketProductDTOS) {
             Optional<BasketProduct> optionalBasketProduct = basketProductRepository.findById(basketProductDTO.getId());
             if (optionalBasketProduct.isPresent()) {
                 BasketProduct basketProduct = optionalBasketProduct.get();
                 basketProduct.setBasketsHistoryId(basketHistory);
+                basketProduct.setPurchaseDateTime(purchaseDateTime);
                 basketProduct.setPurchased(true);
                 basketProduct.setClosed(true);
+                Product product = basketProduct.getProductId();
+                basketProduct.setWeight(product.getWeight());
+                int productId = product.id;
+                double purchasedPrice = product.getPrice();
+                for (SalesDTO saleDTO : salesDTO) {
+                    if (saleDTO.getProductId() == productId) {
+                        purchasedPrice = purchasedPrice * (1 - saleDTO.getDiscount());
+                        break;
+                    }
+                }
+
+                basketProduct.setPurchasedPrice(PriceUtils.roundPrice(purchasedPrice));
                 basketProductRepository.save(basketProduct);
             }
         }

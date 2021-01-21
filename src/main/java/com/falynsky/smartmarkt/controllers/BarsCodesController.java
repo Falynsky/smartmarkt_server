@@ -39,7 +39,6 @@ public class BarsCodesController {
         productData.put("id", productDTO.id);
         productData.put("name", productDTO.name);
         productData.put("price", productDTO.price);
-        productData.put("currency", productDTO.currency);
         productData.put("quantity", productDTO.quantity);
 
 

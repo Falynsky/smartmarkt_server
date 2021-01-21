@@ -19,7 +19,10 @@
             <column name="id" type="int"/>
             <column name="quantity" type="int"/>
             <column name="quantity_type" type="varchar(255)"/>
+            <column name="weight" type="double"/>
+            <column name="purchased_price" type="double"/>
             <column name="purchased" type="boolean"/>
+            <column name="purchase_date_time" type="DATETIME"/>
             <column name="closed" type="boolean"/>
             <column name="basket_id" type="int"/>
             <column name="product_id" type="int"/>
@@ -28,6 +31,7 @@
         <addNotNullConstraint tableName="baskets_products" columnName="id" columnDataType="int"/>
         <addNotNullConstraint tableName="baskets_products" columnName="quantity" columnDataType="int"/>
         <addNotNullConstraint tableName="baskets_products" columnName="quantity_type" columnDataType="varchar(255)"/>
+        <addNotNullConstraint tableName="baskets_products" columnName="weight" columnDataType="double"/>
         <addNotNullConstraint tableName="baskets_products" columnName="basket_id" columnDataType="int"/>
         <addNotNullConstraint tableName="baskets_products" columnName="product_id" columnDataType="int"/>
         <addPrimaryKey tableName="baskets_products" columnNames="id"/>

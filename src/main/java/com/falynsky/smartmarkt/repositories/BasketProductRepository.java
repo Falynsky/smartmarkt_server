@@ -23,7 +23,7 @@ public interface BasketProductRepository extends JpaRepository<BasketProduct, In
 
 
     @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketProductDTO" +
-            "(b.id,  b.quantity, b.quantityType, b.purchased, b.closed, b.basketId.id, b.productId.id) " +
+            "(b.id,  b.quantity, b.quantityType, b.weight, b.purchasedPrice, b.purchased, b.purchaseDateTime, b.closed, b.basketId.id, b.productId.id) " +
             "FROM BasketProduct b WHERE b.basketId.id = :basketId AND b.closed = FALSE")
     List<BasketProductDTO> retrieveBasketProductAsDTObyBasketIdAndNotClosedYet(@Param("basketId") Integer basketId);
 

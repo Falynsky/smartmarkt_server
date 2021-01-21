@@ -19,8 +19,8 @@
             <column name="id" type="int"/>
             <column name="name" type="varchar(255)"/>
             <column name="quantity" type="int"/>
-            <column name="price" type="float"/>
-            <column name="currency" type="varchar(255)"/>
+            <column name="price" type="double"/>
+            <column name="weight" type="double"/>
             <column name="product_type_id" type="int"/>
             <column name="product_info" type="varchar(255)"/>
             <column name="document_id" type="int"/>
@@ -28,8 +28,8 @@
         <addNotNullConstraint tableName="products" columnName="id" columnDataType="int"/>
         <addNotNullConstraint tableName="products" columnName="name" columnDataType="varchar(255)"/>
         <addNotNullConstraint tableName="products" columnName="quantity" columnDataType="int"/>
-        <addNotNullConstraint tableName="products" columnName="price" columnDataType="float"/>
-        <addNotNullConstraint tableName="products" columnName="currency" columnDataType="varchar(255)"/>
+        <addNotNullConstraint tableName="products" columnName="price" columnDataType="double"/>
+        <addNotNullConstraint tableName="products" columnName="weight" columnDataType="double"/>
         <addNotNullConstraint tableName="products" columnName="product_info" columnDataType="varchar(255)"/>
         <addNotNullConstraint tableName="products" columnName="product_type_id" columnDataType="int"/>
 

@@ -19,7 +19,7 @@ public class Sales {
     @Column(name = "discount")
     public double discount;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne()
     @JoinColumn(name = "product_id")
     public Product productId;
 }
