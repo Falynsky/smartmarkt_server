@@ -316,22 +316,7 @@ public class BasketProductService {
             Optional<BasketProduct> optionalBasketProduct = basketProductRepository.findById(basketProductDTO.getId());
             if (optionalBasketProduct.isPresent()) {
                 BasketProduct basketProduct = optionalBasketProduct.get();
-                basketProduct.setBasketsHistoryId(basketHistory);
-                basketProduct.setPurchaseDateTime(purchaseDateTime);
-                basketProduct.setPurchased(true);
-                basketProduct.setClosed(true);
-                Product product = basketProduct.getProductId();
-                basketProduct.setWeight(product.getWeight());
-                int productId = product.id;
-                double purchasedPrice = product.getPrice();
-                for (SalesDTO saleDTO : salesDTO) {
-                    if (saleDTO.getProductId() == productId) {
-                        purchasedPrice = purchasedPrice * (1 - saleDTO.getDiscount());
-                        break;
-                    }
-                }
-
-                basketProduct.setPurchasedPrice(PriceUtils.roundPrice(purchasedPrice));
+                basketProduct = prepareBasketProductToSave(basketHistory, salesDTO, purchaseDateTime, basketProduct);
                 basketProductRepository.save(basketProduct);
             }
         }
@@ -339,6 +324,26 @@ public class BasketProductService {
         basketHistory.setPurchased(true);
         basketHistory.setClosed(true);
         basketHistoryRepository.save(basketHistory);
+    }
+
+    private BasketProduct prepareBasketProductToSave(BasketHistory basketHistory, List<SalesDTO> salesDTO, Date purchaseDateTime, BasketProduct basketProduct) {
+        basketProduct.setBasketsHistoryId(basketHistory);
+        basketProduct.setPurchaseDateTime(purchaseDateTime);
+        basketProduct.setPurchased(true);
+        basketProduct.setClosed(true);
+        Product product = basketProduct.getProductId();
+        basketProduct.setWeight(product.getWeight());
+        int productId = product.id;
+        double purchasedPrice = product.getPrice();
+        for (SalesDTO saleDTO : salesDTO) {
+            if (saleDTO.getProductId() == productId) {
+                purchasedPrice = purchasedPrice * (1 - saleDTO.getDiscount());
+                break;
+            }
+        }
+
+        basketProduct.setPurchasedPrice(PriceUtils.roundPrice(purchasedPrice));
+        return basketProduct;
     }
 
 
