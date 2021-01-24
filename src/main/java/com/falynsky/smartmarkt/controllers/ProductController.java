@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -28,8 +27,7 @@ public class ProductController {
     public ResponseEntity<Map<String, Object>> getAllProductsByTypeId(@RequestBody Map<String, Object> map) {
         Integer id = (Integer) map.get("id");
         List<ProductDTO> productsList = productRepository.retrieveProductAsDTObyTypeId(id);
-        ResponseMapBuilder<List<ProductDTO>> responseMapBuilder = new ResponseMapBuilder<>();
-        Map<String, Object> body = responseMapBuilder.buildResponse(productsList);
+        Map<String, Object> body = ResponseMapBuilder.buildResponse(productsList);
         return ResponseEntity.ok(body);
     }
 

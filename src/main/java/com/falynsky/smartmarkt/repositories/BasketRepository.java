@@ -25,4 +25,8 @@ public interface BasketRepository extends JpaRepository<Basket, Integer> {
 
     @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketDTO(b.id, b.name, b.userId.id) FROM Basket b where b.id = :basketId")
     BasketDTO retrieveBasketAsDTObyId(@Param("basketId") Integer basketId);
+
+
+    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketDTO(b.id, b.name, b.userId.id) FROM Basket b where b.userId.id = :userId")
+    BasketDTO retrieveBasketAsDTObyUserId(@Param("userId") Integer userId);
 }

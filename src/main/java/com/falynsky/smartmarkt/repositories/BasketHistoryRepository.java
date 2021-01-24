@@ -27,4 +27,7 @@ public interface BasketHistoryRepository extends JpaRepository<BasketHistory, In
 
     @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketHistoryDTO(b.id, b.purchased, b.closed, b.basketId.id) FROM BasketHistory b where b.id = :basketHistoryId")
     BasketHistoryDTO retrieveBasketAsDTObyId(@Param("basketHistoryId") Integer basketHistoryId);
+
+    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketHistoryDTO(b.id, b.purchased, b.closed, b.basketId.id) FROM BasketHistory b where b.basketId.id = :basketId ORDER BY b.id DESC")
+    List<BasketHistoryDTO> retrieveBasketsHistoryAsDTObyBasketId(@Param("basketId") Integer basketId);
 }
