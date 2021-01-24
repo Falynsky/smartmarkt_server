@@ -16,4 +16,6 @@ public class SalesDTO {
     public double discount;
     public double originalPrice;
     public int productId;
+    public String docName;
+    public String docType;
 }

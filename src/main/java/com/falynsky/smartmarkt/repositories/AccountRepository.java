@@ -17,9 +17,9 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 
     Account findFirstByOrderByIdDesc();
 
-    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.AccountDTO(a.id, a.username, a.password, a.role) FROM Account a")
+    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.AccountDTO(a.id, a.username, a.password, a.mail, a.role) FROM Account a")
     List<AccountDTO> retrieveAccountAsDTO();
 
-    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.AccountDTO(a.id, a.username, a.password, a.role) FROM Account a where a.id = :accountId")
+    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.AccountDTO(a.id, a.username, a.password, a.mail, a.role) FROM Account a where a.id = :accountId")
     AccountDTO retrieveAccountAsDTObyId(@Param("accountId") Integer accountId);
 }

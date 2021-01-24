@@ -73,6 +73,8 @@ public class SignUpController {
         newAccount.setUsername(username);
         String password = (String) map.get("password");
         newAccount.setPassword(password);
+        String mail = (String) map.get("mail");
+        newAccount.setMail(mail);
         return newAccount;
     }
 

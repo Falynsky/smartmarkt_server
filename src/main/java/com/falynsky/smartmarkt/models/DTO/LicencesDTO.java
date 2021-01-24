@@ -7,13 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountDTO {
+public class LicencesDTO {
 
-    private int id;
-    private String login;
-    private String password;
-    private String mail;
-    private String role;
-
-
+    public int id;
+    public String mail;
+    public String type;
 }

@@ -46,7 +46,7 @@ public class AccountController {
 
     @GetMapping("/mocked")
     public AccountDTO getMockedUser() {
-        return new AccountDTO(1, "mockedUser", "mockedUser", "user");
+        return new AccountDTO(1, "mockedUser", "mockedUser", "mail@gmail.com", "user");
     }
 
     @GetMapping("/mocked/{numberOfUsers}")
@@ -57,7 +57,7 @@ public class AccountController {
     private List<AccountDTO> generateUsers(int numberOfUsers) {
         List<AccountDTO> users = new ArrayList<>();
         for (int i = 1; i <= numberOfUsers; i++) {
-            users.add(new AccountDTO(i, "user" + i, "user" + i, "user"));
+            users.add(new AccountDTO(i, "user" + i, "user" + i, "mail" + i, "user"));
         }
         return users;
     }

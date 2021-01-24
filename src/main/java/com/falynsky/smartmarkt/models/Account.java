@@ -24,6 +24,7 @@ public class Account implements UserDetails {
     private Integer id;
     private String username;
     private String password;
+    private String mail;
     private String role;
 
     @Override
@@ -84,4 +85,13 @@ public class Account implements UserDetails {
     public void setRole(String role) {
         this.role = role;
     }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
 }
