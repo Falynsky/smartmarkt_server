@@ -13,6 +13,5 @@ public class BarsCodesDTO {
     public int code;
     public int productId;
 
-
 }
 

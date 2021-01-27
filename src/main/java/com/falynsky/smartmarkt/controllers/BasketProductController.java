@@ -6,6 +6,7 @@ import com.falynsky.smartmarkt.models.DTO.BasketProductDTO;
 import com.falynsky.smartmarkt.repositories.*;
 import com.falynsky.smartmarkt.services.BasketProductService;
 import com.falynsky.smartmarkt.services.ResponseMsgService;
+import com.falynsky.smartmarkt.utils.ResponseMapBuilder;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,13 +52,7 @@ public class BasketProductController {
         Basket basket = basketProductService.getUserBasketByUserToken(userToken);
         Map<String, Object> data = new HashMap<>();
         data.put("basketId", basket.getId());
-
-        return new HashMap<String, Object>() {
-            {
-                put("data", data);
-                put("success", true);
-            }
-        };
+        return ResponseMapBuilder.buildResponse(data, true);
 
     }
 
@@ -69,13 +64,7 @@ public class BasketProductController {
         List<BasketProductDTO> basketProductDTOS = basketProductRepository.retrieveBasketProductAsDTObyBasketIdAndNotClosedYet(basket.getId());
 
         Map<String, Object> data = basketProductService.getSelectedBasketSummary(basketProductDTOS);
-
-        return new HashMap<String, Object>() {
-            {
-                put("data", data);
-                put("success", true);
-            }
-        };
+        return ResponseMapBuilder.buildResponse(data, true);
 
     }
 
@@ -86,13 +75,7 @@ public class BasketProductController {
         Basket basket = basketProductService.getUserBasketByUserToken(userToken);
         List<BasketProductDTO> basketProductDTOS = basketProductRepository.retrieveBasketProductAsDTObyBasketIdAndNotClosedYet(basket.getId());
         List<Map<String, Object>> basketProductsData = basketProductService.getSelectedBasketProductsData(basketProductDTOS);
-
-        return new HashMap<String, Object>() {
-            {
-                put("data", basketProductsData);
-                put("success", true);
-            }
-        };
+        return ResponseMapBuilder.buildResponse(basketProductsData, true);
 
     }
 

@@ -15,5 +15,4 @@ public class AccountDTO {
     private String mail;
     private String role;
 
-
 }

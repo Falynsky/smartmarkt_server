@@ -18,19 +18,16 @@ public class AccountService {
     private final UserRepository userRepository;
     private final BasketRepository basketRepository;
     private final PasswordEncoder passwordEncoder;
-    private final BasketHistoryRepository basketHistoryRepository;
 
     public AccountService(
             AccountRepository accountRepository,
             UserRepository userRepository,
             BasketRepository basketRepository,
-            PasswordEncoder passwordEncoder,
-            BasketHistoryRepository basketHistoryRepository) {
+            PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
         this.basketRepository = basketRepository;
         this.passwordEncoder = passwordEncoder;
-        this.basketHistoryRepository = basketHistoryRepository;
     }
 
     public void createNewAccountData(Account account, User user) {

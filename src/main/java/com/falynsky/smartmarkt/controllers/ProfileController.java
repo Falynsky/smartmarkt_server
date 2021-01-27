@@ -4,8 +4,6 @@ import com.falynsky.smartmarkt.JWT.JwtTokenUtil;
 import com.falynsky.smartmarkt.models.Account;
 import com.falynsky.smartmarkt.models.User;
 import com.falynsky.smartmarkt.repositories.AccountRepository;
-import com.falynsky.smartmarkt.repositories.BasketHistoryRepository;
-import com.falynsky.smartmarkt.repositories.BasketRepository;
 import com.falynsky.smartmarkt.repositories.UserRepository;
 import com.falynsky.smartmarkt.utils.ResponseMapBuilder;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,15 +21,13 @@ public class ProfileController {
     private final JwtTokenUtil jwtTokenUtil;
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
-    private final BasketRepository basketRepository;
-    private final BasketHistoryRepository basketHistoryRepository;
 
-    public ProfileController(JwtTokenUtil jwtTokenUtil, AccountRepository accountRepository, UserRepository userRepository, BasketRepository basketRepository, BasketHistoryRepository basketHistoryRepository) {
+    public ProfileController(JwtTokenUtil jwtTokenUtil,
+                             AccountRepository accountRepository,
+                             UserRepository userRepository) {
         this.jwtTokenUtil = jwtTokenUtil;
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
-        this.basketRepository = basketRepository;
-        this.basketHistoryRepository = basketHistoryRepository;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -62,7 +58,6 @@ public class ProfileController {
         }
         return optionalUser.get();
     }
-
 
     private Account getCurrentAccount(String userToken) throws Exception {
         String currentUserUsername = jwtTokenUtil.getUsernameFromToken(userToken.substring(5));

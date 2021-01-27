@@ -19,7 +19,6 @@ public class ResponseMsgService {
         return ResponseEntity.ok(body);
     }
 
-
     public static ResponseEntity<Map<String, Object>> errorResponse(String msg) {
         Map<String, Object> body = new HashMap<>();
         body.put("success", "false");
@@ -32,13 +31,6 @@ public class ResponseMsgService {
         body.put("success", "false");
         body.put("title", title);
         body.put("msg", msg);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
-    }
-
-    public static ResponseEntity<Map<String, Object>> elementNotFoundResponse() {
-        Map<String, Object> body = new HashMap<>();
-        body.put("success", "false");
-        body.put("msg", "ObjectNotFound");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
 

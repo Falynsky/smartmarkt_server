@@ -6,6 +6,7 @@ import com.falynsky.smartmarkt.models.Document;
 import com.falynsky.smartmarkt.repositories.DocumentRepository;
 import com.falynsky.smartmarkt.services.ProductService;
 import com.falynsky.smartmarkt.services.ProductTypeService;
+import com.falynsky.smartmarkt.utils.ResponseMapBuilder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -41,7 +42,6 @@ public class BarsCodesController {
         productData.put("price", productDTO.price);
         productData.put("quantity", productDTO.quantity);
 
-
         Integer documentId = productDTO.documentId;
         Optional<Document> optionalDocument = documentRepository.findById(documentId);
         if (optionalDocument.isPresent()) {
@@ -55,12 +55,6 @@ public class BarsCodesController {
 
         productData.put("productTypeId", productTypeDTO.id);
         productData.put("productType", productTypeDTO.name);
-
-        return new HashMap<String, Object>() {
-            {
-                put("data", productData);
-                put("success", true);
-            }
-        };
+        return ResponseMapBuilder.buildResponse(productData, true);
     }
 }
