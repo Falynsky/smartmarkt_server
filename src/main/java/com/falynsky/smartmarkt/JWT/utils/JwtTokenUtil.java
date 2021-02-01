@@ -1,4 +1,4 @@
-package com.falynsky.smartmarkt.JWT;
+package com.falynsky.smartmarkt.JWT.utils;
 
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;

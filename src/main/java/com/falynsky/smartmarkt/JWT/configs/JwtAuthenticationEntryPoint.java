@@ -1,4 +1,4 @@
-package com.falynsky.smartmarkt.JWT;
+package com.falynsky.smartmarkt.JWT.configs;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

@@ -6,6 +6,8 @@ import com.falynsky.smartmarkt.models.Document;
 import com.falynsky.smartmarkt.repositories.DocumentRepository;
 import com.falynsky.smartmarkt.services.ProductService;
 import com.falynsky.smartmarkt.services.ProductTypeService;
+import com.falynsky.smartmarkt.services.SalesService;
+import com.falynsky.smartmarkt.utils.PriceUtils;
 import com.falynsky.smartmarkt.utils.ResponseMapBuilder;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,11 +22,13 @@ public class BarsCodesController {
 
     private final ProductService productService;
     private final ProductTypeService productTypeService;
+    private final SalesService salesService;
     private final DocumentRepository documentRepository;
 
-    public BarsCodesController(ProductService productService, ProductTypeService productTypeService, DocumentRepository documentRepository) {
+    public BarsCodesController(ProductService productService, ProductTypeService productTypeService, SalesService salesService, DocumentRepository documentRepository) {
         this.productService = productService;
         this.productTypeService = productTypeService;
+        this.salesService = salesService;
         this.documentRepository = documentRepository;
     }
 
@@ -39,8 +43,11 @@ public class BarsCodesController {
         Map<String, Object> productData = new HashMap<>();
         productData.put("id", productDTO.id);
         productData.put("name", productDTO.name);
-        productData.put("price", productDTO.price);
+        double productPrice = productDTO.price;
+        productData.put("price", productPrice);
         productData.put("quantity", productDTO.quantity);
+        Double priceAfterDiscount = salesService.getProductPriceAfterDiscount(productPrice, productDTO);
+        productData.put("afterDiscount", priceAfterDiscount != null ? PriceUtils.roundPrice(priceAfterDiscount) : null);
 
         Integer documentId = productDTO.documentId;
         Optional<Document> optionalDocument = documentRepository.findById(documentId);
@@ -57,4 +64,6 @@ public class BarsCodesController {
         productData.put("productType", productTypeDTO.name);
         return ResponseMapBuilder.buildResponse(productData, true);
     }
+
+
 }

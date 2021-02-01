@@ -1,6 +1,6 @@
 package com.falynsky.smartmarkt.controllers;
 
-import com.falynsky.smartmarkt.JWT.JwtTokenUtil;
+import com.falynsky.smartmarkt.JWT.utils.JwtTokenUtil;
 import com.falynsky.smartmarkt.models.Account;
 import com.falynsky.smartmarkt.models.User;
 import com.falynsky.smartmarkt.repositories.AccountRepository;

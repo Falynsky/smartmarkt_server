@@ -1,5 +1,9 @@
-package com.falynsky.smartmarkt.JWT;
+package com.falynsky.smartmarkt.JWT.controllers;
 
+import com.falynsky.smartmarkt.JWT.utils.JwtTokenUtil;
+import com.falynsky.smartmarkt.JWT.services.JwtUserDetailsService;
+import com.falynsky.smartmarkt.JWT.models.JwtRequest;
+import com.falynsky.smartmarkt.JWT.models.JwtResponse;
 import com.falynsky.smartmarkt.services.ResponseMsgService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,7 +44,7 @@ public class JwtAuthenticationController {
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
         if (userDetails == null) {
-            return ResponseMsgService.errorResponse("No UserDetails found!");
+            return ResponseMsgService.errorResponse("Brak danych użytkownika!");
         }
 
         final String token = jwtTokenUtil.generateToken(userDetails);

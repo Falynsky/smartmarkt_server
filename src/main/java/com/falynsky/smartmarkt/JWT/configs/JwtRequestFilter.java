@@ -1,5 +1,7 @@
-package com.falynsky.smartmarkt.JWT;
+package com.falynsky.smartmarkt.JWT.configs;
 
+import com.falynsky.smartmarkt.JWT.services.JwtUserDetailsService;
+import com.falynsky.smartmarkt.JWT.utils.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;

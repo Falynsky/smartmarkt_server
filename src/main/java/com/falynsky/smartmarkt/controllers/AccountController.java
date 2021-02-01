@@ -3,6 +3,7 @@ package com.falynsky.smartmarkt.controllers;
 import com.falynsky.smartmarkt.models.Account;
 import com.falynsky.smartmarkt.models.DTO.AccountDTO;
 import com.falynsky.smartmarkt.repositories.AccountRepository;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ public class AccountController {
         this.usersRepository = usersRepository;
     }
 
+    @ApiModelProperty(value = "pet status in the store", allowableValues = "available,pending,sold")
     @GetMapping("/all")
     public List<AccountDTO> getAllUsers() {
         return usersRepository.retrieveAccountAsDTO();

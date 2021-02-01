@@ -1,4 +1,4 @@
-package com.falynsky.smartmarkt.JWT;
+package com.falynsky.smartmarkt.JWT.models;
 
 import java.io.Serializable;
 

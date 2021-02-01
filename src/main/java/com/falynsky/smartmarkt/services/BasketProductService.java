@@ -1,6 +1,6 @@
 package com.falynsky.smartmarkt.services;
 
-import com.falynsky.smartmarkt.JWT.JwtTokenUtil;
+import com.falynsky.smartmarkt.JWT.utils.JwtTokenUtil;
 import com.falynsky.smartmarkt.exceptions.NotEnoughQuantity;
 import com.falynsky.smartmarkt.models.*;
 import com.falynsky.smartmarkt.models.DTO.BasketProductDTO;
@@ -27,13 +27,17 @@ public class BasketProductService {
     private final DocumentRepository documentRepository;
     private final BasketHistoryRepository basketHistoryRepository;
     private final JwtTokenUtil jwtTokenUtil;
+    private final SalesService salesService;
 
     BasketProductService(BasketProductRepository basketProductRepository,
                          ProductRepository productRepository,
                          BasketRepository basketRepository,
                          SalesRepository salesRepository, AccountRepository accountRepository,
                          UserRepository userRepository,
-                         DocumentRepository documentRepository, BasketHistoryRepository basketHistoryRepository, JwtTokenUtil jwtTokenUtil) {
+                         DocumentRepository documentRepository,
+                         BasketHistoryRepository basketHistoryRepository,
+                         JwtTokenUtil jwtTokenUtil,
+                         SalesService salesService) {
         this.basketProductRepository = basketProductRepository;
         this.productRepository = productRepository;
         this.basketRepository = basketRepository;
@@ -43,6 +47,7 @@ public class BasketProductService {
         this.documentRepository = documentRepository;
         this.basketHistoryRepository = basketHistoryRepository;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.salesService = salesService;
     }
 
 
@@ -237,7 +242,7 @@ public class BasketProductService {
             double summary = price * quantity;
             double roundSummary = PriceUtils.roundPrice(summary);
             productData.put("summary", roundSummary);
-            Double productDiscount = getProductPriceAfterDiscount(roundSummary, productDTO);
+            Double productDiscount = salesService.getProductPriceAfterDiscount(roundSummary, productDTO);
             productData.put("discountPrice", productDiscount != null ? PriceUtils.roundPrice(productDiscount) : null);
 
             Integer documentId = productDTO.documentId;
@@ -274,7 +279,7 @@ public class BasketProductService {
                 ProductDTO product = optionalProduct.get();
                 double productSummary = getProductSummary(basketProductDTO, product);
                 summary += productSummary;
-                Double productPriceAfterDiscount = getProductPriceAfterDiscount(productSummary, product);
+                Double productPriceAfterDiscount = salesService.getProductPriceAfterDiscount(productSummary, product);
                 summaryAfterDiscount += productPriceAfterDiscount != null ? productPriceAfterDiscount : productSummary;
             }
         }
@@ -289,16 +294,6 @@ public class BasketProductService {
         int quantity = basketProductDTO.getQuantity();
         return price * quantity;
     }
-
-    private Double getProductPriceAfterDiscount(double productSummary, ProductDTO product) {
-        SalesDTO salesDTO = salesRepository.retrieveSaleAsDTOByProductId(product.id);
-        if (salesDTO != null) {
-            double discount = salesDTO.discount;
-            return productSummary * (1 - discount);
-        }
-        return null;
-    }
-
 
     public void purchaseAllProductsFromBasket(String userToken) {
         Basket basket = getUserBasketByUserToken(userToken);

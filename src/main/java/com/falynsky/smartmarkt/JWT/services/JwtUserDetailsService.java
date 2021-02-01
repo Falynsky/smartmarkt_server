@@ -1,4 +1,4 @@
-package com.falynsky.smartmarkt.JWT;
+package com.falynsky.smartmarkt.JWT.services;
 
 import com.falynsky.smartmarkt.models.Account;
 import com.falynsky.smartmarkt.repositories.AccountRepository;
@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
-
 
     AccountRepository accountRepository;
 
