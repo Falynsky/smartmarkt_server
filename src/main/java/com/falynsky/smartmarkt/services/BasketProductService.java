@@ -140,12 +140,22 @@ public class BasketProductService {
         return optionalBasketProduct.orElse(null);
     }
 
-    public void removeProductFromBasket(Map<String, Object> map, String userToken) throws Exception {
+    public String removeProductFromBasket(Map<String, Object> map, String userToken) throws Exception {
         BasketProduct basketProduct = getBasketProduct(map, userToken);
         Integer productId = (Integer) map.get("productId");
+        Integer quantity = (Integer) map.get("quantity");
         Product product = getSelectedProduct(productId);
-        updateProductQuantity(basketProduct, product);
-        basketProductRepository.delete(basketProduct);
+        updateProductQuantity(basketProduct, product, quantity);
+        int basketProductQuantity;
+        if (quantity == null) {
+            basketProductRepository.delete(basketProduct);
+        } else {
+            basketProductQuantity = basketProduct.getQuantity() - quantity;
+            basketProduct.setQuantity(basketProductQuantity);
+            basketProductRepository.save(basketProduct);
+        }
+
+        return product.name;
     }
 
     public void removeAllProductsFromBasket(String userToken) {
@@ -157,15 +167,20 @@ public class BasketProductService {
             if (optionalBasketProduct.isPresent()) {
                 BasketProduct basketProduct = optionalBasketProduct.get();
                 Product product = basketProduct.getProductId();
-                updateProductQuantity(basketProduct, product);
+                updateProductQuantity(basketProduct, product, null);
                 basketProductRepository.delete(basketProduct);
             }
         }
 
     }
 
-    private void updateProductQuantity(BasketProduct basketProduct, Product product) {
-        int basketProductQuantity = product.getQuantity() + basketProduct.getQuantity();
+    private void updateProductQuantity(BasketProduct basketProduct, Product product, Integer quantity) {
+        int basketProductQuantity;
+        if (quantity == null) {
+            basketProductQuantity = product.getQuantity() + basketProduct.getQuantity();
+        } else {
+            basketProductQuantity = product.getQuantity() + quantity;
+        }
         product.setQuantity(basketProductQuantity);
         productRepository.save(product);
     }

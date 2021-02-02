@@ -99,15 +99,30 @@ public class BasketProductController {
 
     @Transactional(rollbackFor = Exception.class)
     @PostMapping("/remove")
-    public ResponseEntity<Map<String, Object>> removeSelectedProductFromBasket(
+    public ResponseEntity<Map<String, Object>> removeOneSelectedProductFromBasket(
             @RequestBody Map<String, Object> map,
             @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
+        String productName;
         try {
-            basketProductService.removeProductFromBasket(map, userToken);
+            productName = basketProductService.removeProductFromBasket(map, userToken);
         } catch (Exception ex) {
             return ResponseMsgService.errorResponse(ex.getMessage());
         }
-        return ResponseMsgService.sendCorrectResponse("Produk został usunięty z koszyka");
+        return ResponseMsgService.sendCorrectResponse("Usunięto jedną pozycję produktu - " + productName);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("/removeAllFromKind")
+    public ResponseEntity<Map<String, Object>> removeSelectedProductsFromBasket(
+            @RequestBody Map<String, Object> map,
+            @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
+        String productName;
+        try {
+            productName = basketProductService.removeProductFromBasket(map, userToken);
+        } catch (Exception ex) {
+            return ResponseMsgService.errorResponse(ex.getMessage());
+        }
+        return ResponseMsgService.sendCorrectResponse("Usunięto wszystkie pozycję produktu - " + productName);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -119,7 +134,7 @@ public class BasketProductController {
         } catch (Exception ex) {
             return ResponseMsgService.errorResponse(ex.getMessage());
         }
-        return ResponseMsgService.sendCorrectResponse("Produkty zostały usunięte z koszyka");
+        return ResponseMsgService.sendCorrectResponse("Koszyk został opróżniony");
     }
 
     @Transactional(rollbackFor = Exception.class)
