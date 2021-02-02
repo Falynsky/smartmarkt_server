@@ -61,22 +61,21 @@ public class BasketProductService {
             throw new NotEnoughQuantity(product.name);
         }
 
-        return addProductToBasket(map, product, userToken);
+        return addProductToBasket(quantity, product, userToken);
 
     }
 
     @Transactional(rollbackFor = Exception.class)
-    String addProductToBasket(Map<String, Object> map, Product product, String userToken) throws Exception {
-        int quantity = getQuantity(map);
+    String addProductToBasket(int quantity, Product product, String userToken) {
         Basket basket = getUserBasketByUserToken(userToken);
         Optional<BasketProduct> optionalBasketProduct = basketProductRepository.findFirstByProductIdAndBasketIdAndClosedFalse(product, basket);
         BasketProduct basketProduct;
         if (optionalBasketProduct.isPresent()) {
             basketProduct = optionalBasketProduct.get();
-            int oldQuantity = basketProduct.getQuantity() + quantity;
-            basketProduct.setQuantity(oldQuantity);
+            int newQuantity = basketProduct.getQuantity() + quantity;
+            basketProduct.setQuantity(newQuantity);
         } else {
-            basketProduct = createAndAddBasketProduct(map, basket);
+            basketProduct = createAndAddBasketProduct(quantity, product, basket);
         }
 
         int newQuantity = product.getQuantity() - quantity;
@@ -172,19 +171,17 @@ public class BasketProductService {
     }
 
 
-    public BasketProduct createAndAddBasketProduct(Map<String, Object> map, Basket basket) {
-        BasketProduct basketProduct = new BasketProduct();
+    public BasketProduct createAndAddBasketProduct(int quantity, Product product, Basket basket) {
         int id = getIdForNewBasketProduct(basketProductRepository);
+
+        BasketProduct basketProduct = new BasketProduct();
         basketProduct.setId(id);
-        Integer quantity = getQuantity(map);
         basketProduct.setQuantity(quantity);
-        Product product = getProduct(map);
         basketProduct.setQuantityType("szt.");
         basketProduct.setPurchased(false);
         basketProduct.setClosed(false);
         basketProduct.setBasketId(basket);
         basketProduct.setProductId(product);
-
         return basketProduct;
     }
 

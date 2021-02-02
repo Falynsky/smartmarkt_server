@@ -93,17 +93,25 @@ public class FileUploadController {
 
 
     @GetMapping("/download/{fileName:.+}/db/{width:.+}/{height:.+}")
-    public ResponseEntity<Object> getScaledPictureUsingWidthAndHeightFromDatabase(@PathVariable String fileName, @PathVariable String width, @PathVariable String height) throws Exception {
+    public ResponseEntity<Object> getScaledPictureUsingWidthAndHeightFromDatabase(
+            @PathVariable String fileName,
+            @PathVariable String width,
+            @PathVariable String height) throws Exception {
         String[] fileNameType = fileName.split("\\.");
-        Document document = documentRepository.findByDocName(fileNameType[0]);
+        if (fileNameType.length != 2) {
+            return null;
+        }
+        String fileNameWithoutExt = fileNameType[0];
+        Document document = documentRepository.findByDocName(fileNameWithoutExt);
         if (document == null) {
             return null;
         }
         byte[] pictureBytes = document.getFileBytes();
         int widthValue = Integer.parseInt(width);
         int heightValue = Integer.parseInt(height);
-        byte[] scaledPictureBytes = scalePicture(pictureBytes, widthValue, heightValue, fileNameType[1]);
-
+        byte[] scaledPictureBytes = scalePicture(
+                pictureBytes, widthValue,
+                heightValue, fileNameType[1]);
 
         MediaType mediaType = getMediaType(document);
         return ResponseEntity.ok()
@@ -157,12 +165,11 @@ public class FileUploadController {
     private byte[] getScaledBytes(String extension, BufferedImage img, int width, int height) throws IOException {
         Image scaledImage = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         BufferedImage imageBuff = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        imageBuff.getGraphics().drawImage(scaledImage, 0, 0, new Color(0, 0, 0), null);
+        Color backgroundColor = new Color(0, 0, 0);
+        imageBuff.getGraphics().drawImage(scaledImage, 0, 0, backgroundColor, null);
 
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-
         ImageIO.write(imageBuff, extension, buffer);
-
         return buffer.toByteArray();
     }
 
