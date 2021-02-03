@@ -4,7 +4,7 @@ import com.falynsky.smartmarkt.JWT.utils.JwtTokenUtil;
 import com.falynsky.smartmarkt.JWT.services.JwtUserDetailsService;
 import com.falynsky.smartmarkt.JWT.models.JwtRequest;
 import com.falynsky.smartmarkt.JWT.models.JwtResponse;
-import com.falynsky.smartmarkt.services.ResponseMsgService;
+import com.falynsky.smartmarkt.utils.ResponseUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -44,7 +44,7 @@ public class JwtAuthenticationController {
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
         if (userDetails == null) {
-            return ResponseMsgService.errorResponse("Brak danych użytkownika!");
+            return ResponseUtils.errorResponse("Brak danych użytkownika!");
         }
 
         final String token = jwtTokenUtil.generateToken(userDetails);

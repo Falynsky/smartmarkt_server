@@ -13,20 +13,11 @@ import java.util.Optional;
 @Repository
 public interface BasketHistoryRepository extends JpaRepository<BasketHistory, Integer> {
 
-    Optional<BasketHistory> findById(int id);
+    BasketHistory findById(int id);
 
     BasketHistory findFirstByOrderByIdDesc();
 
     BasketHistory findByClosedFalse();
-
-    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketHistoryDTO(b.id, b.purchased, b.closed, b.basketId.id) FROM BasketHistory b")
-    List<BasketHistoryDTO> retrieveBasketsAsDTO();
-
-    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketHistoryDTO(b.id, b.purchased,b.closed,  b.basketId.id) FROM BasketHistory b where b.purchased = false")
-    BasketHistoryDTO retrieveUnPurchasedBasketProductSummaryAsDTO();
-
-    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketHistoryDTO(b.id, b.purchased, b.closed, b.basketId.id) FROM BasketHistory b where b.id = :basketHistoryId")
-    BasketHistoryDTO retrieveBasketAsDTObyId(@Param("basketHistoryId") Integer basketHistoryId);
 
     @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketHistoryDTO(b.id, b.purchased, b.closed, b.basketId.id) FROM BasketHistory b where b.basketId.id = :basketId ORDER BY b.id DESC")
     List<BasketHistoryDTO> retrieveBasketsHistoryAsDTObyBasketId(@Param("basketId") Integer basketId);

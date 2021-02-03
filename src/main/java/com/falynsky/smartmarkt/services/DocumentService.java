@@ -1,5 +1,6 @@
 package com.falynsky.smartmarkt.services;
 
+import com.falynsky.smartmarkt.models.DTO.ProductDTO;
 import com.falynsky.smartmarkt.models.Document;
 import com.falynsky.smartmarkt.repositories.DocumentRepository;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class DocumentService {
@@ -58,6 +62,18 @@ public class DocumentService {
         doc.setId(newDocId);
         documentRepository.save(doc);
         return fileName;
+    }
+
+    public Map<String, Object> getDocumentDataByDocumentId(Integer documentId ) {
+        Map<String, Object> documentData = new HashMap<>();
+        Optional<Document> optionalDocument = documentRepository.findById(documentId);
+        if (optionalDocument.isPresent()) {
+            Document document = optionalDocument.get();
+            documentData.put("documentId", documentId);
+            documentData.put("documentName", document.getDocName());
+            documentData.put("documentType", document.getDocType());
+        }
+        return documentData;
     }
 
     private Integer getIdForNewDocument(DocumentRepository documentRepository) {

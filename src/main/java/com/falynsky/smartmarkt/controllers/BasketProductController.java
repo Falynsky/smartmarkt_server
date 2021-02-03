@@ -5,8 +5,8 @@ import com.falynsky.smartmarkt.models.Basket;
 import com.falynsky.smartmarkt.models.DTO.BasketProductDTO;
 import com.falynsky.smartmarkt.repositories.*;
 import com.falynsky.smartmarkt.services.BasketProductService;
-import com.falynsky.smartmarkt.services.ResponseMsgService;
-import com.falynsky.smartmarkt.utils.ResponseMapBuilder;
+import com.falynsky.smartmarkt.utils.ResponseUtils;
+import com.falynsky.smartmarkt.utils.ResponseMapUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +52,7 @@ public class BasketProductController {
         Basket basket = basketProductService.getUserBasketByUserToken(userToken);
         Map<String, Object> data = new HashMap<>();
         data.put("basketId", basket.getId());
-        return ResponseMapBuilder.buildResponse(data, true);
+        return ResponseMapUtils.buildResponse(data, true);
 
     }
 
@@ -64,7 +64,7 @@ public class BasketProductController {
         List<BasketProductDTO> basketProductDTOS = basketProductRepository.retrieveBasketProductAsDTObyBasketIdAndNotClosedYet(basket.getId());
 
         Map<String, Object> data = basketProductService.getSelectedBasketSummary(basketProductDTOS);
-        return ResponseMapBuilder.buildResponse(data, true);
+        return ResponseMapUtils.buildResponse(data, true);
 
     }
 
@@ -75,7 +75,7 @@ public class BasketProductController {
         Basket basket = basketProductService.getUserBasketByUserToken(userToken);
         List<BasketProductDTO> basketProductDTOS = basketProductRepository.retrieveBasketProductAsDTObyBasketIdAndNotClosedYet(basket.getId());
         List<Map<String, Object>> basketProductsData = basketProductService.getSelectedBasketProductsData(basketProductDTOS);
-        return ResponseMapBuilder.buildResponse(basketProductsData, true);
+        return ResponseMapUtils.buildResponse(basketProductsData, true);
 
     }
 
@@ -89,11 +89,11 @@ public class BasketProductController {
         try {
             productName = basketProductService.updateOrCreateBasketProduct(map, userToken);
         } catch (NotEnoughQuantity e) {
-            return ResponseMsgService.errorResponse(e.getLocalizedMessage());
+            return ResponseUtils.errorResponse(e.getLocalizedMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseMsgService.sendCorrectResponse("Dodano " + productName + " do koszyka.");
+        return ResponseUtils.sendCorrectResponse("Dodano " + productName + " do koszyka.");
     }
 
 
@@ -106,9 +106,9 @@ public class BasketProductController {
         try {
             productName = basketProductService.removeProductFromBasket(map, userToken);
         } catch (Exception ex) {
-            return ResponseMsgService.errorResponse(ex.getMessage());
+            return ResponseUtils.errorResponse(ex.getMessage());
         }
-        return ResponseMsgService.sendCorrectResponse("Usunięto jedną pozycję produktu - " + productName);
+        return ResponseUtils.sendCorrectResponse("Usunięto jedną pozycję produktu - " + productName);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -120,9 +120,9 @@ public class BasketProductController {
         try {
             productName = basketProductService.removeProductFromBasket(map, userToken);
         } catch (Exception ex) {
-            return ResponseMsgService.errorResponse(ex.getMessage());
+            return ResponseUtils.errorResponse(ex.getMessage());
         }
-        return ResponseMsgService.sendCorrectResponse("Usunięto wszystkie pozycję produktu - " + productName);
+        return ResponseUtils.sendCorrectResponse("Usunięto wszystkie pozycję produktu - " + productName);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -132,9 +132,9 @@ public class BasketProductController {
         try {
             basketProductService.removeAllProductsFromBasket(userToken);
         } catch (Exception ex) {
-            return ResponseMsgService.errorResponse(ex.getMessage());
+            return ResponseUtils.errorResponse(ex.getMessage());
         }
-        return ResponseMsgService.sendCorrectResponse("Koszyk został opróżniony");
+        return ResponseUtils.sendCorrectResponse("Koszyk został opróżniony");
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -144,8 +144,8 @@ public class BasketProductController {
         try {
             basketProductService.purchaseAllProductsFromBasket(userToken);
         } catch (Exception ex) {
-            return ResponseMsgService.errorResponse(ex.getMessage());
+            return ResponseUtils.errorResponse(ex.getMessage());
         }
-        return ResponseMsgService.sendCorrectResponse("Produkty zostały zakupione");
+        return ResponseUtils.sendCorrectResponse("Produkty zostały zakupione");
     }
 }

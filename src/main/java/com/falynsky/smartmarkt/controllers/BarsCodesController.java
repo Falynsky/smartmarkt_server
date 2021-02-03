@@ -2,18 +2,16 @@ package com.falynsky.smartmarkt.controllers;
 
 import com.falynsky.smartmarkt.models.DTO.ProductDTO;
 import com.falynsky.smartmarkt.models.DTO.ProductTypeDTO;
-import com.falynsky.smartmarkt.models.Document;
-import com.falynsky.smartmarkt.repositories.DocumentRepository;
+import com.falynsky.smartmarkt.services.DocumentService;
 import com.falynsky.smartmarkt.services.ProductService;
 import com.falynsky.smartmarkt.services.ProductTypeService;
 import com.falynsky.smartmarkt.services.SalesService;
 import com.falynsky.smartmarkt.utils.PriceUtils;
-import com.falynsky.smartmarkt.utils.ResponseMapBuilder;
+import com.falynsky.smartmarkt.utils.ResponseMapUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -23,17 +21,21 @@ public class BarsCodesController {
     private final ProductService productService;
     private final ProductTypeService productTypeService;
     private final SalesService salesService;
-    private final DocumentRepository documentRepository;
+    private final DocumentService documentService;
 
-    public BarsCodesController(ProductService productService, ProductTypeService productTypeService, SalesService salesService, DocumentRepository documentRepository) {
+    public BarsCodesController(
+            ProductService productService,
+            ProductTypeService productTypeService,
+            SalesService salesService,
+            DocumentService documentService) {
         this.productService = productService;
         this.productTypeService = productTypeService;
         this.salesService = salesService;
-        this.documentRepository = documentRepository;
+        this.documentService = documentService;
     }
 
     @GetMapping("/{code}")
-    public Map<String, Object> getProductDataUsingBarsCode(@PathVariable("code") Integer barsCodeCode) {
+    public Map<String, Object> getProductDataUsingBarsCode(@PathVariable("code") Integer barsCodeCode) throws Exception {
 
         final ProductDTO productDTO = productService.getProductDTOByBarsCode(barsCodeCode);
         if (productDTO == null) {
@@ -41,28 +43,35 @@ public class BarsCodesController {
         }
 
         Map<String, Object> productData = new HashMap<>();
+        double productPrice = productDTO.price;
+
         productData.put("id", productDTO.id);
         productData.put("name", productDTO.name);
-        double productPrice = productDTO.price;
         productData.put("price", productPrice);
         productData.put("quantity", productDTO.quantity);
-        Double priceAfterDiscount = salesService.getProductPriceAfterDiscount(productPrice, productDTO);
-        productData.put("afterDiscount", priceAfterDiscount != null ? PriceUtils.roundPrice(priceAfterDiscount) : null);
 
-        Integer documentId = productDTO.documentId;
-        Optional<Document> optionalDocument = documentRepository.findById(documentId);
-        if (optionalDocument.isPresent()) {
-            Document document = optionalDocument.get();
-            productData.put("documentId", documentId);
-            productData.put("documentName", document.getDocName());
-            productData.put("documentType", document.getDocType());
-        }
+        Double priceAfterDiscount = salesService.getProductPriceAfterDiscount(productPrice, productDTO);
+        Double afterDiscount = getAfterDiscount(priceAfterDiscount);
+        productData.put("afterDiscount", afterDiscount);
+
+        Map<String, Object> documentData = getDocumentData(productDTO);
+        productData.putAll(documentData);
+
         int productTypeId = productDTO.productTypeId;
         final ProductTypeDTO productTypeDTO = productTypeService.getProductTypeDTOById(productTypeId);
 
         productData.put("productTypeId", productTypeDTO.id);
         productData.put("productType", productTypeDTO.name);
-        return ResponseMapBuilder.buildResponse(productData, true);
+        return ResponseMapUtils.buildResponse(productData, true);
+    }
+
+    private Map<String, Object> getDocumentData(ProductDTO productDTO) {
+        Integer documentId = productDTO.documentId;
+        return documentService.getDocumentDataByDocumentId(documentId);
+    }
+
+    private Double getAfterDiscount(Double priceAfterDiscount) {
+        return priceAfterDiscount != null ? PriceUtils.roundPrice(priceAfterDiscount) : null;
     }
 
 

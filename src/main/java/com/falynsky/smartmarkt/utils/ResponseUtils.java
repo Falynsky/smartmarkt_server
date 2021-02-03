@@ -1,4 +1,4 @@
-package com.falynsky.smartmarkt.services;
+package com.falynsky.smartmarkt.utils;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ResponseMsgService {
+public class ResponseUtils {
 
     public static ResponseEntity<Map<String, Object>> sendCorrectResponse() {
         Map<String, Object> body = new HashMap<>();

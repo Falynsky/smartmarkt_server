@@ -47,21 +47,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         boolean requestTokenHeaderStartsWithWave = requestTokenHeader != null && requestTokenHeader.startsWith(REQUEST_HEADER_BEGIN);
         if (requestTokenHeaderStartsWithWave) {
             jwtToken = requestTokenHeader.substring(REQUEST_HEADER_BEGIN_LENGTH);
-            try {
-                username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-            } catch (IllegalArgumentException e) {
-                System.out.println("Unable to get JWT Token");
-            } catch (ExpiredJwtException e) {
-                System.out.println("JWT Token has expired");
-            }
+            username = getUsername(jwtToken);
         } else {
             logger.warn("JWT Token does not begin with 'Wave ' String");
         }
 
         SecurityContext context = SecurityContextHolder.getContext();
-
-        boolean usernameExists = username != null && !username.isEmpty();
         boolean contextHasAuthentication = context.getAuthentication() != null;
+        boolean usernameExists = username != null && !username.isEmpty();
 
         if (usernameExists && !contextHasAuthentication) {
 
@@ -69,19 +62,34 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             Boolean isTokenValidate = jwtTokenUtil.validateToken(jwtToken, userDetails);
 
             if (isTokenValidate) {
-
-                Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
-                UsernamePasswordAuthenticationToken usernamePasswordAuthToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
-
-                WebAuthenticationDetails details = new WebAuthenticationDetailsSource().buildDetails(request);
-
-                usernamePasswordAuthToken.setDetails(details);
-                context.setAuthentication(usernamePasswordAuthToken);
+                saveAuthenticationInContextFotUser(request, context, userDetails);
             }
         }
 
         chain.doFilter(request, response);
+    }
+
+    private String getUsername(String jwtToken) {
+        String username = null;
+        try {
+            username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Unable to get JWT Token");
+        } catch (ExpiredJwtException e) {
+            System.out.println("JWT Token has expired");
+        }
+        return username;
+    }
+
+    private void saveAuthenticationInContextFotUser(HttpServletRequest request, SecurityContext context, UserDetails userDetails) {
+        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+        UsernamePasswordAuthenticationToken usernamePasswordAuthToken =
+                new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+
+        WebAuthenticationDetails details = new WebAuthenticationDetailsSource().buildDetails(request);
+
+        usernamePasswordAuthToken.setDetails(details);
+        context.setAuthentication(usernamePasswordAuthToken);
     }
 
 }

@@ -15,9 +15,12 @@ public class ProductTypeService {
         this.productTypeRepository = productTypeRepository;
     }
 
-    public ProductTypeDTO getProductTypeDTOById(Integer productTypeId) {
-        Optional<ProductTypeDTO> optionalProductTypeDTO = productTypeRepository.retrieveProductTypeAsDTObyId(productTypeId);
-        return optionalProductTypeDTO.orElse(null);
+    public ProductTypeDTO getProductTypeDTOById(Integer productTypeId) throws Exception {
+        ProductTypeDTO productTypeDTO = productTypeRepository.retrieveProductTypeAsDTObyId(productTypeId);
+        if(productTypeDTO == null){
+            throw new Exception("USER NOT FOUND");
+        }
+        return productTypeDTO;
     }
 
 }

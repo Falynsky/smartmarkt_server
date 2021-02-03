@@ -1,12 +1,14 @@
 package com.falynsky.smartmarkt.services;
 
-import com.falynsky.smartmarkt.JWT.utils.JwtTokenUtil;
 import com.falynsky.smartmarkt.exceptions.NotEnoughQuantity;
 import com.falynsky.smartmarkt.models.*;
 import com.falynsky.smartmarkt.models.DTO.BasketProductDTO;
 import com.falynsky.smartmarkt.models.DTO.ProductDTO;
 import com.falynsky.smartmarkt.models.DTO.SalesDTO;
-import com.falynsky.smartmarkt.repositories.*;
+import com.falynsky.smartmarkt.repositories.BasketHistoryRepository;
+import com.falynsky.smartmarkt.repositories.BasketProductRepository;
+import com.falynsky.smartmarkt.repositories.ProductRepository;
+import com.falynsky.smartmarkt.repositories.SalesRepository;
 import com.falynsky.smartmarkt.utils.PriceUtils;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -18,35 +20,33 @@ import java.util.stream.Collectors;
 @Service
 public class BasketProductService {
 
-    private final BasketRepository basketRepository;
+    private final BasketService basketService;
     private final SalesRepository salesRepository;
     private final BasketProductRepository basketProductRepository;
     private final ProductRepository productRepository;
-    private final AccountRepository accountRepository;
-    private final UserRepository userRepository;
-    private final DocumentRepository documentRepository;
+    private final AccountService accountService;
+    private final UserService userService;
+    private final DocumentService documentService;
     private final BasketHistoryRepository basketHistoryRepository;
-    private final JwtTokenUtil jwtTokenUtil;
     private final SalesService salesService;
 
     BasketProductService(BasketProductRepository basketProductRepository,
                          ProductRepository productRepository,
-                         BasketRepository basketRepository,
-                         SalesRepository salesRepository, AccountRepository accountRepository,
-                         UserRepository userRepository,
-                         DocumentRepository documentRepository,
+                         BasketService basketService, SalesRepository salesRepository,
+                         AccountService accountService,
+                         UserService userService,
+                         DocumentService documentService,
                          BasketHistoryRepository basketHistoryRepository,
-                         JwtTokenUtil jwtTokenUtil,
+
                          SalesService salesService) {
         this.basketProductRepository = basketProductRepository;
         this.productRepository = productRepository;
-        this.basketRepository = basketRepository;
+        this.basketService = basketService;
         this.salesRepository = salesRepository;
-        this.accountRepository = accountRepository;
-        this.userRepository = userRepository;
-        this.documentRepository = documentRepository;
+        this.accountService = accountService;
+        this.userService = userService;
+        this.documentService = documentService;
         this.basketHistoryRepository = basketHistoryRepository;
-        this.jwtTokenUtil = jwtTokenUtil;
         this.salesService = salesService;
     }
 
@@ -60,18 +60,14 @@ public class BasketProductService {
         if (productQuantity < quantity) {
             throw new NotEnoughQuantity(product.name);
         }
-
         return addProductToBasket(quantity, product, userToken);
-
     }
 
     @Transactional(rollbackFor = Exception.class)
     String addProductToBasket(int quantity, Product product, String userToken) {
         Basket basket = getUserBasketByUserToken(userToken);
-        Optional<BasketProduct> optionalBasketProduct = basketProductRepository.findFirstByProductIdAndBasketIdAndClosedFalse(product, basket);
-        BasketProduct basketProduct;
-        if (optionalBasketProduct.isPresent()) {
-            basketProduct = optionalBasketProduct.get();
+        BasketProduct basketProduct = basketProductRepository.findFirstByProductIdAndBasketIdAndClosedFalse(product, basket);
+        if (basketProduct != null) {
             int newQuantity = basketProduct.getQuantity() + quantity;
             basketProduct.setQuantity(newQuantity);
         } else {
@@ -88,40 +84,12 @@ public class BasketProductService {
     @SneakyThrows
     public Basket getUserBasketByUserToken(String userToken) {
         User user = getCurrentUser(userToken);
-        return getCurrentUserBasket(user);
+        return basketService.getCurrentUserBasket(user);
     }
 
     private User getCurrentUser(String userToken) throws Exception {
-        Account account = getCurrentAccount(userToken);
-        return getCurrentUserByAccount(account);
-    }
-
-    private Account getCurrentAccount(String userToken) throws Exception {
-        String currentUserUsername = jwtTokenUtil.getUsernameFromToken(userToken.substring(5));
-
-        Optional<Account> optionalAccount = accountRepository.findByUsername(currentUserUsername);
-        if (!optionalAccount.isPresent()) {
-            throw new Exception("ACCOUNT NOT FOUND");
-        }
-        return optionalAccount.get();
-    }
-
-    private User getCurrentUserByAccount(Account account) throws Exception {
-        Optional<User> optionalUser = userRepository.findFirstByAccountId(account);
-        if (!optionalUser.isPresent()) {
-            throw new Exception("USER NOT FOUND");
-        }
-        return optionalUser.get();
-    }
-
-
-    private Basket getCurrentUserBasket(User user) throws Exception {
-        Optional<Basket> optionalBasket = basketRepository.findByUserId(user);
-        if (optionalBasket.isPresent()) {
-            return optionalBasket.get();
-        } else {
-            throw new Exception("BASKET NOT FOUND");
-        }
+        Account account = accountService.getCurrentAccount(userToken);
+        return userService.getCurrentUserByAccount(account);
     }
 
     public Product getSelectedProduct(Integer productId) throws Exception {
@@ -136,8 +104,7 @@ public class BasketProductService {
         Integer productId = (Integer) map.get("productId");
         Basket basket = getUserBasketByUserToken(userToken);
         Product product = getSelectedProduct(productId);
-        Optional<BasketProduct> optionalBasketProduct = basketProductRepository.findFirstByProductIdAndBasketIdAndClosedFalse(product, basket);
-        return optionalBasketProduct.orElse(null);
+        return basketProductRepository.findFirstByProductIdAndBasketIdAndClosedFalse(product, basket);
     }
 
     public String removeProductFromBasket(Map<String, Object> map, String userToken) throws Exception {
@@ -163,9 +130,8 @@ public class BasketProductService {
 
         List<BasketProductDTO> basketProductDTOS = basketProductRepository.retrieveBasketProductAsDTObyBasketIdAndNotClosedYet(basket.id);
         for (BasketProductDTO basketProductDTO : basketProductDTOS) {
-            Optional<BasketProduct> optionalBasketProduct = basketProductRepository.findById(basketProductDTO.getId());
-            if (optionalBasketProduct.isPresent()) {
-                BasketProduct basketProduct = optionalBasketProduct.get();
+            BasketProduct basketProduct = basketProductRepository.findById(basketProductDTO.getId());
+            if (basketProduct != null) {
                 Product product = basketProduct.getProductId();
                 updateProductQuantity(basketProduct, product, null);
                 basketProductRepository.delete(basketProduct);
@@ -184,7 +150,6 @@ public class BasketProductService {
         product.setQuantity(basketProductQuantity);
         productRepository.save(product);
     }
-
 
     public BasketProduct createAndAddBasketProduct(int quantity, Product product, Basket basket) {
         int id = getIdForNewBasketProduct(basketProductRepository);
@@ -219,11 +184,6 @@ public class BasketProductService {
         }
     }
 
-    private Product getProduct(Map<String, Object> map) {
-        Integer productId = (Integer) map.get("productId");
-        return productRepository.getOne(productId);
-    }
-
     public List<Map<String, Object>> getSelectedBasketProductsData(List<BasketProductDTO> basketProductDTOS) {
 
 
@@ -243,7 +203,7 @@ public class BasketProductService {
             int productId = productDTO.getId();
             String name = productDTO.getName();
             int quantity = basketProductDTO.getQuantity();
-            Double price = productDTO.getPrice();
+            double price = productDTO.getPrice();
 
             Map<String, Object> productData = new LinkedHashMap<>();
             productData.put("id", id);
@@ -257,27 +217,16 @@ public class BasketProductService {
             Double productDiscount = salesService.getProductPriceAfterDiscount(roundSummary, productDTO);
             productData.put("discountPrice", productDiscount != null ? PriceUtils.roundPrice(productDiscount) : null);
 
-            Integer documentId = productDTO.documentId;
-            Optional<Document> optionalDocument = documentRepository.findById(documentId);
-            if (optionalDocument.isPresent()) {
-                Document document = optionalDocument.get();
-                productData.put("documentId", documentId);
-                productData.put("documentName", document.getDocName());
-                productData.put("documentType", document.getDocType());
-            }
+            Map<String, Object> documentData = getDocumentData(productDTO);
+            productData.putAll(documentData);
             return productData;
         }
         return null;
     }
 
-    public void addOneToBasketProduct(Map<String, Object> map, String userToken) throws Exception {
-        BasketProduct basketProduct = getBasketProduct(map, userToken);
-        if (basketProduct == null) {
-            throw new Exception("No element found");
-        }
-        int newQuantity = basketProduct.getQuantity() + 1;
-        basketProduct.setQuantity(newQuantity);
-        basketProductRepository.save(basketProduct);
+    private Map<String, Object> getDocumentData(ProductDTO productDTO) {
+        Integer documentId = productDTO.documentId;
+        return documentService.getDocumentDataByDocumentId(documentId);
     }
 
     public Map<String, Object> getSelectedBasketSummary(List<BasketProductDTO> basketProductDTOS) {
@@ -312,19 +261,15 @@ public class BasketProductService {
         BasketHistory basketHistory = basketHistoryRepository.findByClosedFalse();
         List<SalesDTO> salesDTO = salesRepository.retrieveSalesAsDTO();
         if (basketHistory == null) {
-            int newBasketHistoryId = getIdForNewBasketHistory();
-            basketHistory = new BasketHistory(newBasketHistoryId, false, false, basket);
-            basketHistoryRepository.save(basketHistory);
+            basketHistory = createAndGetBasketHistory(basket);
         }
 
         List<BasketProductDTO> basketProductDTOS = basketProductRepository.retrieveBasketProductAsDTObyBasketIdAndNotClosedYet(basket.id);
         Date purchaseDateTime = new Date();
         for (BasketProductDTO basketProductDTO : basketProductDTOS) {
-            Optional<BasketProduct> optionalBasketProduct = basketProductRepository.findById(basketProductDTO.getId());
-            if (optionalBasketProduct.isPresent()) {
-                BasketProduct basketProduct = optionalBasketProduct.get();
-                basketProduct = prepareBasketProductToSave(basketHistory, salesDTO, purchaseDateTime, basketProduct);
-                basketProductRepository.save(basketProduct);
+            BasketProduct basketProduct = basketProductRepository.findById(basketProductDTO.getId());
+            if (basketProduct != null) {
+                modifyAndSaveBasketProduct(basketHistory, salesDTO, purchaseDateTime, basketProduct);
             }
         }
 
@@ -333,7 +278,24 @@ public class BasketProductService {
         basketHistoryRepository.save(basketHistory);
     }
 
-    private BasketProduct prepareBasketProductToSave(BasketHistory basketHistory, List<SalesDTO> salesDTO, Date purchaseDateTime, BasketProduct basketProduct) {
+    private BasketHistory createAndGetBasketHistory(Basket basket) {
+        BasketHistory basketHistory;
+        int newBasketHistoryId = getIdForNewBasketHistory();
+        basketHistory = new BasketHistory(newBasketHistoryId, false, false, basket);
+        basketHistoryRepository.save(basketHistory);
+        return basketHistory;
+    }
+
+    private int getIdForNewBasketHistory() {
+        BasketHistory BasketHistory = basketHistoryRepository.findFirstByOrderByIdDesc();
+        if (BasketHistory == null) {
+            return 1;
+        }
+        int lastId = BasketHistory.getId();
+        return ++lastId;
+    }
+
+    private void modifyAndSaveBasketProduct(BasketHistory basketHistory, List<SalesDTO> salesDTO, Date purchaseDateTime, BasketProduct basketProduct) {
         basketProduct.setBasketsHistoryId(basketHistory);
         basketProduct.setPurchaseDateTime(purchaseDateTime);
         basketProduct.setPurchased(true);
@@ -348,19 +310,8 @@ public class BasketProductService {
                 break;
             }
         }
-
         basketProduct.setPurchasedPrice(PriceUtils.roundPrice(purchasedPrice));
-        return basketProduct;
-    }
-
-
-    private int getIdForNewBasketHistory() {
-        BasketHistory BasketHistory = basketHistoryRepository.findFirstByOrderByIdDesc();
-        if (BasketHistory == null) {
-            return 1;
-        }
-        int lastId = BasketHistory.getId();
-        return ++lastId;
+        basketProductRepository.save(basketProduct);
     }
 
 }

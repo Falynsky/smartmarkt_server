@@ -1,11 +1,10 @@
 package com.falynsky.smartmarkt.services;
 
+import com.falynsky.smartmarkt.JWT.utils.JwtTokenUtil;
 import com.falynsky.smartmarkt.models.Account;
 import com.falynsky.smartmarkt.models.Basket;
-import com.falynsky.smartmarkt.models.BasketHistory;
 import com.falynsky.smartmarkt.models.User;
 import com.falynsky.smartmarkt.repositories.AccountRepository;
-import com.falynsky.smartmarkt.repositories.BasketHistoryRepository;
 import com.falynsky.smartmarkt.repositories.BasketRepository;
 import com.falynsky.smartmarkt.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,16 +17,28 @@ public class AccountService {
     private final UserRepository userRepository;
     private final BasketRepository basketRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenUtil jwtTokenUtil;
 
     public AccountService(
             AccountRepository accountRepository,
             UserRepository userRepository,
             BasketRepository basketRepository,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder, JwtTokenUtil jwtTokenUtil) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
         this.basketRepository = basketRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtTokenUtil = jwtTokenUtil;
+    }
+
+    public Account getCurrentAccount(String userToken) throws Exception {
+        String currentUserUsername = jwtTokenUtil.getUsernameFromToken(userToken.substring(5));
+
+        Account account = accountRepository.findByUsername(currentUserUsername);
+        if (account == null) {
+            throw new Exception("ACCOUNT NOT FOUND");
+        }
+        return account;
     }
 
     public void createNewAccountData(Account account, User user) {

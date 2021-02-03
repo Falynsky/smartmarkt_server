@@ -2,7 +2,7 @@ package com.falynsky.smartmarkt.controllers;
 
 import com.falynsky.smartmarkt.models.DTO.ProductDTO;
 import com.falynsky.smartmarkt.repositories.ProductRepository;
-import com.falynsky.smartmarkt.utils.ResponseMapBuilder;
+import com.falynsky.smartmarkt.utils.ResponseMapUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +27,7 @@ public class ProductController {
     public ResponseEntity<Map<String, Object>> getAllProductsByTypeId(@RequestBody Map<String, Object> map) {
         Integer id = (Integer) map.get("id");
         List<ProductDTO> productsList = productRepository.retrieveProductAsDTObyTypeId(id);
-        Map<String, Object> body = ResponseMapBuilder.buildResponse(productsList);
+        Map<String, Object> body = ResponseMapUtils.buildResponse(productsList);
         return ResponseEntity.ok(body);
     }
 

@@ -14,9 +14,7 @@ import java.util.Optional;
 @Repository
 public interface BasketRepository extends JpaRepository<Basket, Integer> {
 
-    Optional<Basket> findByName(String name);
-
-    Optional<Basket> findByUserId(User user);
+    Basket findByUserId(User user);
 
     Basket findFirstByOrderByIdDesc();
 

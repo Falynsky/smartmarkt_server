@@ -9,7 +9,7 @@ import com.falynsky.smartmarkt.repositories.BasketProductRepository;
 import com.falynsky.smartmarkt.repositories.BasketRepository;
 import com.falynsky.smartmarkt.repositories.ProductRepository;
 import com.falynsky.smartmarkt.utils.PriceUtils;
-import com.falynsky.smartmarkt.utils.ResponseMapBuilder;
+import com.falynsky.smartmarkt.utils.ResponseMapUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,9 +66,9 @@ public class HistoryController {
             }
             data.put("historyList", historyList);
         } catch (Exception ex) {
-            return ResponseMapBuilder.buildResponse(null, false);
+            return ResponseMapUtils.buildResponse(null, false);
         }
-        return ResponseMapBuilder.buildResponse(data, true);
+        return ResponseMapUtils.buildResponse(data, true);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -98,8 +98,8 @@ public class HistoryController {
             }
             data.put("productsList", productsList);
         } catch (Exception ex) {
-            return ResponseMapBuilder.buildResponse(null, false);
+            return ResponseMapUtils.buildResponse(null, false);
         }
-        return ResponseMapBuilder.buildResponse(data, true);
+        return ResponseMapUtils.buildResponse(data, true);
     }
 }

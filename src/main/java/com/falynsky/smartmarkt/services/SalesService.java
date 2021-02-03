@@ -10,10 +10,8 @@ public class SalesService {
 
     private final SalesRepository salesRepository;
 
-
     public SalesService(SalesRepository salesRepository) {
         this.salesRepository = salesRepository;
-
     }
 
     public Double getProductPriceAfterDiscount(double productPrice, ProductDTO product) {

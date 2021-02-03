@@ -15,11 +15,11 @@ import java.util.Optional;
 @Repository
 public interface BasketProductRepository extends JpaRepository<BasketProduct, Integer> {
 
-    Optional<BasketProduct> findById(int id);
+    BasketProduct findById(int id);
 
     BasketProduct findFirstByOrderByIdDesc();
 
-    Optional<BasketProduct> findFirstByProductIdAndBasketIdAndClosedFalse(Product product, Basket basket);
+    BasketProduct findFirstByProductIdAndBasketIdAndClosedFalse(Product product, Basket basket);
 
 
     @Query("SELECT new com.falynsky.smartmarkt.models.DTO.BasketProductDTO" +

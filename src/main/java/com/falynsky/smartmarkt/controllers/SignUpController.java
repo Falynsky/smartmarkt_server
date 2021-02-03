@@ -3,7 +3,7 @@ package com.falynsky.smartmarkt.controllers;
 import com.falynsky.smartmarkt.models.Account;
 import com.falynsky.smartmarkt.models.User;
 import com.falynsky.smartmarkt.services.AccountService;
-import com.falynsky.smartmarkt.services.ResponseMsgService;
+import com.falynsky.smartmarkt.utils.ResponseUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,17 +29,17 @@ public class SignUpController {
 
             boolean isInvalidRegisterInput = isInvalidRegisterInput(map);
             if (isInvalidRegisterInput) {
-                return ResponseMsgService.errorResponse("Wartości są wymagane i puste znaki są zabronione.");
+                return ResponseUtils.errorResponse("Wartości są wymagane i puste znaki są zabronione.");
             }
             Account newAccount = createAccount(map);
             User newUser = createUser(map);
             accountService.createNewAccountData(newAccount, newUser);
         } catch (DataIntegrityViolationException e) {
-            return ResponseMsgService.errorResponse("Podany użytkownik już istnieje.");
+            return ResponseUtils.errorResponse("Podany użytkownik już istnieje.");
         } catch (Exception e) {
-            return ResponseMsgService.errorResponse("Błąd serwera!", "Spróbuj ponownie później.");
+            return ResponseUtils.errorResponse("Błąd serwera!", "Spróbuj ponownie później.");
         }
-        return ResponseMsgService.sendCorrectResponse();
+        return ResponseUtils.sendCorrectResponse();
     }
 
     private boolean isInvalidRegisterInput(Map<String, Object> map) {

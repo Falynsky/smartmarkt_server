@@ -3,7 +3,7 @@ package com.falynsky.smartmarkt.utils;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ResponseMapBuilder {
+public class ResponseMapUtils {
 
     public static Map<String, Object> buildResponse(Object data) {
         return new HashMap<String, Object>() {

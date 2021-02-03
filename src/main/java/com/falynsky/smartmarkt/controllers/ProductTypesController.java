@@ -2,13 +2,12 @@ package com.falynsky.smartmarkt.controllers;
 
 import com.falynsky.smartmarkt.models.DTO.ProductTypeDTO;
 import com.falynsky.smartmarkt.repositories.ProductTypeRepository;
-import com.falynsky.smartmarkt.utils.ResponseMapBuilder;
+import com.falynsky.smartmarkt.utils.ResponseMapUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +26,6 @@ public class ProductTypesController {
     public Map<String, Object> getAllProducts() {
 
         List<ProductTypeDTO> productTypeDTOS = productTypeRepository.retrieveProductTypesAsDTO();
-        return ResponseMapBuilder.buildResponse(productTypeDTOS, true);
+        return ResponseMapUtils.buildResponse(productTypeDTOS, true);
     }
 }

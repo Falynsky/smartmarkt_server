@@ -14,7 +14,6 @@ import java.util.Optional;
 @Repository
 public interface ProductTypeRepository extends JpaRepository<Product, Integer> {
 
-    Optional<ProductType> findByName(String name);
 
     ProductType findFirstByOrderByIdDesc();
 
@@ -22,11 +21,5 @@ public interface ProductTypeRepository extends JpaRepository<Product, Integer> {
     List<ProductTypeDTO> retrieveProductTypesAsDTO();
 
     @Query("SELECT new com.falynsky.smartmarkt.models.DTO.ProductTypeDTO(pt.id, pt.name) FROM ProductType pt where pt.id = :productTypeId")
-    Optional<ProductTypeDTO> retrieveProductTypeAsDTObyId(@Param("productTypeId") Integer productTypeId);
-
-    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.ProductTypeDTO(pt.id, pt.name) FROM ProductType pt where pt.name = :productName")
-    ProductTypeDTO retrieveProductAsDTObyName(@Param("productName") String productName);
-
-    @Query("SELECT new com.falynsky.smartmarkt.models.DTO.ProductTypeDTO(pt.id, pt.name) FROM ProductType pt where pt.id IN :ids OR pt.name IN :names")
-    List<ProductTypeDTO> retrieveProductTypesAllAsDTO(@Param("ids") List<Integer> ids, @Param("names") List<String> names);
+    ProductTypeDTO retrieveProductTypeAsDTObyId(@Param("productTypeId") Integer productTypeId);
 }
