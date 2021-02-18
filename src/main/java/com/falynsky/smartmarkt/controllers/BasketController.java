@@ -1,6 +1,6 @@
 package com.falynsky.smartmarkt.controllers;
 
-import com.falynsky.smartmarkt.models.DTO.BasketDTO;
+import com.falynsky.smartmarkt.models.dto.BasketDTO;
 import com.falynsky.smartmarkt.repositories.BasketRepository;
 import org.springframework.web.bind.annotation.*;
 

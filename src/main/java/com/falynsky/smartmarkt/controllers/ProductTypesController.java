@@ -1,6 +1,6 @@
 package com.falynsky.smartmarkt.controllers;
 
-import com.falynsky.smartmarkt.models.DTO.ProductTypeDTO;
+import com.falynsky.smartmarkt.models.dto.ProductTypeDTO;
 import com.falynsky.smartmarkt.repositories.ProductTypeRepository;
 import com.falynsky.smartmarkt.utils.ResponseMapUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;

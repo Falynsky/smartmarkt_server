@@ -1,12 +1,10 @@
-package com.falynsky.smartmarkt.models;
+package com.falynsky.smartmarkt.models.objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Arrays;
-import java.util.Objects;
 
 @Data
 @Entity

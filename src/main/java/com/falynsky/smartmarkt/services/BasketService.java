@@ -1,11 +1,8 @@
 package com.falynsky.smartmarkt.services;
 
-import com.falynsky.smartmarkt.models.Basket;
-import com.falynsky.smartmarkt.models.User;
-import com.falynsky.smartmarkt.repositories.AccountRepository;
+import com.falynsky.smartmarkt.models.objects.Basket;
+import com.falynsky.smartmarkt.models.objects.User;
 import com.falynsky.smartmarkt.repositories.BasketRepository;
-import com.falynsky.smartmarkt.repositories.UserRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service

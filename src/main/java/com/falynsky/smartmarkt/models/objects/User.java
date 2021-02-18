@@ -1,4 +1,4 @@
-package com.falynsky.smartmarkt.models;
+package com.falynsky.smartmarkt.models.objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +12,11 @@ import javax.persistence.*;
 @Entity
 @Table(name = "users")
 public class User {
+
+    public User(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
     @Id
     @Column(name = "id")

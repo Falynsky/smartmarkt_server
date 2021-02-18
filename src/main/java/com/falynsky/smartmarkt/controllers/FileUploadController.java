@@ -1,6 +1,6 @@
 package com.falynsky.smartmarkt.controllers;
 
-import com.falynsky.smartmarkt.models.Document;
+import com.falynsky.smartmarkt.models.objects.Document;
 import com.falynsky.smartmarkt.repositories.DocumentRepository;
 import com.falynsky.smartmarkt.services.DocumentService;
 import org.slf4j.Logger;

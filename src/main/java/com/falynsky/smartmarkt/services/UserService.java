@@ -1,7 +1,7 @@
 package com.falynsky.smartmarkt.services;
 
-import com.falynsky.smartmarkt.models.Account;
-import com.falynsky.smartmarkt.models.User;
+import com.falynsky.smartmarkt.models.objects.Account;
+import com.falynsky.smartmarkt.models.objects.User;
 import com.falynsky.smartmarkt.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 

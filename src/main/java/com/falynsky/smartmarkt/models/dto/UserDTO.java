@@ -1,4 +1,4 @@
-package com.falynsky.smartmarkt.models.DTO;
+package com.falynsky.smartmarkt.models.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BarsCodesDTO {
+public class UserDTO {
 
     public int id;
-    public int code;
-    public int productId;
-
+    public String firstName;
+    public String lastName;
+    public int accountId;
 }
 

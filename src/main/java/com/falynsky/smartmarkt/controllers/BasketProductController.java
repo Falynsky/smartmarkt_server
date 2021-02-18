@@ -1,12 +1,13 @@
 package com.falynsky.smartmarkt.controllers;
 
 import com.falynsky.smartmarkt.exceptions.NotEnoughQuantity;
-import com.falynsky.smartmarkt.models.Basket;
-import com.falynsky.smartmarkt.models.DTO.BasketProductDTO;
+import com.falynsky.smartmarkt.models.dto.BasketProductDTO;
+import com.falynsky.smartmarkt.models.objects.Basket;
+import com.falynsky.smartmarkt.models.request.BasketObject;
 import com.falynsky.smartmarkt.repositories.*;
 import com.falynsky.smartmarkt.services.BasketProductService;
-import com.falynsky.smartmarkt.utils.ResponseUtils;
 import com.falynsky.smartmarkt.utils.ResponseMapUtils;
+import com.falynsky.smartmarkt.utils.ResponseUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,7 +63,6 @@ public class BasketProductController {
 
         Basket basket = basketProductService.getUserBasketByUserToken(userToken);
         List<BasketProductDTO> basketProductDTOS = basketProductRepository.retrieveBasketProductAsDTObyBasketIdAndNotClosedYet(basket.getId());
-
         Map<String, Object> data = basketProductService.getSelectedBasketSummary(basketProductDTOS);
         return ResponseMapUtils.buildResponse(data, true);
 
@@ -83,11 +83,11 @@ public class BasketProductController {
     @Transactional(rollbackFor = Exception.class)
     @PostMapping("/add")
     public ResponseEntity<Map<String, Object>> addToBasket(
-            @RequestBody Map<String, Object> map,
+            @RequestBody BasketObject basketObject,
             @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
         String productName = "";
         try {
-            productName = basketProductService.updateOrCreateBasketProduct(map, userToken);
+            productName = basketProductService.updateOrCreateBasketProduct(basketObject, userToken);
         } catch (NotEnoughQuantity e) {
             return ResponseUtils.errorResponse(e.getLocalizedMessage());
         } catch (Exception e) {
@@ -100,11 +100,11 @@ public class BasketProductController {
     @Transactional(rollbackFor = Exception.class)
     @PostMapping("/remove")
     public ResponseEntity<Map<String, Object>> removeOneSelectedProductFromBasket(
-            @RequestBody Map<String, Object> map,
+            @RequestBody BasketObject basketObject,
             @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
         String productName;
         try {
-            productName = basketProductService.removeProductFromBasket(map, userToken);
+            productName = basketProductService.removeProductFromBasket(basketObject, userToken);
         } catch (Exception ex) {
             return ResponseUtils.errorResponse(ex.getMessage());
         }
@@ -114,11 +114,11 @@ public class BasketProductController {
     @Transactional(rollbackFor = Exception.class)
     @PostMapping("/removeAllFromKind")
     public ResponseEntity<Map<String, Object>> removeSelectedProductsFromBasket(
-            @RequestBody Map<String, Object> map,
+            @RequestBody BasketObject basketObject,
             @RequestHeader(value = "Auth", defaultValue = "empty") String userToken) {
         String productName;
         try {
-            productName = basketProductService.removeProductFromBasket(map, userToken);
+            productName = basketProductService.removeProductFromBasket(basketObject, userToken);
         } catch (Exception ex) {
             return ResponseUtils.errorResponse(ex.getMessage());
         }

@@ -1,9 +1,9 @@
 package com.falynsky.smartmarkt.controllers;
 
-import com.falynsky.smartmarkt.models.DTO.BasketDTO;
-import com.falynsky.smartmarkt.models.DTO.BasketHistoryDTO;
-import com.falynsky.smartmarkt.models.DTO.BasketProductDTO;
-import com.falynsky.smartmarkt.models.DTO.ProductDTO;
+import com.falynsky.smartmarkt.models.dto.BasketDTO;
+import com.falynsky.smartmarkt.models.dto.BasketHistoryDTO;
+import com.falynsky.smartmarkt.models.dto.BasketProductDTO;
+import com.falynsky.smartmarkt.models.dto.ProductDTO;
 import com.falynsky.smartmarkt.repositories.BasketHistoryRepository;
 import com.falynsky.smartmarkt.repositories.BasketProductRepository;
 import com.falynsky.smartmarkt.repositories.BasketRepository;

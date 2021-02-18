@@ -1,10 +1,8 @@
 package com.falynsky.smartmarkt.services;
 
-import com.falynsky.smartmarkt.models.DTO.ProductTypeDTO;
+import com.falynsky.smartmarkt.models.dto.ProductTypeDTO;
 import com.falynsky.smartmarkt.repositories.ProductTypeRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class ProductTypeService {

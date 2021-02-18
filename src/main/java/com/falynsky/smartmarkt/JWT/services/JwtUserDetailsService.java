@@ -1,6 +1,6 @@
 package com.falynsky.smartmarkt.JWT.services;
 
-import com.falynsky.smartmarkt.models.Account;
+import com.falynsky.smartmarkt.models.objects.Account;
 import com.falynsky.smartmarkt.repositories.AccountRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,4 +1,4 @@
-package com.falynsky.smartmarkt.models;
+package com.falynsky.smartmarkt.models.objects;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

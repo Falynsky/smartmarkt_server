@@ -1,11 +1,12 @@
 package com.falynsky.smartmarkt.controllers;
 
-import com.falynsky.smartmarkt.models.Account;
-import com.falynsky.smartmarkt.models.User;
+import com.falynsky.smartmarkt.models.objects.User;
+import com.falynsky.smartmarkt.models.request.RegisterObject;
 import com.falynsky.smartmarkt.services.AccountService;
 import com.falynsky.smartmarkt.utils.ResponseUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -23,17 +24,17 @@ public class SignUpController {
         this.accountService = accountService;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @PostMapping("/register")
-    public ResponseEntity<Map<String, Object>> register(@RequestBody Map<String, Object> map) {
+    public ResponseEntity<Map<String, Object>> register(@RequestBody RegisterObject registerObject) {
         try {
 
-            boolean isInvalidRegisterInput = isInvalidRegisterInput(map);
+            boolean isInvalidRegisterInput = isInvalidRegisterInput(registerObject);
             if (isInvalidRegisterInput) {
                 return ResponseUtils.errorResponse("Wartości są wymagane i puste znaki są zabronione.");
             }
-            Account newAccount = createAccount(map);
-            User newUser = createUser(map);
-            accountService.createNewAccountData(newAccount, newUser);
+            User newUser = createUser(registerObject);
+            accountService.createNewAccountData(registerObject, newUser);
         } catch (DataIntegrityViolationException e) {
             return ResponseUtils.errorResponse("Podany użytkownik już istnieje.");
         } catch (Exception e) {
@@ -42,12 +43,12 @@ public class SignUpController {
         return ResponseUtils.sendCorrectResponse();
     }
 
-    private boolean isInvalidRegisterInput(Map<String, Object> map) {
+    private boolean isInvalidRegisterInput(RegisterObject registerObject) {
 
-        String username = ((String) map.get("username"));
-        String password = (String) map.get("password");
-        String firstName = (String) map.get("firstName");
-        String lastName = (String) map.get("lastName");
+        String username = registerObject.username;
+        String password = registerObject.password;
+        String firstName = registerObject.firstName;
+        String lastName = registerObject.lastName;
 
         if (username == null || password == null || firstName == null || lastName == null) {
             return true;
@@ -67,22 +68,10 @@ public class SignUpController {
         return usernameMatcher.find();
     }
 
-    private Account createAccount(Map<String, Object> map) {
-        Account newAccount = new Account();
-        String username = (String) map.get("username");
-        newAccount.setUsername(username);
-        String password = (String) map.get("password");
-        newAccount.setPassword(password);
-        String mail = (String) map.get("mail");
-        newAccount.setMail(mail);
-        return newAccount;
-    }
-
-    private User createUser(Map<String, Object> map) {
-        User newUser = new User();
-        newUser.setFirstName((String) map.get("firstName"));
-        newUser.setLastName((String) map.get("lastName"));
-        return newUser;
+    private User createUser(RegisterObject registerObject) {
+        String firstName = registerObject.firstName;
+        String lastName = registerObject.lastName;
+        return new User(firstName, lastName);
     }
 
 }

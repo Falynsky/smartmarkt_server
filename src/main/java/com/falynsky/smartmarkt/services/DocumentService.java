@@ -1,7 +1,6 @@
 package com.falynsky.smartmarkt.services;
 
-import com.falynsky.smartmarkt.models.DTO.ProductDTO;
-import com.falynsky.smartmarkt.models.Document;
+import com.falynsky.smartmarkt.models.objects.Document;
 import com.falynsky.smartmarkt.repositories.DocumentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;

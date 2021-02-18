@@ -1,4 +1,4 @@
-package com.falynsky.smartmarkt.models;
+package com.falynsky.smartmarkt.models.objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,11 +21,11 @@ import java.util.Collections;
 public class Account implements UserDetails {
 
     @Id
-    private Integer id;
-    private String username;
-    private String password;
-    private String mail;
-    private String role;
+    public Integer id;
+    public String username;
+    public String password;
+    public String mail;
+    public String role;
 
     @Override
     public String getUsername() {

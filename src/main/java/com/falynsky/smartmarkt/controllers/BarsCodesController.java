@@ -1,7 +1,7 @@
 package com.falynsky.smartmarkt.controllers;
 
-import com.falynsky.smartmarkt.models.DTO.ProductDTO;
-import com.falynsky.smartmarkt.models.DTO.ProductTypeDTO;
+import com.falynsky.smartmarkt.models.dto.ProductDTO;
+import com.falynsky.smartmarkt.models.dto.ProductTypeDTO;
 import com.falynsky.smartmarkt.services.DocumentService;
 import com.falynsky.smartmarkt.services.ProductService;
 import com.falynsky.smartmarkt.services.ProductTypeService;

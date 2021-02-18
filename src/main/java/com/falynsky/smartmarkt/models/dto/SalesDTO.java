@@ -1,4 +1,4 @@
-package com.falynsky.smartmarkt.models.DTO;
+package com.falynsky.smartmarkt.models.dto;
 
 
 import lombok.AllArgsConstructor;

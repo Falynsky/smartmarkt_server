@@ -1,7 +1,7 @@
 package com.falynsky.smartmarkt.services;
 
-import com.falynsky.smartmarkt.models.DTO.BarsCodesDTO;
-import com.falynsky.smartmarkt.models.DTO.ProductDTO;
+import com.falynsky.smartmarkt.models.dto.BarsCodesDTO;
+import com.falynsky.smartmarkt.models.dto.ProductDTO;
 import com.falynsky.smartmarkt.repositories.BarsCodesRepository;
 import com.falynsky.smartmarkt.repositories.ProductRepository;
 import org.springframework.stereotype.Service;

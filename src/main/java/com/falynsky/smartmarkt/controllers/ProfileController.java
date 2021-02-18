@@ -1,7 +1,7 @@
 package com.falynsky.smartmarkt.controllers;
 
-import com.falynsky.smartmarkt.models.Account;
-import com.falynsky.smartmarkt.models.User;
+import com.falynsky.smartmarkt.models.objects.Account;
+import com.falynsky.smartmarkt.models.objects.User;
 import com.falynsky.smartmarkt.services.AccountService;
 import com.falynsky.smartmarkt.services.UserService;
 import com.falynsky.smartmarkt.utils.ResponseMapUtils;

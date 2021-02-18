@@ -1,7 +1,7 @@
 package com.falynsky.smartmarkt.controllers;
 
-import com.falynsky.smartmarkt.models.Account;
-import com.falynsky.smartmarkt.models.DTO.AccountDTO;
+import com.falynsky.smartmarkt.models.objects.Account;
+import com.falynsky.smartmarkt.models.dto.AccountDTO;
 import com.falynsky.smartmarkt.repositories.AccountRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

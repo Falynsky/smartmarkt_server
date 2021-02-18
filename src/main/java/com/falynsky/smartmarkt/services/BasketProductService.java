@@ -1,10 +1,11 @@
 package com.falynsky.smartmarkt.services;
 
 import com.falynsky.smartmarkt.exceptions.NotEnoughQuantity;
-import com.falynsky.smartmarkt.models.*;
-import com.falynsky.smartmarkt.models.DTO.BasketProductDTO;
-import com.falynsky.smartmarkt.models.DTO.ProductDTO;
-import com.falynsky.smartmarkt.models.DTO.SalesDTO;
+import com.falynsky.smartmarkt.models.dto.BasketProductDTO;
+import com.falynsky.smartmarkt.models.dto.ProductDTO;
+import com.falynsky.smartmarkt.models.dto.SalesDTO;
+import com.falynsky.smartmarkt.models.request.BasketObject;
+import com.falynsky.smartmarkt.models.objects.*;
 import com.falynsky.smartmarkt.repositories.BasketHistoryRepository;
 import com.falynsky.smartmarkt.repositories.BasketProductRepository;
 import com.falynsky.smartmarkt.repositories.ProductRepository;
@@ -51,9 +52,9 @@ public class BasketProductService {
     }
 
 
-    public String updateOrCreateBasketProduct(Map<String, Object> map, String userToken) throws Exception {
-        Integer productId = (Integer) map.get("productId");
-        int quantity = getQuantity(map);
+    public String updateOrCreateBasketProduct(BasketObject basketObject, String userToken) throws Exception {
+        Integer productId = basketObject.productId;
+        int quantity = getQuantity(basketObject);
         Product product = getSelectedProduct(productId);
 
         int productQuantity = product.getQuantity();
@@ -100,17 +101,17 @@ public class BasketProductService {
         return product.get();
     }
 
-    public BasketProduct getBasketProduct(Map<String, Object> map, String userToken) throws Exception {
-        Integer productId = (Integer) map.get("productId");
+    public BasketProduct getBasketProduct(BasketObject map, String userToken) throws Exception {
+        Integer productId = map.productId;
         Basket basket = getUserBasketByUserToken(userToken);
         Product product = getSelectedProduct(productId);
         return basketProductRepository.findFirstByProductIdAndBasketIdAndClosedFalse(product, basket);
     }
 
-    public String removeProductFromBasket(Map<String, Object> map, String userToken) throws Exception {
+    public String removeProductFromBasket(BasketObject map, String userToken) throws Exception {
         BasketProduct basketProduct = getBasketProduct(map, userToken);
-        Integer productId = (Integer) map.get("productId");
-        Integer quantity = (Integer) map.get("quantity");
+        Integer productId = map.productId;
+        Integer quantity = map.quantity;
         Product product = getSelectedProduct(productId);
         updateProductQuantity(basketProduct, product, quantity);
         int basketProductQuantity;
@@ -175,8 +176,8 @@ public class BasketProductService {
     }
 
     @SneakyThrows
-    private Integer getQuantity(Map<String, Object> map) {
-        Object quantityValue = map.get("quantity");
+    private Integer getQuantity(BasketObject map) {
+        Object quantityValue = map.quantity;
         if (quantityValue instanceof Integer) {
             return (Integer) quantityValue;
         } else {

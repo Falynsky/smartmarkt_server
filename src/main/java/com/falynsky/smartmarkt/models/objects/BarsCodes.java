@@ -1,4 +1,4 @@
-package com.falynsky.smartmarkt.models;
+package com.falynsky.smartmarkt.models.objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,13 +13,15 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "product_types")
-public class ProductType {
+@Table(name = "bars_codes")
+public class BarsCodes {
 
     @Id
     @Column(name = "id", nullable = false)
     public int id;
-    @Column(name = "name", nullable = false)
-    public String name;
-}
+    @Column(name = "code", nullable = false)
+    public int code;
+    @Column(name = "product_id", nullable = false)
+    public int productId;
 
+}

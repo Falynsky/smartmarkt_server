@@ -1,9 +1,10 @@
 package com.falynsky.smartmarkt.services;
 
 import com.falynsky.smartmarkt.JWT.utils.JwtTokenUtil;
-import com.falynsky.smartmarkt.models.Account;
-import com.falynsky.smartmarkt.models.Basket;
-import com.falynsky.smartmarkt.models.User;
+import com.falynsky.smartmarkt.models.objects.Account;
+import com.falynsky.smartmarkt.models.objects.Basket;
+import com.falynsky.smartmarkt.models.objects.User;
+import com.falynsky.smartmarkt.models.request.RegisterObject;
 import com.falynsky.smartmarkt.repositories.AccountRepository;
 import com.falynsky.smartmarkt.repositories.BasketRepository;
 import com.falynsky.smartmarkt.repositories.UserRepository;
@@ -41,20 +42,22 @@ public class AccountService {
         return account;
     }
 
-    public void createNewAccountData(Account account, User user) {
-        createNewAccount(account);
+    public void createNewAccountData(RegisterObject registerObject, User user) {
+        Account account = createNewAccount(registerObject);
         createNewUser(account, user);
-        createNewUserBasket(account, user);
+        createNewUserBasket(registerObject, user);
     }
 
-    private void createNewAccount(Account account) {
-        String encodePassword = getEncodedPassword(account);
-        account.setPassword(encodePassword);
-
+    private Account createNewAccount(RegisterObject registerObject) {
         Integer newAccountId = getIdForNewAccount();
-        account.setId(newAccountId);
-        account.setRole("ROLE_USER");
-        accountRepository.save(account);
+        String username = registerObject.username;
+        String encodePassword = getEncodedPassword(registerObject);
+        String mail = registerObject.mail;
+        String role = "ROLE_USER";
+
+        Account newAccount = new Account(newAccountId, username, encodePassword, mail, role);
+        accountRepository.save(newAccount);
+        return newAccount;
     }
 
     private String getEncodedPassword(Account account) {
@@ -75,7 +78,6 @@ public class AccountService {
         int newUserId = getIdForNewUser();
         user.setId(newUserId);
         user.setAccountId(account);
-
         userRepository.save(user);
     }
 
@@ -88,9 +90,9 @@ public class AccountService {
         return ++lastId;
     }
 
-    private void createNewUserBasket(Account account, User user) {
+    private void createNewUserBasket(RegisterObject registerObject, User user) {
         int newBasketId = getIdForNewBasket();
-        String userBasketName = account.getUsername().toUpperCase() + "_BASKET";
+        String userBasketName = registerObject.username.toUpperCase() + "_BASKET";
         Basket newUserBasket = new Basket(newBasketId, userBasketName, user);
         basketRepository.save(newUserBasket);
     }
